@@ -16,7 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.tesseract.fabric.TesseractFabric"
+      "dev.tesseract.core.fabric.TesseractFabric"
     ]
   },
   "mixins": [

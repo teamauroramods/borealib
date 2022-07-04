@@ -1,4 +1,4 @@
-package dev.tesseract.mixin;
+package dev.tesseract.core.mixin;
 
 import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;
