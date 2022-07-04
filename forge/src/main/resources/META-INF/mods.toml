@@ -4,32 +4,25 @@ loaderVersion = "[41,)"
 license = "Insert License Here"
 
 [[mods]]
-modId = "examplemod"
+modId = "tesseract"
 version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
+displayName = "Tesseract"
+authors = "ebo2022"
 description = '''
 This is an example description! Tell everyone what your mod is about!
 '''
 #logoFile = ""
 
-[[dependencies.examplemod]]
+[[dependencies.tesseract]]
 modId = "forge"
 mandatory = true
 versionRange = "[41,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.tesseract]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19,)"
 ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.examplemod]]
-modId = "architectury"
-mandatory = true
-versionRange = "[5.7.28,)"
-ordering = "AFTER"
 side = "BOTH"

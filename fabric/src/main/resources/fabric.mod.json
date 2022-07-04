@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "tesseract",
   "version": "${version}",
-  "name": "Example Mod",
+  "name": "Tesseract",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Me!"
+    "ebo2022"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
@@ -16,16 +16,15 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.examplemod.fabric.ExampleModFabric"
+      "dev.tesseract.fabric.TesseractFabric"
     ]
   },
   "mixins": [
-    "examplemod.mixins.json",
-    "examplemod-common.mixins.json"
+    "tesseract.mixins.json",
+    "tesseract-common.mixins.json"
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.19",
-    "architectury": ">=5.7.28"
+    "minecraft": ">=1.19"
   }
 }
