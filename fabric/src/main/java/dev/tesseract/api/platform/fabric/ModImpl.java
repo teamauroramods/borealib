@@ -1,6 +1,7 @@
 package dev.tesseract.api.platform.fabric;
 
 import dev.tesseract.api.platform.Mod;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.Person;
 import org.jetbrains.annotations.ApiStatus;
@@ -19,6 +20,10 @@ public class ModImpl implements Mod {
 
     public ModImpl(ModContainer container) {
         this.container = container;
+    }
+
+    public ModImpl(String modId) {
+        this.container = FabricLoader.getInstance().getModContainer(modId).orElseThrow();
     }
 
     @Override

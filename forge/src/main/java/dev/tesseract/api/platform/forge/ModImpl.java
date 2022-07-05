@@ -2,8 +2,8 @@ package dev.tesseract.api.platform.forge;
 
 import dev.tesseract.api.platform.Mod;
 import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
-import net.minecraftforge.forgespi.language.IModInfo;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +21,10 @@ public class ModImpl implements Mod {
 
     public ModImpl(ModContainer container) {
         this.container = container;
+    }
+
+    public ModImpl(String modId) {
+        this.container = ModList.get().getModContainerById(modId).orElseThrow();
     }
 
     @Override
