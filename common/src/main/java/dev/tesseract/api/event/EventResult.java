@@ -4,98 +4,81 @@ import net.minecraft.world.InteractionResult;
 import org.apache.commons.lang3.BooleanUtils;
 
 /**
- * A class that holds results for an event.
+ * A wrapper for event results.
  *
- * @see #pass()
- * @see #interrupt(Boolean)
- * @see CompoundEventResult
  * @author ebo2022
- * @since 1.0.0
+ * @since 2.0.0
  */
-public final class EventResult {
+public enum EventResult {
 
-    private static final EventResult TRUE = new EventResult(true, true);
-    private static final EventResult STOP = new EventResult(true, null);
-    private static final EventResult PASS = new EventResult(false, null);
-    private static final EventResult FALSE = new EventResult(true, false);
+    /**
+     * Prevents further processing and returns a <code>true</code> outcome.
+     */
+    SUCCESS(true, true),
 
-    private final boolean interruptsListeners;
+    /**
+     * Prevents further processing and returns a <code>false</code> outcome.
+     */
+    DENY(true, false),
+
+    /**
+     * Keeps processing and continues onto the next iteration.
+     */
+    PASS(false, null),
+
+    /**
+     * Halts further processing but does not provide an outcome.
+     */
+    STOP(true, null);
+
+    private final boolean preventsProcessing;
     private final Boolean value;
 
-     private EventResult(boolean interruptsFurtherEvaluation, Boolean value) {
-        this.interruptsListeners = interruptsFurtherEvaluation;
+    EventResult(boolean preventsProcessing, Boolean value) {
+        this.preventsProcessing = preventsProcessing;
         this.value = value;
     }
 
     /**
-     * @return A result that continues on to the next listener
+     * @return Whether the result prevents other listeners from being processed
      */
-    public static EventResult pass() {
-        return PASS;
-    }
-
-
-    /**
-     * Stops the event and prevents it from continuing on to the next listener.
-     *
-     * @param value The outcome of the event. Passing {@code null} represents the default outcome, which is often falling back to vanilla logic
-     * @return A result that interrupts the event
-     */
-    public static EventResult interrupt(Boolean value) {
-        if (value == null) return STOP;
-        if (value) return TRUE;
-        return FALSE;
+    public boolean preventsProcessing() {
+        return preventsProcessing;
     }
 
     /**
-     * @return Whether this result prevents other listeners from being processed
-     */
-    public boolean interruptsListeners() {
-        return interruptsListeners;
-    }
-
-    /**
-     * @return The outcome of this result, returns {@code null} if none is present
+     * @return The boolean outcome of the result, returns <code>null</code> if there is none
      */
     public Boolean getValue() {
         return value;
     }
 
     /**
-     * @return Whether this result has no outcome
+     * @return Whether the result has an outcome
      */
-    public boolean isEmpty() {
-        return value == null;
-    }
-
-    /**
-     * @return Whether this result has an outcome
-     */
-    public boolean isPresent() {
+    public boolean hasValue() {
         return value != null;
     }
 
     /**
-     * @return Whether this result has a {@code true} outcome
+     * @return Whether the result has a <code>true</code> outcome
      */
     public boolean isTrue() {
         return BooleanUtils.isTrue(value);
     }
 
     /**
-     * @return Whether this result has a {@code false} outcome
+     * @return Whether the result has a <code>false</code> outcome
      */
     public boolean isFalse() {
         return BooleanUtils.isFalse(value);
     }
 
     /**
-     * @return This result, converted to a vanilla {@link InteractionResult}
+     * @return The result as a vanilla-sided {@link InteractionResult}
      */
     public InteractionResult asInteraction() {
-        if (isPresent()) {
-            return getValue() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
-        }
+        if (hasValue()) return getValue() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
         return InteractionResult.PASS;
     }
 }
