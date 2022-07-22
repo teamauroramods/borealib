@@ -1,21 +1,24 @@
-package dev.tesseract.biomes.impl;
+package dev.tesseract.biomes.forge;
 
 import dev.tesseract.biomes.*;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraftforge.common.world.ModifiableBiomeInfo;
 
-public class ImmutableBiomeProperties implements BiomeProperties {
-    protected final Biome biome;
+public class BiomePropertiesImpl implements BiomeProperties {
+
     protected final ClimateSettings climateSettings;
     protected final SpecialEffectSettings specialEffectSettings;
     protected final GenerationSettings generationSettings;
     protected final SpawnSettings spawnSettings;
 
-    public ImmutableBiomeProperties(Biome biome) {
-        this(biome, new ImmutableClimateSettings(biome), new ImmutableSpecialEffectSettings(biome), new ImmutableGenerationSettings(biome), new ImmutableSpawnSettings(biome));
+    public BiomePropertiesImpl(ModifiableBiomeInfo.BiomeInfo.Builder parent) {
+        this(new ClimateSettingsImpl(parent.getClimateSettings()),
+                new SpecialEffectSettingsImpl(parent.getSpecialEffects()),
+                new GenerationSettingsImpl(parent.getGenerationSettings()),
+                new SpawnSettingsImpl(parent.getMobSpawnSettings())
+        );
     }
 
-    public ImmutableBiomeProperties(Biome biome, ClimateSettings climateSettings, SpecialEffectSettings specialEffectSettings, GenerationSettings generationSettings, SpawnSettings spawnSettings) {
-        this.biome = biome;
+    public BiomePropertiesImpl(ClimateSettings climateSettings, SpecialEffectSettings specialEffectSettings, GenerationSettings generationSettings, SpawnSettings spawnSettings) {
         this.climateSettings = climateSettings;
         this.specialEffectSettings = specialEffectSettings;
         this.generationSettings = generationSettings;

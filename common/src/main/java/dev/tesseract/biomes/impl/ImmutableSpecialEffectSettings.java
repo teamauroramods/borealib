@@ -21,61 +21,61 @@ public class ImmutableSpecialEffectSettings implements SpecialEffectSettings {
 
     @Override
     public int getFogColor() {
-        return effects.fogColor;
+        return this.effects.fogColor;
     }
 
     @Override
     public int getWaterColor() {
-        return effects.waterColor;
+        return this.effects.waterColor;
     }
 
     @Override
     public int getWaterFogColor() {
-        return effects.waterFogColor;
+        return this.effects.waterFogColor;
     }
 
     @Override
     public int getSkyColor() {
-        return effects.skyColor;
+        return this.effects.skyColor;
     }
 
     @Override
     public OptionalInt getFoliageColorOverride() {
-        return effects.foliageColorOverride.map(OptionalInt::of).orElseGet(OptionalInt::empty);
+        return this.effects.foliageColorOverride.map(OptionalInt::of).orElseGet(OptionalInt::empty);
     }
 
     @Override
     public OptionalInt getGrassColorOverride() {
-        return effects.grassColorOverride.map(OptionalInt::of).orElseGet(OptionalInt::empty);
+        return this.effects.grassColorOverride.map(OptionalInt::of).orElseGet(OptionalInt::empty);
     }
 
     @Override
     public BiomeSpecialEffects.GrassColorModifier getGrassColorModifier() {
-        return effects.grassColorModifier;
+        return this.effects.grassColorModifier;
     }
 
     @Override
     public Optional<AmbientParticleSettings> getAmbientParticle() {
-        return effects.ambientParticleSettings;
+        return this.effects.ambientParticleSettings;
     }
 
     @Override
     public Optional<SoundEvent> getAmbientLoopSound() {
-        return effects.ambientLoopSoundEvent;
+        return this.effects.ambientLoopSoundEvent;
     }
 
     @Override
     public Optional<AmbientMoodSettings> getAmbientMoodSound() {
-        return effects.ambientMoodSettings;
+        return this.effects.ambientMoodSettings;
     }
 
     @Override
     public Optional<AmbientAdditionsSettings> getAmbientAdditionsSound() {
-        return effects.ambientAdditionsSettings;
+        return this.effects.ambientAdditionsSettings;
     }
 
     @Override
     public Optional<Music> getBackgroundMusic() {
-        return effects.backgroundMusic;
+        return this.effects.backgroundMusic;
     }
 }

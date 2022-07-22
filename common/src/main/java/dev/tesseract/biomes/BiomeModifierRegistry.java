@@ -17,11 +17,11 @@ public final class BiomeModifierRegistry {
     }
 
     @ExpectPlatform
-    public static void register(Phase phase, Predicate<BiomeContext> selector, BiConsumer<BiomeContext, BiomeProperties.Mutable> modifier) {
+    public static void register(Phase phase, Predicate<BiomeData> selector, BiConsumer<BiomeData, BiomeProperties.Mutable> modifier) {
         Platform.error();
     }
     
-    public interface BiomeContext {
+    public interface BiomeData {
         Optional<ResourceLocation> getKey();
         
         BiomeProperties getProperties();

@@ -20,25 +20,25 @@
 package dev.tesseract.biomes;
 
 public interface BiomeProperties {
-    ClimateSettings getClimateProperties();
+    ClimateSettings getClimateSettings();
     
-    SpecialEffectSettings getEffectsProperties();
+    SpecialEffectSettings getSpecialEffectSettings();
     
-    GenerationSettings getGenerationProperties();
+    GenerationSettings getGenerationSettings();
     
-    SpawnSettings getSpawnProperties();
+    SpawnSettings getSpawnSettings();
     
     interface Mutable extends BiomeProperties {
         @Override
-        ClimateSettings.Mutable getClimateProperties();
+        ClimateSettings.Mutable getClimateSettings();
         
         @Override
-        SpecialEffectSettings.Mutable getEffectsProperties();
+        SpecialEffectSettings.Mutable getSpecialEffectSettings();
         
         @Override
-        GenerationSettings.Mutable getGenerationProperties();
+        GenerationSettings.Mutable getGenerationSettings();
         
         @Override
-        SpawnSettings.Mutable getSpawnProperties();
+        SpawnSettings.Mutable getSpawnSettings();
     }
 }

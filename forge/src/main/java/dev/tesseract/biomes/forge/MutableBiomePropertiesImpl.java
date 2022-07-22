@@ -1,16 +1,16 @@
-package dev.tesseract.biomes.impl;
+package dev.tesseract.biomes.forge;
 
 import dev.tesseract.biomes.*;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraftforge.common.world.ModifiableBiomeInfo;
 
-public class MutableBiomeProperties extends ImmutableBiomeProperties implements BiomeProperties.Mutable {
+public class MutableBiomePropertiesImpl extends BiomePropertiesImpl implements BiomeProperties.Mutable {
 
-    public MutableBiomeProperties(Biome biome, ClimateSettings.Mutable climateSettings, SpecialEffectSettings.Mutable specialEffectSettings, GenerationSettings.Mutable generationSettings, SpawnSettings.Mutable spawnSettings) {
-        super(biome, climateSettings, specialEffectSettings, generationSettings, spawnSettings);
-    }
-
-    public MutableBiomeProperties(Biome biome) {
-        super(biome);
+    public MutableBiomePropertiesImpl(ModifiableBiomeInfo.BiomeInfo.Builder parent) {
+        super(new ClimateSettingsImpl.Mutable(parent.getClimateSettings()),
+                new SpecialEffectSettingsImpl.Mutable(parent.getSpecialEffects()),
+                new GenerationSettingsImpl.Mutable(parent.getGenerationSettings()),
+                new SpawnSettingsImpl.Mutable(parent.getMobSpawnSettings())
+        );
     }
 
     @Override
