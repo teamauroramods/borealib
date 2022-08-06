@@ -22,7 +22,7 @@ public interface ModContainer {
     String getBrand();
 
     /**
-     * @return A list of possible root paths for the mod
+     * @return A list of all possible root paths for the mod
      */
     List<Path> getRootPaths();
 
@@ -50,7 +50,7 @@ public interface ModContainer {
     String getVersion();
 
     /**
-     * Finds the logo file for the mod.
+     * Finds the logo file for the mod if one is present.
      *
      * @param size The preferred size for the logo file (only used on Fabric)
      * @return The logo file

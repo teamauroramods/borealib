@@ -7,5 +7,6 @@ import net.minecraftforge.fml.common.Mod;
 public class TesseractForge {
 
     public TesseractForge() {
+        Tesseract.INSTANCE.setup();
     }
 }
