@@ -7,7 +7,6 @@ import java.util.ServiceLoader;
 
 @ApiStatus.Internal
 public class Tesseract {
-
     public static final String MOD_ID = "tesseract";
 
     public static ModLoaderService findMod(String id) {
