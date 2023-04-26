@@ -1,28 +1,29 @@
 modLoader = "javafml"
-loaderVersion = "[41,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+loaderVersion = "[${forge_major_version},)"
+issueTrackerURL = "https://github.com/teamauroramods/${archives_base_name}/issues"
+license = "LGPLv3"
 
 [[mods]]
-modId = "tesseract"
-version = "${version}"
-displayName = "Tesseract"
-authors = "ebo2022"
-description = '''
-This is an example description! Tell everyone what your mod is about!
-'''
-#logoFile = ""
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+description = "${mod_description}"
+#logoFile = "${mod_id}.logo.png"
+authors = "Team Aurora"
 
-[[dependencies.tesseract]]
+[modproperties.${mod_id}]
+catalogueImageIcon="${mod_id}.icon.png"
+
+[[dependencies.${mod_id}]]
 modId = "forge"
 mandatory = true
-versionRange = "[42,)"
-ordering = "NONE"
+versionRange = "[${forge_major_version},)"
+ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.tesseract]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.1,)"
-ordering = "NONE"
+versionRange = "[${minecraft_version},)"
+ordering = "AFTER"
 side = "BOTH"

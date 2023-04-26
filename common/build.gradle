@@ -3,7 +3,7 @@ architectury {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/tesseract.accesswidener")
+    accessWidenerPath = file("src/main/resources/magnetosphere.accesswidener")
 }
 
 dependencies {
