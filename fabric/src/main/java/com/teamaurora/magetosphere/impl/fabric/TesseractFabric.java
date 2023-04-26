@@ -1,7 +1,6 @@
 package com.teamaurora.magetosphere.impl.fabric;
 
 import com.teamaurora.magetosphere.api.base.v1.event.events.lifecycle.ServerLifecycleEvents;
-import com.teamaurora.magetosphere.impl.Magnetosphere;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.ApiStatus;

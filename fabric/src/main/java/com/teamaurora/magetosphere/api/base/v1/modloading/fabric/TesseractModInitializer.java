@@ -2,7 +2,6 @@ package com.teamaurora.magetosphere.api.base.v1.modloading.fabric;
 
 import com.teamaurora.magetosphere.api.base.v1.platform.ModContainer;
 import com.teamaurora.magetosphere.api.base.v1.modloading.ModLoaderService;
-import com.teamaurora.magetosphere.impl.Magnetosphere;
 import com.teamaurora.magetosphere.impl.base.platform.fabric.ModContainerImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;

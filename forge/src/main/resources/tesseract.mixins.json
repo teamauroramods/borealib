@@ -5,6 +5,7 @@
   "client": [
   ],
   "mixins": [
+    "ReloadListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

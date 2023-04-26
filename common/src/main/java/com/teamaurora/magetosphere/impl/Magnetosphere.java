@@ -8,7 +8,6 @@ import java.util.ServiceLoader;
 @ApiStatus.Internal
 public class Magnetosphere {
     public static final String MOD_ID = "magnetosphere";
-
     public static ModLoaderService findMod(String id) {
         return ServiceLoader.load(ModLoaderService.class)
                 .stream()

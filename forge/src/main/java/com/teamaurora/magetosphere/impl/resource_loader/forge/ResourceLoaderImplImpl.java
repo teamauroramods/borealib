@@ -2,7 +2,6 @@ package com.teamaurora.magetosphere.impl.resource_loader.forge;
 
 import com.mojang.datafixers.util.Pair;
 import com.teamaurora.magetosphere.api.resource_loader.v1.NamedReloadListener;
-import com.teamaurora.magetosphere.impl.Magnetosphere;
 import com.teamaurora.magetosphere.impl.resource_loader.ResourceLoaderImpl;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;

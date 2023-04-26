@@ -1,6 +1,5 @@
 package com.teamaurora.magetosphere.impl.forge;
 
-import com.teamaurora.magetosphere.impl.Magnetosphere;
 import com.teamaurora.magetosphere.api.base.v1.event.events.lifecycle.ServerLifecycleEvents;
 import net.minecraftforge.event.server.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

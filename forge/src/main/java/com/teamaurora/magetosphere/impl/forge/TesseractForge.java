@@ -1,6 +1,5 @@
 package com.teamaurora.magetosphere.impl.forge;
 
-import com.teamaurora.magetosphere.impl.Magnetosphere;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.ApiStatus;
 
