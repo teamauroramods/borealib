@@ -2,7 +2,7 @@ package com.teamaurora.magetosphere.api.base.v1.modloading.forge;
 
 import com.teamaurora.magetosphere.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.magetosphere.api.base.v1.platform.ModContainer;
-import com.teamaurora.magetosphere.api.base.v1.util.forge.TesseractForgeUtil;
+import com.teamaurora.magetosphere.api.base.v1.util.forge.ForgeHelper;
 import com.teamaurora.magetosphere.impl.Magnetosphere;
 import com.teamaurora.magetosphere.impl.base.modloading.forge.ParallelDispatcherImpl;
 import com.teamaurora.magetosphere.impl.base.platform.forge.ModContainerImpl;
@@ -42,7 +42,7 @@ public final class ForgeModFactory {
      * @param id The id of the mod to initialize; should be the same one as specified in your {@link ModLoaderService}
      */
     static void loadMod(String id) {
-        IEventBus bus = TesseractForgeUtil.getEventBus(id);
+        IEventBus bus = ForgeHelper.getEventBus(id);
         ModLoaderService s = Magnetosphere.findMod(id);
         bus.<FMLCommonSetupEvent>addListener(e -> s.onCommonPostInit(new ParallelDispatcherImpl(e)));
         bus.<FMLClientSetupEvent>addListener(e -> s.onClientPostInit(new ParallelDispatcherImpl(e)));

@@ -8,7 +8,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
  *
  * @since 1.0
  */
-public interface ModdedReloadListener extends PreparableReloadListener {
+public interface NamedReloadListener extends PreparableReloadListener {
 
     /**
      * @return An id to identify this reload listener by

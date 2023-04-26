@@ -4,7 +4,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 
-public interface TesseractForgeUtil {
+public interface ForgeHelper {
 
     /**
      * Gets the event bus for the specified mod id.

@@ -19,7 +19,7 @@ public abstract class ResourceLoaderImpl implements ResourceLoader {
 
     @ExpectPlatform
     public static ResourceLoaderImpl get(PackType packType) {
-        return Platform.error();
+        return Platform.expect();
     }
 
     @Override

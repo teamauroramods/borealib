@@ -2,7 +2,7 @@ package com.teamaurora.magetosphere.impl.registry.forge;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
-import com.teamaurora.magetosphere.api.base.v1.util.forge.TesseractForgeUtil;
+import com.teamaurora.magetosphere.api.base.v1.util.forge.ForgeHelper;
 import com.teamaurora.magetosphere.api.registry.v1.RegistryProperties;
 import com.teamaurora.magetosphere.api.registry.v1.RegistryReference;
 import com.teamaurora.magetosphere.api.registry.v1.PlatformRegistry;
@@ -46,7 +46,7 @@ public final class ForgePlatformRegistry<T> implements PlatformRegistry<T> {
         this.registry = new RegistryHolder<>(registryKey);
         this.codec = ExtraCodecs.lazyInitializedCodec(() -> this.registry.get().getCodec());
         this.key = registryKey;
-        TesseractForgeUtil.getEventBus(registryKey.location().getNamespace()).<NewRegistryEvent>addListener(e -> {
+        ForgeHelper.getEventBus(registryKey.location().getNamespace()).<NewRegistryEvent>addListener(e -> {
             RegistryBuilder<T> builder = new RegistryBuilder<T>().setName(registryKey.location());
             if (!properties.saveToDisk())
                 builder.disableSaving();
@@ -67,7 +67,7 @@ public final class ForgePlatformRegistry<T> implements PlatformRegistry<T> {
     public <R extends T> RegistryReference<R> register(ResourceLocation name, Supplier<? extends R> object) {
         DeferredRegister<T> registry1 = this.deferredRegisters.computeIfAbsent(name.getNamespace(), s -> {
             DeferredRegister<T> deferredRegister = DeferredRegister.create(this.key, s);
-            deferredRegister.register(TesseractForgeUtil.getEventBus(s));
+            deferredRegister.register(ForgeHelper.getEventBus(s));
             return deferredRegister;
         });
         return (RegistryReference<R>) new ForgeRegistryReference<>(registry1.register(name.getPath(), object), this.key);
