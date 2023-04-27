@@ -1,30 +1,21 @@
 {
   "schemaVersion": 1,
-  "id": "${mod_id}",
-  "version": "${mod_version}",
-  "name": "${mod_name}",
-  "description": "${mod_description}",
+  "id": "magnetosphere",
+  "version": "${version}",
+  "name": "Magnetosphere",
+  "description": "A.",
   "authors": [
     "Team Aurora"
   ],
-  "contact": {
-    "issues": "https://github.com/teamauroramods/${archives_base_name}/issues",
-    "sources": "https://github.com/teamauroramods/${archives_base_name}/"
-  },
-  "license": "Insert License Here",
-  "icon": "${mod_id}.icon.png",
+  "license": "MIT",
   "environment": "*",
   "entrypoints": {
     "main": [
       "com.teamaurora.magnetosphere.impl.fabric.MagnetosphereFabric"
     ]
   },
-  "mixins": [
-    "${mod_id}.mixins.json",
-    "${mod_id}-common.mixins.json"
-  ],
   "depends": {
     "fabric": "*",
-    "minecraft": "~${minecraft_version}"
+    "minecraft": ">=1.19.4"
   }
 }

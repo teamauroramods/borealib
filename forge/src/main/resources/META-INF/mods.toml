@@ -1,29 +1,27 @@
 modLoader = "javafml"
-loaderVersion = "[${forge_major_version},)"
-issueTrackerURL = "https://github.com/teamauroramods/${archives_base_name}/issues"
-license = "LGPLv3"
+loaderVersion = "[44,)"
+#issueTrackerURL = ""
+license = "MIT"
 
 [[mods]]
-modId = "${mod_id}"
-version = "${mod_version}"
-displayName = "${mod_name}"
-description = "${mod_description}"
-#logoFile = "${mod_id}.logo.png"
-authors = "Team Aurora"
+modId = "magnetosphere"
+version = "${version}"
+displayName = "Magnetosphere"
+authors = "ebo2022"
+description = '''
+'''
+#logoFile = ""
 
-[modproperties.${mod_id}]
-catalogueImageIcon="${mod_id}.icon.png"
-
-[[dependencies.${mod_id}]]
+[[dependencies.magnetosphere]]
 modId = "forge"
 mandatory = true
-versionRange = "[${forge_major_version},)"
-ordering = "AFTER"
+versionRange = "[45,)"
+ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.magnetosphere]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[${minecraft_version},)"
-ordering = "AFTER"
+versionRange = "[1.19.4,)"
+ordering = "NONE"
 side = "BOTH"
