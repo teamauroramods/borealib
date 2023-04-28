@@ -9,7 +9,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 @Mod.EventBusSubscriber(modid = Magnetosphere.MOD_ID)
-public class TesseractCommonForgeEvents {
+public class MagnetosphereCommonForgeEvents {
 
     @SubscribeEvent
     public static void onEvent(ServerAboutToStartEvent event) {

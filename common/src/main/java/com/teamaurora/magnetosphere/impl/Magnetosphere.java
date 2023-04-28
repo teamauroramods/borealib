@@ -4,7 +4,6 @@ import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ServiceLoader;
-import java.util.stream.Stream;
 
 @ApiStatus.Internal
 public class Magnetosphere implements ModLoaderService {
@@ -21,5 +20,9 @@ public class Magnetosphere implements ModLoaderService {
     @Override
     public String id() {
         return MOD_ID;
+    }
+
+    @Override
+    public void onCommonInit() {
     }
 }

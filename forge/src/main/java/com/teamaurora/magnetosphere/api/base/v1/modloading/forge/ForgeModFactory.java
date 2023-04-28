@@ -41,7 +41,7 @@ public final class ForgeModFactory {
      *
      * @param id The id of the mod to initialize; should be the same one as specified in your {@link ModLoaderService}
      */
-    static void loadMod(String id) {
+    public static void loadMod(String id) {
         IEventBus bus = ForgeHelper.getEventBus(id);
         ModLoaderService s = Magnetosphere.findMod(id);
         bus.<FMLCommonSetupEvent>addListener(e -> s.onCommonPostInit(new ParallelDispatcherImpl(e)));
