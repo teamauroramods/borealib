@@ -1,6 +1,9 @@
 package com.teamaurora.magnetosphere.impl;
 
 import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
+import com.teamaurora.magnetosphere.api.base.v1.util.tabs.ModifyCreativeTabEvent;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ServiceLoader;
@@ -24,5 +27,9 @@ public class Magnetosphere implements ModLoaderService {
 
     @Override
     public void onCommonInit() {
+    }
+
+    @Override
+    public void onCommonPostInit(ParallelDispatcher dispatcher) {
     }
 }

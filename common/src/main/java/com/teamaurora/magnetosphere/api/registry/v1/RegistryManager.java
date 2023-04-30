@@ -20,7 +20,6 @@ public interface RegistryManager {
      * @param <T> The top level type of the registry
      * @return The registry if it exists
      */
-    @Nullable
     static <T> PlatformRegistry<T> getRegistry(ResourceKey<? extends Registry<T>> registryKey) {
         return getRegistry(registryKey.location());
     }
@@ -32,7 +31,6 @@ public interface RegistryManager {
      * @param <T> The top level type of the registry
      * @return The registry if it exists
      */
-    @Nullable
     static <T> PlatformRegistry<T> getRegistry(ResourceLocation id) {
         return RegistryManagerImpl.getRegistry(id);
     }
