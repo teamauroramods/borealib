@@ -3,7 +3,7 @@ package com.teamaurora.magnetosphere.impl.registry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryReference;
-import com.teamaurora.magnetosphere.api.registry.v1.PlatformRegistry;
+import com.teamaurora.magnetosphere.api.registry.v1.RegistryView;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,18 +18,12 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @ApiStatus.Internal
-public final class VanillaPlatformRegistry<T> implements PlatformRegistry<T> {
+public final class VanillaRegistryView<T> implements RegistryView<T> {
 
     private final Registry<T> parent;
 
-    public VanillaPlatformRegistry(Registry<T> parent) {
+    public VanillaRegistryView(Registry<T> parent) {
         this.parent = parent;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <R extends T> RegistryReference<R> register(ResourceLocation name, Supplier<? extends R> object) {
-        return (RegistryReference<R>) new VanillaRegistryReference<>(Registry.register(this.parent, name, object.get()), ResourceKey.create(this.key(), name), this.parent);
     }
 
     @Override

@@ -5,6 +5,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -38,10 +40,13 @@ public interface RegistryReference<T> extends Supplier<T> {
     /**
      * @return The object as a vanilla {@link Holder} if that's needed for some reason
      */
-    Holder<T> getHolder();
+    Optional<Holder<T>> getHolder();
+
 
     /**
-     * @return The key of the parent registry
+     * Adds code to run when the object registers
+     *
+     * @param consumer The code to run
      */
-    ResourceKey<? extends Registry<T>> getRegistryKey();
+    void listen(Consumer<T> consumer);
 }

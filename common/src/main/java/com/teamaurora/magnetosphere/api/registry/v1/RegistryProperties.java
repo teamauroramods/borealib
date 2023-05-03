@@ -10,7 +10,7 @@ public final class RegistryProperties<T> {
 
     private boolean saveToDisk = true;
     private boolean syncToClients = true;
-    private final List<Consumer<PlatformRegistry<T>>> onFill = new ArrayList<>();
+    private final List<Consumer<RegistryView<T>>> onFill = new ArrayList<>();
     private final List<OnAdd<T>> onAdd = new ArrayList<>();
 
     public RegistryProperties() {
@@ -37,7 +37,7 @@ public final class RegistryProperties<T> {
      *
      * @param onFill Code to run
      */
-    public RegistryProperties<T> onFill(Consumer<PlatformRegistry<T>> onFill) {
+    public RegistryProperties<T> onFill(Consumer<RegistryView<T>> onFill) {
         this.onFill.add(onFill);
         return this;
     }
@@ -60,7 +60,7 @@ public final class RegistryProperties<T> {
         return this.syncToClients;
     }
 
-    public List<Consumer<PlatformRegistry<T>>> getOnFill() {
+    public List<Consumer<RegistryView<T>>> getOnFill() {
         return this.onFill;
     }
 
