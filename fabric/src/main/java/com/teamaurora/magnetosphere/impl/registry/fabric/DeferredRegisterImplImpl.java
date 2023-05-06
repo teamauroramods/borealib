@@ -18,12 +18,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@ApiStatus.Internal
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
 
@@ -40,11 +42,20 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
         REGISTRY_PRIORITY.forEach(e -> REGISTRIES.put(e, new LinkedHashMap<>()));
     }
 
-    protected final Map<RegistryReferenceImpl<? extends T, T>, Supplier<? extends T>> entries = new LinkedHashMap<>();
+    private final Map<RegistryReferenceImpl<? extends T, T>, Supplier<? extends T>> entries = new LinkedHashMap<>();
     private boolean customMarker;
 
     private DeferredRegisterImplImpl(ResourceKey<? extends Registry<T>> registryKey, String modId) {
         super(registryKey, modId);
+    }
+
+    // Ran by Magnetosphere to ensure a deterministic registry load order (Fabric loads mod initializers randomly)
+    // Also allows for a commonPostInit where MGN-dependent registry objects are guaranteed to be loaded
+    public static void init() {
+        REGISTRIES.forEach((key, value) -> {
+            List<String> sorted = value.keySet().stream().sorted().toList();
+            sorted.forEach(s -> value.get(s).forEach(DeferredRegisterImplImpl::initEntries));
+        });
     }
 
     public static <T> DeferredRegisterImpl<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
@@ -86,6 +97,10 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
     @Override
     public Iterator<RegistryReference<T>> iterator() {
         return ((Set) this.entries.keySet()).iterator();
+    }
+
+    private void initEntries() {
+        this.entries.forEach((key, value) -> key.initialize((Supplier) value));
     }
 
     static class RegistryReferenceImpl<R extends T, T> implements RegistryReference<R> {
@@ -137,6 +152,7 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
             Registry<T> registry = (Registry<T>) Objects.requireNonNull(BuiltInRegistries.REGISTRY.get(this.getId()), "Registry " + id + " doesn't exist");
             this.holder = ((WritableRegistry) registry).register(ResourceKey.create(registry.key(), id), supplier.get(), Lifecycle.stable());
             this.value = this.holder.value();
+            this.onRegister.forEach(c -> c.accept(this.value));
         }
     }
 }

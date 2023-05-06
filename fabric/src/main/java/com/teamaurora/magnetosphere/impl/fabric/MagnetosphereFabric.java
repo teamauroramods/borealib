@@ -6,6 +6,7 @@ import com.teamaurora.magnetosphere.api.base.v1.modloading.fabric.ServicedModIni
 import com.teamaurora.magnetosphere.api.base.v1.util.tabs.ModifyCreativeTabEvent;
 import com.teamaurora.magnetosphere.impl.Magnetosphere;
 import com.teamaurora.magnetosphere.impl.base.util.tabs.ModifyCreativeTabEventImpl;
+import com.teamaurora.magnetosphere.impl.registry.fabric.DeferredRegisterImplImpl;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.CreativeModeTab;
@@ -27,8 +28,10 @@ public class MagnetosphereFabric implements ServicedModInitializer {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void onInitialize() {
         ServicedModInitializer.super.onInitialize();
+        DeferredRegisterImplImpl.init();
         ServerLifecycleEvents.PRE_STARTING.register(server1 -> {
             server = server1;
             return true;
