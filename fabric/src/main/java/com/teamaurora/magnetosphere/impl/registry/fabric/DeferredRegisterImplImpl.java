@@ -109,10 +109,12 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
         private final List<Consumer<R>> onRegister = new ArrayList<>();
         private R value;
         private Holder<R> holder;
+        private final ResourceKey<? extends Registry<T>> registryKey;
 
-        public RegistryReferenceImpl(ResourceLocation id, ResourceKey<? extends Registry<T>> registry) {
+        public RegistryReferenceImpl(ResourceLocation id, ResourceKey<? extends Registry<T>> registryKey) {
             this.id = id;
-            this.key = (ResourceKey<R>) ResourceKey.create(registry, id);
+            this.registryKey = registryKey;
+            this.key = (ResourceKey<R>) ResourceKey.create(registryKey, id);
         }
 
         @Override
@@ -149,8 +151,8 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
         }
 
         void initialize(Supplier<? extends R> supplier) {
-            Registry<T> registry = (Registry<T>) Objects.requireNonNull(BuiltInRegistries.REGISTRY.get(this.getId()), "Registry " + id + " doesn't exist");
-            this.holder = ((WritableRegistry) registry).register(ResourceKey.create(registry.key(), id), supplier.get(), Lifecycle.stable());
+            Registry<T> registry = (Registry<T>) Objects.requireNonNull(BuiltInRegistries.REGISTRY.get(this.registryKey.location()), "Registry " + id + " doesn't exist");
+            this.holder = ((WritableRegistry) registry).register(this.key, supplier.get(), Lifecycle.stable());
             this.value = this.holder.value();
             this.onRegister.forEach(c -> c.accept(this.value));
         }

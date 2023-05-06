@@ -159,6 +159,7 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
                 if (forgeRegistry.containsKey(this.id)) {
                     this.value = (R) forgeRegistry.getValue(this.id);
                     this.holder = (Holder<R>) forgeRegistry.getHolder(this.id).orElse(null);
+                    this.onRegister.forEach(c -> c.accept(this.value));
                 } else {
                     this.value = null;
                     this.holder = null;
@@ -170,6 +171,7 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
                 if (vanillaRegistry.containsKey(this.id)) {
                     this.value = (R) vanillaRegistry.get(this.id);
                     this.holder = (Holder<R>) vanillaRegistry.getHolder((ResourceKey<T>) this.key).orElse(null);
+                    this.onRegister.forEach(c -> c.accept(this.value));
                 } else {
                     this.value = null;
                     this.holder = null;

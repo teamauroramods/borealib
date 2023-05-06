@@ -2,8 +2,14 @@ package com.teamaurora.magnetosphere.impl;
 
 import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.magnetosphere.api.base.v1.util.tabs.ModifyCreativeTabEvent;
+import com.teamaurora.magnetosphere.api.registry.v1.DeferredRegister;
+import com.teamaurora.magnetosphere.api.registry.v1.extended.DeferredBlockRegister;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ServiceLoader;
@@ -27,6 +33,8 @@ public class Magnetosphere implements ModLoaderService {
 
     @Override
     public void onCommonInit() {
+        DeferredBlockRegister register = DeferredBlockRegister.create(DeferredRegister.create(Registries.ITEM, MOD_ID));
+        register.registerWithItem("block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)), new Item.Properties());
     }
 
     @Override
