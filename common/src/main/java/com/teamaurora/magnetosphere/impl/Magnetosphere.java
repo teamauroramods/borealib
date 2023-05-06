@@ -33,8 +33,6 @@ public class Magnetosphere implements ModLoaderService {
 
     @Override
     public void onCommonInit() {
-        DeferredBlockRegister register = DeferredBlockRegister.create(DeferredRegister.create(Registries.ITEM, MOD_ID));
-        register.registerWithItem("block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)), new Item.Properties());
     }
 
     @Override
