@@ -123,6 +123,9 @@ transitive-accessible method net/minecraft/world/level/block/WitherSkullBlock <i
 transitive-accessible method net/minecraft/world/level/block/WitherWallSkullBlock <init> (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible method net/minecraft/world/level/block/WoolCarpetBlock <init> (Lnet/minecraft/world/item/DyeColor;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 
+transitive-accessible class net/minecraft/data/models/BlockModelGenerators$TintState
+accessible field net/minecraft/data/models/BlockModelGenerators SHAPE_CONSUMERS Ljava/util/Map;
+
 # Exposed for deferred register usage only
 accessible method net/minecraft/world/entity/ai/memory/MemoryModuleType <init> (Ljava/util/Optional;)V
 accessible method net/minecraft/world/entity/ai/sensing/SensorType <init> (Ljava/util/function/Supplier;)V
