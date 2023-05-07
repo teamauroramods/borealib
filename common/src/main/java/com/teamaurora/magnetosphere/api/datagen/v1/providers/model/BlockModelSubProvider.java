@@ -1,5 +1,6 @@
 package com.teamaurora.magnetosphere.api.datagen.v1.providers.model;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import net.minecraft.core.Direction;
@@ -27,6 +28,22 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
     private final Consumer<BlockStateGenerator> blockStateOutput;
     private final BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput;
     private final Consumer<Item> skippedAutoModelsOutput;
+    static final Map<BlockFamily.Variant, BiConsumer<BlockFamilyProvider, Block>> SHAPE_CONSUMERS = ImmutableMap.<BlockFamily.Variant, BiConsumer<BlockFamilyProvider, Block>>builder()
+            .put(BlockFamily.Variant.BUTTON, BlockFamilyProvider::button)
+            .put(BlockFamily.Variant.DOOR, BlockFamilyProvider::door)
+            .put(BlockFamily.Variant.CHISELED, BlockFamilyProvider::fullBlockVariant)
+            .put(BlockFamily.Variant.CRACKED, BlockFamilyProvider::fullBlockVariant)
+            .put(BlockFamily.Variant.CUSTOM_FENCE, BlockFamilyProvider::customFence)
+            .put(BlockFamily.Variant.FENCE, BlockFamilyProvider::fence)
+            .put(BlockFamily.Variant.CUSTOM_FENCE_GATE, BlockFamilyProvider::customFenceGate)
+            .put(BlockFamily.Variant.FENCE_GATE, BlockFamilyProvider::fenceGate)
+            .put(BlockFamily.Variant.SIGN, BlockFamilyProvider::sign)
+            .put(BlockFamily.Variant.SLAB, BlockFamilyProvider::slab)
+            .put(BlockFamily.Variant.STAIRS, BlockFamilyProvider::stairs)
+            .put(BlockFamily.Variant.PRESSURE_PLATE, BlockFamilyProvider::pressurePlate)
+            .put(BlockFamily.Variant.TRAPDOOR, BlockFamilyProvider::trapdoor)
+            .put(BlockFamily.Variant.WALL, BlockFamilyProvider::wall)
+            .build();
 
     public BlockModelSubProvider(Consumer<BlockStateGenerator> blockStateOutput, BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput, Consumer<Item> skippedAutoModelsOutput) {
         this.blockStateOutput = blockStateOutput;
@@ -42,7 +59,9 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         return Collections.emptyList();
     }
 
-    public Map<Block, BlockModelGenerators.BlockStateGeneratorSupplier> fullBlockModelCustomGenerators;
+    public Map<Block, BlockStateGeneratorSupplier> getFullBlockModelCustomGenerators() {
+        return Collections.emptyMap();
+    }
 
 
     public Consumer<BlockStateGenerator> blockStateOutput() {
@@ -134,8 +153,8 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         return MultiVariantGenerator.multiVariant(buttonBlock).with(PropertyDispatch.property(BlockStateProperties.POWERED).select(false, Variant.variant().with(VariantProperties.MODEL, unpoweredModelLocation)).select(true, Variant.variant().with(VariantProperties.MODEL, poweredModelLocation))).with(PropertyDispatch.properties(BlockStateProperties.ATTACH_FACE, BlockStateProperties.HORIZONTAL_FACING).select(AttachFace.FLOOR, Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(AttachFace.FLOOR, Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(AttachFace.FLOOR, Direction.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).select(AttachFace.FLOOR, Direction.NORTH, Variant.variant()).select(AttachFace.WALL, Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.UV_LOCK, true)).select(AttachFace.WALL, Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.UV_LOCK, true)).select(AttachFace.WALL, Direction.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.UV_LOCK, true)).select(AttachFace.WALL, Direction.NORTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.UV_LOCK, true)).select(AttachFace.CEILING, Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.X_ROT, VariantProperties.Rotation.R180)).select(AttachFace.CEILING, Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.X_ROT, VariantProperties.Rotation.R180)).select(AttachFace.CEILING, Direction.SOUTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R180)).select(AttachFace.CEILING, Direction.NORTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.X_ROT, VariantProperties.Rotation.R180)));
     }
 
-    protected static PropertyDispatch.C4<Direction, DoubleBlockHalf, DoorHingeSide, Boolean> configureDoorHalf(PropertyDispatch.C4<Direction, DoubleBlockHalf, DoorHingeSide, Boolean> doorProperties, DoubleBlockHalf doorHalf, ResourceLocation doorModelLocation, ResourceLocation doorRightHingeModelLocation) {
-        return doorProperties.select(Direction.EAST, doorHalf, DoorHingeSide.LEFT, false, Variant.variant().with(VariantProperties.MODEL, doorModelLocation)).select(Direction.SOUTH, doorHalf, DoorHingeSide.LEFT, false, Variant.variant().with(VariantProperties.MODEL, doorModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(Direction.WEST, doorHalf, DoorHingeSide.LEFT, false, Variant.variant().with(VariantProperties.MODEL, doorModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).select(Direction.NORTH, doorHalf, DoorHingeSide.LEFT, false, Variant.variant().with(VariantProperties.MODEL, doorModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(Direction.EAST, doorHalf, DoorHingeSide.RIGHT, false, Variant.variant().with(VariantProperties.MODEL, doorRightHingeModelLocation)).select(Direction.SOUTH, doorHalf, DoorHingeSide.RIGHT, false, Variant.variant().with(VariantProperties.MODEL, doorRightHingeModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(Direction.WEST, doorHalf, DoorHingeSide.RIGHT, false, Variant.variant().with(VariantProperties.MODEL, doorRightHingeModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).select(Direction.NORTH, doorHalf, DoorHingeSide.RIGHT, false, Variant.variant().with(VariantProperties.MODEL, doorRightHingeModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(Direction.EAST, doorHalf, DoorHingeSide.LEFT, true, Variant.variant().with(VariantProperties.MODEL, doorRightHingeModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(Direction.SOUTH, doorHalf, DoorHingeSide.LEFT, true, Variant.variant().with(VariantProperties.MODEL, doorRightHingeModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).select(Direction.WEST, doorHalf, DoorHingeSide.LEFT, true, Variant.variant().with(VariantProperties.MODEL, doorRightHingeModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(Direction.NORTH, doorHalf, DoorHingeSide.LEFT, true, Variant.variant().with(VariantProperties.MODEL, doorRightHingeModelLocation)).select(Direction.EAST, doorHalf, DoorHingeSide.RIGHT, true, Variant.variant().with(VariantProperties.MODEL, doorModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(Direction.SOUTH, doorHalf, DoorHingeSide.RIGHT, true, Variant.variant().with(VariantProperties.MODEL, doorModelLocation)).select(Direction.WEST, doorHalf, DoorHingeSide.RIGHT, true, Variant.variant().with(VariantProperties.MODEL, doorModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(Direction.NORTH, doorHalf, DoorHingeSide.RIGHT, true, Variant.variant().with(VariantProperties.MODEL, doorModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180));
+    protected static PropertyDispatch.C4<Direction, DoubleBlockHalf, DoorHingeSide, Boolean> configureDoorHalf(PropertyDispatch.C4<Direction, DoubleBlockHalf, DoorHingeSide, Boolean> c4, DoubleBlockHalf doubleBlockHalf, ResourceLocation resourceLocation, ResourceLocation resourceLocation2, ResourceLocation resourceLocation3, ResourceLocation resourceLocation4) {
+        return c4.select(Direction.EAST, doubleBlockHalf, DoorHingeSide.LEFT, false, Variant.variant().with(VariantProperties.MODEL, resourceLocation)).select(Direction.SOUTH, doubleBlockHalf, DoorHingeSide.LEFT, false, Variant.variant().with(VariantProperties.MODEL, resourceLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(Direction.WEST, doubleBlockHalf, DoorHingeSide.LEFT, false, Variant.variant().with(VariantProperties.MODEL, resourceLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).select(Direction.NORTH, doubleBlockHalf, DoorHingeSide.LEFT, false, Variant.variant().with(VariantProperties.MODEL, resourceLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(Direction.EAST, doubleBlockHalf, DoorHingeSide.RIGHT, false, Variant.variant().with(VariantProperties.MODEL, resourceLocation3)).select(Direction.SOUTH, doubleBlockHalf, DoorHingeSide.RIGHT, false, Variant.variant().with(VariantProperties.MODEL, resourceLocation3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(Direction.WEST, doubleBlockHalf, DoorHingeSide.RIGHT, false, Variant.variant().with(VariantProperties.MODEL, resourceLocation3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).select(Direction.NORTH, doubleBlockHalf, DoorHingeSide.RIGHT, false, Variant.variant().with(VariantProperties.MODEL, resourceLocation3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(Direction.EAST, doubleBlockHalf, DoorHingeSide.LEFT, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(Direction.SOUTH, doubleBlockHalf, DoorHingeSide.LEFT, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)).select(Direction.WEST, doubleBlockHalf, DoorHingeSide.LEFT, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(Direction.NORTH, doubleBlockHalf, DoorHingeSide.LEFT, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation2)).select(Direction.EAST, doubleBlockHalf, DoorHingeSide.RIGHT, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation4).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)).select(Direction.SOUTH, doubleBlockHalf, DoorHingeSide.RIGHT, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation4)).select(Direction.WEST, doubleBlockHalf, DoorHingeSide.RIGHT, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation4).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)).select(Direction.NORTH, doubleBlockHalf, DoorHingeSide.RIGHT, true, Variant.variant().with(VariantProperties.MODEL, resourceLocation4).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180));
     }
 
     protected static BlockStateGenerator createFence(Block fenceBlock, ResourceLocation fencePostModelLocation, ResourceLocation fenceSideModelLocation) {
@@ -224,7 +243,7 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
     }
 
     protected BlockFamilyProvider family(Block block) {
-        TexturedModel texturedModel = this.texturedModels.getOrDefault(block, TexturedModel.CUBE.get(block));
+        TexturedModel texturedModel = this.getTexturedModels().getOrDefault(block, TexturedModel.CUBE.get(block));
         return (new BlockFamilyProvider(texturedModel.getMapping())).fullBlock(block, texturedModel.getTemplate());
     }
 
@@ -289,6 +308,32 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(sourceBlock);
         this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(targetBlock, Variant.variant().with(VariantProperties.MODEL, resourceLocation)));
         this.delegateItemModel(targetBlock, resourceLocation);
+    }
+
+    protected static BlockStateGenerator createDoor(Block block, ResourceLocation resourceLocation, ResourceLocation resourceLocation2, ResourceLocation resourceLocation3, ResourceLocation resourceLocation4, ResourceLocation resourceLocation5, ResourceLocation resourceLocation6, ResourceLocation resourceLocation7, ResourceLocation resourceLocation8) {
+        return MultiVariantGenerator.multiVariant(block).with(configureDoorHalf(configureDoorHalf(PropertyDispatch.properties(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.DOUBLE_BLOCK_HALF, BlockStateProperties.DOOR_HINGE, BlockStateProperties.OPEN), DoubleBlockHalf.LOWER, resourceLocation, resourceLocation2, resourceLocation3, resourceLocation4), DoubleBlockHalf.UPPER, resourceLocation5, resourceLocation6, resourceLocation7, resourceLocation8));
+    }
+
+    protected void createDoor(Block block) {
+        TextureMapping textureMapping = TextureMapping.door(block);
+        ResourceLocation resourceLocation = ModelTemplates.DOOR_BOTTOM_LEFT.create(block, textureMapping, this.modelOutput);
+        ResourceLocation resourceLocation2 = ModelTemplates.DOOR_BOTTOM_LEFT_OPEN.create(block, textureMapping, this.modelOutput);
+        ResourceLocation resourceLocation3 = ModelTemplates.DOOR_BOTTOM_RIGHT.create(block, textureMapping, this.modelOutput);
+        ResourceLocation resourceLocation4 = ModelTemplates.DOOR_BOTTOM_RIGHT_OPEN.create(block, textureMapping, this.modelOutput);
+        ResourceLocation resourceLocation5 = ModelTemplates.DOOR_TOP_LEFT.create(block, textureMapping, this.modelOutput);
+        ResourceLocation resourceLocation6 = ModelTemplates.DOOR_TOP_LEFT_OPEN.create(block, textureMapping, this.modelOutput);
+        ResourceLocation resourceLocation7 = ModelTemplates.DOOR_TOP_RIGHT.create(block, textureMapping, this.modelOutput);
+        ResourceLocation resourceLocation8 = ModelTemplates.DOOR_TOP_RIGHT_OPEN.create(block, textureMapping, this.modelOutput);
+        this.createSimpleFlatItemModel(block.asItem());
+        this.blockStateOutput.accept(createDoor(block, resourceLocation, resourceLocation2, resourceLocation3, resourceLocation4, resourceLocation5, resourceLocation6, resourceLocation7, resourceLocation8));
+    }
+
+    protected static BlockStateGenerator createPillarBlockUVLocked(Block block, TextureMapping textureMapping, BiConsumer<ResourceLocation, Supplier<JsonElement>> biConsumer) {
+        ResourceLocation resourceLocation = ModelTemplates.CUBE_COLUMN_UV_LOCKED_X.create(block, textureMapping, biConsumer);
+        ResourceLocation resourceLocation2 = ModelTemplates.CUBE_COLUMN_UV_LOCKED_Y.create(block, textureMapping, biConsumer);
+        ResourceLocation resourceLocation3 = ModelTemplates.CUBE_COLUMN_UV_LOCKED_Z.create(block, textureMapping, biConsumer);
+        ResourceLocation resourceLocation4 = ModelTemplates.CUBE_COLUMN.create(block, textureMapping, biConsumer);
+        return MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, resourceLocation4)).with(PropertyDispatch.property(BlockStateProperties.AXIS).select(Direction.Axis.X, Variant.variant().with(VariantProperties.MODEL, resourceLocation)).select(Direction.Axis.Y, Variant.variant().with(VariantProperties.MODEL, resourceLocation2)).select(Direction.Axis.Z, Variant.variant().with(VariantProperties.MODEL, resourceLocation3)));
     }
 
     public class BlockFamilyProvider {
@@ -397,7 +442,7 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
             if (this.family == null) {
                 throw new IllegalStateException("Family not defined");
             } else {
-                Block block2 = (Block)this.family.getVariants().get(net.minecraft.data.BlockFamily.Variant.WALL_SIGN);
+                Block block2 = this.family.getVariants().get(BlockFamily.Variant.WALL_SIGN);
                 ResourceLocation resourceLocation = ModelTemplates.PARTICLE_ONLY.create(block, this.mapping, BlockModelSubProvider.this.modelOutput);
                 BlockModelSubProvider.this.blockStateOutput.accept(createSimpleBlock(block, resourceLocation));
                 BlockModelSubProvider.this.blockStateOutput.accept(createSimpleBlock(block2, resourceLocation));
@@ -429,7 +474,7 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         }
 
         private BlockFamilyProvider fullBlockVariant(Block block) {
-            TexturedModel texturedModel = (TexturedModel)BlockModelSubProvider.this.texturedModels.getOrDefault(block, TexturedModel.CUBE.get(block));
+            TexturedModel texturedModel = BlockModelSubProvider.this.getTexturedModels().getOrDefault(block, TexturedModel.CUBE.get(block));
             BlockModelSubProvider.this.blockStateOutput.accept(createSimpleBlock(block, texturedModel.create(block, BlockModelSubProvider.this.modelOutput)));
             return this;
         }
@@ -449,15 +494,13 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         }
 
         private ResourceLocation getOrCreateModel(ModelTemplate modelTemplate, Block block) {
-            return (ResourceLocation)this.models.computeIfAbsent(modelTemplate, (modelTemplatex) -> {
-                return modelTemplatex.create(block, this.mapping, BlockModelSubProvider.this.modelOutput);
-            });
+            return this.models.computeIfAbsent(modelTemplate, (modelTemplatex) -> modelTemplatex.create(block, this.mapping, BlockModelSubProvider.this.modelOutput));
         }
 
         public BlockFamilyProvider generateFor(BlockFamily blockFamily) {
             this.family = blockFamily;
             blockFamily.getVariants().forEach((variant, block) -> {
-                BiConsumer<BlockFamilyProvider, Block> biConsumer = BlockModelGenerators.SHAPE_CONSUMERS.get(variant);
+                BiConsumer<BlockFamilyProvider, Block> biConsumer = SHAPE_CONSUMERS.get(variant);
                 if (biConsumer != null) {
                     biConsumer.accept(this, block);
                 }
