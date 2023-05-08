@@ -44,4 +44,8 @@ public final class DeferredBlockRegister extends ExtendedDeferredRegister<Block>
         this.itemRegistry.register(id, () -> itemFactory.apply(register.get()));
         return register;
     }
+
+    public DeferredRegister<Item> getItemRegistry() {
+        return this.itemRegistry;
+    }
 }

@@ -9,6 +9,13 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * The main means to register content and/or create custom synchronous registries.
+ * <p>Most common vanilla registries are loaded in a set order, meaning no need for defining objects in any particular order.
+ * <p>Deferred registers are automatically handled by each platform and no other work is needed than defining the register.
+ *
+ * @param <T> The top level of the registry type
+ */
 public interface DeferredRegister<T> extends Iterable<RegistryReference<T>> {
 
     static <T> DeferredRegister<T> create(ResourceKey<? extends Registry<T>> registryKey, String modId) {
