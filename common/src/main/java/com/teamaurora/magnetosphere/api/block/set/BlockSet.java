@@ -12,8 +12,9 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
- * A set of blocks and items that share common properties (e.g. the Oak woodset or the Deepslate stone set).
- * <p>Block Sets are comprised of block and item variants which provide a template for the set to register objects.
+ * A group of blocks and items that share common properties (e.g. the Oak woodset or the Deepslate stone set).
+ *
+ * @param <T> The type of block set (should extend {@link BlockSet})
  *
  * @since 1.0.0
  */
@@ -25,22 +26,45 @@ public abstract class BlockSet<T> {
     private final Map<ItemVariant<T>, RegistryReference<Item>> itemsByVariant = new HashMap<>();
     private final String namespace;
     private final String baseName;
+    private boolean registered;
 
     protected BlockSet(String namespace, String baseName) {
         this.namespace = namespace;
         this.baseName = baseName;
     }
 
-    public BlockSet<T> include(BlockVariant<T> variant) {
+    public T include(BlockVariant<T> variant) {
+        this.validateMutable();
         if (!this.blockVariants.add(variant))
             throw new IllegalStateException("Attempted to add duplicate block set variant");
-        return this;
+        return this.getThis();
     }
 
-    public BlockSet<T> include(ItemVariant<T> variant) {
+    public T include(List<BlockVariant<T>> variants) {
+        variants.forEach(this::include);
+        return this.getThis();
+    }
+
+    @SafeVarargs
+    public final T include(BlockVariant<T>... variants) {
+        return this.include(Arrays.asList(variants));
+    }
+
+    public T includeItem(ItemVariant<T> variant) {
+        this.validateMutable();
         if (!this.itemVariants.add(variant))
-            throw new IllegalStateException("Attempted to add duplicate block set variant");
-        return this;
+            throw new IllegalStateException("Attempted to add duplicate block set item variant");
+        return this.getThis();
+    }
+
+    public T includeItem(List<ItemVariant<T>> variants) {
+        variants.forEach(this::includeItem);
+        return this.getThis();
+    }
+
+    @SafeVarargs
+    public final T includeItem(ItemVariant<T>... variants) {
+        return this.includeItem(Arrays.asList(variants));
     }
 
     public Optional<RegistryReference<Block>> variant(BlockVariant<T> variant) {
@@ -59,10 +83,10 @@ public abstract class BlockSet<T> {
         return this.itemVariant(variant).orElseThrow();
     }
 
-    public BlockSet<T> register(DeferredBlockRegister register) {
-        T context = this.makeContext();
+    public T registerTo(DeferredBlockRegister register) {
+        this.validateMutable();
         this.blockVariants.forEach(variant -> {
-            Supplier<Block> blockSupplier = variant.getFactory().create(context, this);
+            Supplier<Block> blockSupplier = variant.getFactory().create(this.getThis());
             ResourceLocation name = variant.createName(this.namespace, this.baseName);
             RegistryReference<Block> reference;
             if (variant.hasBlockItem()) {
@@ -73,14 +97,20 @@ public abstract class BlockSet<T> {
             if (variant.getOnRegister() != null)
                 reference.listen(variant.getOnRegister());
         });
-        this.itemVariants.forEach(variant -> register.getItemRegistry().register(variant.createName(this.namespace, this.baseName), variant.getFactory().create(context, this)));
-        return this;
+        this.itemVariants.forEach(variant -> register.getItemRegistry().register(variant.createName(this.namespace, this.baseName), variant.getFactory().create(this.getThis())));
+        this.registered = true;
+        return this.getThis();
     }
 
-    public abstract T makeContext();
+    protected void validateMutable() {
+        if (this.registered)
+            throw new IllegalStateException("Cannot change a block set after it has been registered");
+    }
+
+    protected abstract T getThis();
 
     @FunctionalInterface
     public interface ComponentFactory<T, R> {
-        Supplier<T> create(R context, BlockSet<R> set);
+        Supplier<T> create(R set);
     }
 }
