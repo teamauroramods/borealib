@@ -12,6 +12,8 @@ public class FlammabilityRegistryImplImpl {
     public static synchronized void register(Block fireBlock, int encouragement, int flammability, Block... blocks) {
         if (!(fireBlock instanceof FireBlock))
             throw new IllegalStateException("Block " + fireBlock + " is not an instance of FireBlock");
-        Arrays.asList(blocks).forEach(block -> ((FireBlockAccessor) fireBlock).invokeSetFlammable(block, encouragement, flammability));
+        for (Block block : blocks) {
+            ((FireBlockAccessor) fireBlock).invokeSetFlammable(block, encouragement, flammability);
+        }
     }
 }

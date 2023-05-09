@@ -14,6 +14,10 @@
       "com.teamaurora.magnetosphere.impl.fabric.MagnetosphereFabric"
     ]
   },
+  "mixins": [
+    "magnetosphere.mixins.json",
+    "magnetosphere-common.mixins.json"
+  ],
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.19.4"

@@ -10,6 +10,8 @@ import java.util.Arrays;
 public class FlammabilityRegistryImplImpl {
     public static void register(Block fireBlock, int encouragement, int flammability, Block... blocks) {
         FlammableBlockRegistry registry = FlammableBlockRegistry.getInstance(fireBlock);
-        Arrays.asList(blocks).forEach(block -> registry.add(block, encouragement, flammability));
+        for (Block block : blocks) {
+            registry.add(block, encouragement, flammability);
+        }
     }
 }

@@ -5,6 +5,7 @@
   "client": [
   ],
   "mixins": [
+    "AxeItemMixin",
     "FireBlockAccessor",
     "ReloadListenerMixin"
   ],

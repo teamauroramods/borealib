@@ -2,6 +2,7 @@ package com.teamaurora.magnetosphere.impl;
 
 import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.magnetosphere.api.base.v1.util.tabs.ModifyCreativeTabEvent;
+import com.teamaurora.magnetosphere.api.content_registries.v1.StrippingRegistry;
 import com.teamaurora.magnetosphere.api.registry.v1.DeferredRegister;
 import com.teamaurora.magnetosphere.api.registry.v1.extended.DeferredBlockRegister;
 import net.minecraft.core.registries.Registries;

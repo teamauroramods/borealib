@@ -6,6 +6,7 @@
     "client.IntegratedServerMixin"
   ],
   "mixins": [
+    "AxeItemMixin",
     "DedicatedServerMixin",
     "MinecraftServerMixin"
   ],
