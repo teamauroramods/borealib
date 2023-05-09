@@ -68,7 +68,7 @@ public class MagnetosphereModelProvider implements DataProvider {
                     models.put(itemLocation, new DelegatedModel(ModelLocationUtils.getModelLocation(block)));
             }
         });
-        CompletableFuture<?>[] futures = new CompletableFuture<>[]{
+        CompletableFuture<?>[] futures = new CompletableFuture<?>[]{
                 this.saveCollection(cache, blockStates, (block) -> this.blockStatePathProvider.json(block.builtInRegistryHolder().key().location())),
                 this.saveCollection(cache, models, this.modelPathProvider::json)
         };

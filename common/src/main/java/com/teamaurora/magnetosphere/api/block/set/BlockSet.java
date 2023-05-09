@@ -7,6 +7,7 @@ import com.teamaurora.magnetosphere.api.registry.v1.extended.DeferredBlockRegist
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -28,7 +29,7 @@ public abstract class BlockSet<T> {
     private final String baseName;
     private boolean registered;
 
-    protected BlockSet(String namespace, String baseName) {
+    protected BlockSet(@Nullable String namespace, String baseName) {
         this.namespace = namespace;
         this.baseName = baseName;
     }

@@ -5,6 +5,7 @@
   "client": [
   ],
   "mixins": [
+    "BlockBehaviourPropertiesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

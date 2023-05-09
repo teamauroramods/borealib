@@ -18,6 +18,8 @@ transitive-accessible field net/minecraft/world/item/CreativeModeTabs INVENTORY 
 transitive-accessible class net/minecraft/world/item/CreativeModeTab$Output
 transitive-accessible class net/minecraft/world/item/CreativeModeTab$TabVisibility
 
+accessible method net/minecraft/world/level/block/state/properties/WoodType register (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
+
 transitive-accessible method net/minecraft/world/item/AxeItem <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V
 transitive-accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/Item$Properties;)V
 transitive-accessible method net/minecraft/world/item/HoeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V

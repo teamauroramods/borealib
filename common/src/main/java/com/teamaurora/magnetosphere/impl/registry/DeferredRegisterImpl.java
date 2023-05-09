@@ -5,7 +5,9 @@ import com.teamaurora.magnetosphere.api.registry.v1.DeferredRegister;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public abstract class DeferredRegisterImpl<T> implements DeferredRegister<T> {
 
     protected final ResourceKey<? extends Registry<T>> registryKey;
