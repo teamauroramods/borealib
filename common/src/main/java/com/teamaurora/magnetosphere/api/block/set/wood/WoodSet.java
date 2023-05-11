@@ -37,6 +37,10 @@ public final class WoodSet extends BlockSet<WoodSet> {
         return this.baseProperties;
     }
 
+    public WoodType getWoodType() {
+        return this.woodType;
+    }
+
     public MaterialColor getBarkColor() {
         return this.barkColor;
     }
@@ -51,19 +55,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
     }
 
     public enum Sound {
-        DEFAULT(SoundType.WOOD,
-                SoundEvents.WOODEN_DOOR_CLOSE,
-                SoundEvents.WOODEN_DOOR_OPEN,
-                SoundEvents.WOODEN_TRAPDOOR_CLOSE,
-                SoundEvents.WOODEN_TRAPDOOR_OPEN,
-                SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_OFF,
-                SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON,
-                SoundEvents.WOODEN_BUTTON_CLICK_OFF,
-                SoundEvents.WOODEN_BUTTON_CLICK_ON,
-                SoundType.HANGING_SIGN,
-                SoundEvents.FENCE_GATE_CLOSE,
-                SoundEvents.FENCE_GATE_OPEN),
-        UPDATED(SoundType.CHERRY_WOOD,
+        DEFAULT(SoundType.CHERRY_WOOD,
                 SoundEvents.CHERRY_WOOD_DOOR_CLOSE,
                 SoundEvents.CHERRY_WOOD_DOOR_OPEN,
                 SoundEvents.CHERRY_WOOD_TRAPDOOR_CLOSE,
@@ -75,6 +67,18 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 SoundType.CHERRY_WOOD_HANGING_SIGN,
                 SoundEvents.CHERRY_WOOD_FENCE_GATE_CLOSE,
                 SoundEvents.CHERRY_WOOD_FENCE_GATE_OPEN),
+        LEGACY(SoundType.WOOD,
+                SoundEvents.WOODEN_DOOR_CLOSE,
+                SoundEvents.WOODEN_DOOR_OPEN,
+                SoundEvents.WOODEN_TRAPDOOR_CLOSE,
+                SoundEvents.WOODEN_TRAPDOOR_OPEN,
+                SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_OFF,
+                SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON,
+                SoundEvents.WOODEN_BUTTON_CLICK_OFF,
+                SoundEvents.WOODEN_BUTTON_CLICK_ON,
+                SoundType.HANGING_SIGN,
+                SoundEvents.FENCE_GATE_CLOSE,
+                SoundEvents.FENCE_GATE_OPEN),
         MUSHROOM_LIKE(SoundType.NETHER_WOOD,
                 SoundEvents.NETHER_WOOD_DOOR_CLOSE,
                 SoundEvents.NETHER_WOOD_DOOR_OPEN,
@@ -86,13 +90,26 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 SoundEvents.NETHER_WOOD_BUTTON_CLICK_ON,
                 SoundType.NETHER_WOOD_HANGING_SIGN,
                 SoundEvents.NETHER_WOOD_FENCE_GATE_CLOSE,
-                SoundEvents.NETHER_WOOD_FENCE_GATE_OPEN);
+                SoundEvents.NETHER_WOOD_FENCE_GATE_OPEN),
+        BAMBOO_LIKE(SoundType.BAMBOO_WOOD,
+                SoundEvents.BAMBOO_WOOD_DOOR_CLOSE,
+                SoundEvents.BAMBOO_WOOD_DOOR_OPEN,
+                SoundEvents.BAMBOO_WOOD_TRAPDOOR_CLOSE,
+                SoundEvents.BAMBOO_WOOD_TRAPDOOR_OPEN,
+                SoundEvents.BAMBOO_WOOD_PRESSURE_PLATE_CLICK_OFF,
+                SoundEvents.BAMBOO_WOOD_PRESSURE_PLATE_CLICK_ON,
+                SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_OFF,
+                SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_ON,
+                SoundType.BAMBOO_WOOD_HANGING_SIGN,
+                SoundEvents.BAMBOO_WOOD_FENCE_GATE_CLOSE,
+                SoundEvents.BAMBOO_WOOD_FENCE_GATE_OPEN);
 
         private final Function<String, WoodType> function;
 
         Sound(SoundType soundType, SoundEvent doorClose, SoundEvent doorOpen, SoundEvent trapdoorClose, SoundEvent trapdoorOpen, SoundEvent pressurePlateClickOff, SoundEvent pressurePlateClickOn, SoundEvent buttonClickOff, SoundEvent buttonClickOn, SoundType hangingSignSoundType, SoundEvent fenceGateClose, SoundEvent fenceGateOpen) {
             this.function = s -> {
                 BlockSetType blockSetType = new BlockSetType(s, soundType, doorClose, doorOpen, trapdoorClose, trapdoorOpen, pressurePlateClickOff, pressurePlateClickOn, buttonClickOff, buttonClickOn);
+                BlockSetType.register(blockSetType);
                 return new WoodType(s, blockSetType, soundType, hangingSignSoundType, fenceGateClose, fenceGateOpen);
             };
         }
