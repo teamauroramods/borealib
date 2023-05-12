@@ -84,6 +84,14 @@ public abstract class BlockSet<T> {
         return this.itemVariant(variant).orElseThrow();
     }
 
+    public String getNamespace() {
+        return this.namespace;
+    }
+
+    public String getBaseName() {
+        return this.baseName;
+    }
+
     public T registerTo(DeferredBlockRegister register) {
         this.validateMutable();
         this.blockVariants.forEach(variant -> {

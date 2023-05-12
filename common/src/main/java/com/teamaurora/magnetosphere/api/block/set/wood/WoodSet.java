@@ -20,10 +20,9 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private MaterialColor barkColor = MaterialColor.WOOD;
     private MaterialColor woodColor = MaterialColor.PODZOL;
 
-    private WoodSet(String namespace, String baseName, Sound sound) {
+    private WoodSet(String namespace, String baseName, WoodTypeProvider woodTypeProvider) {
         super(namespace, baseName);
-        this.woodType = sound.function.apply(baseName);
-        WoodType.register(this.woodType);
+        this.woodType = woodTypeProvider.apply(baseName);
         this.baseProperties = () -> BlockBehaviour.Properties.of(Material.WOOD).strength(2F, 3F).sound(this.woodType.soundType());
     }
 
@@ -54,8 +53,19 @@ public final class WoodSet extends BlockSet<WoodSet> {
         return this;
     }
 
-    public enum Sound {
-        DEFAULT(SoundType.CHERRY_WOOD,
+    public record WoodTypeProvider(SoundType soundType,
+                                   SoundEvent doorClose,
+                                   SoundEvent doorOpen,
+                                   SoundEvent trapdoorClose,
+                                   SoundEvent trapdoorOpen,
+                                   SoundEvent pressurePlateClickOff,
+                                   SoundEvent pressurePlateClickOn,
+                                   SoundEvent buttonClickOff,
+                                   SoundEvent buttonClickOn,
+                                   SoundType hangingSignSoundType,
+                                   SoundEvent fenceGateClose,
+                                   SoundEvent fenceGateOpen) implements Function<String, WoodType> {
+        public static final WoodTypeProvider DEFAULT = new WoodTypeProvider(SoundType.CHERRY_WOOD,
                 SoundEvents.CHERRY_WOOD_DOOR_CLOSE,
                 SoundEvents.CHERRY_WOOD_DOOR_OPEN,
                 SoundEvents.CHERRY_WOOD_TRAPDOOR_CLOSE,
@@ -66,8 +76,8 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 SoundEvents.CHERRY_WOOD_BUTTON_CLICK_ON,
                 SoundType.CHERRY_WOOD_HANGING_SIGN,
                 SoundEvents.CHERRY_WOOD_FENCE_GATE_CLOSE,
-                SoundEvents.CHERRY_WOOD_FENCE_GATE_OPEN),
-        LEGACY(SoundType.WOOD,
+                SoundEvents.CHERRY_WOOD_FENCE_GATE_OPEN);
+        public static final WoodTypeProvider LEGACY = new WoodTypeProvider(SoundType.WOOD,
                 SoundEvents.WOODEN_DOOR_CLOSE,
                 SoundEvents.WOODEN_DOOR_OPEN,
                 SoundEvents.WOODEN_TRAPDOOR_CLOSE,
@@ -78,8 +88,8 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 SoundEvents.WOODEN_BUTTON_CLICK_ON,
                 SoundType.HANGING_SIGN,
                 SoundEvents.FENCE_GATE_CLOSE,
-                SoundEvents.FENCE_GATE_OPEN),
-        MUSHROOM_LIKE(SoundType.NETHER_WOOD,
+                SoundEvents.FENCE_GATE_OPEN);
+        public static final WoodTypeProvider MUSHROOM_LIKE = new WoodTypeProvider(SoundType.NETHER_WOOD,
                 SoundEvents.NETHER_WOOD_DOOR_CLOSE,
                 SoundEvents.NETHER_WOOD_DOOR_OPEN,
                 SoundEvents.NETHER_WOOD_TRAPDOOR_CLOSE,
@@ -90,8 +100,8 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 SoundEvents.NETHER_WOOD_BUTTON_CLICK_ON,
                 SoundType.NETHER_WOOD_HANGING_SIGN,
                 SoundEvents.NETHER_WOOD_FENCE_GATE_CLOSE,
-                SoundEvents.NETHER_WOOD_FENCE_GATE_OPEN),
-        BAMBOO_LIKE(SoundType.BAMBOO_WOOD,
+                SoundEvents.NETHER_WOOD_FENCE_GATE_OPEN);
+        public static final WoodTypeProvider BAMBOO_LIKE = new WoodTypeProvider(SoundType.BAMBOO_WOOD,
                 SoundEvents.BAMBOO_WOOD_DOOR_CLOSE,
                 SoundEvents.BAMBOO_WOOD_DOOR_OPEN,
                 SoundEvents.BAMBOO_WOOD_TRAPDOOR_CLOSE,
@@ -104,14 +114,13 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 SoundEvents.BAMBOO_WOOD_FENCE_GATE_CLOSE,
                 SoundEvents.BAMBOO_WOOD_FENCE_GATE_OPEN);
 
-        private final Function<String, WoodType> function;
-
-        Sound(SoundType soundType, SoundEvent doorClose, SoundEvent doorOpen, SoundEvent trapdoorClose, SoundEvent trapdoorOpen, SoundEvent pressurePlateClickOff, SoundEvent pressurePlateClickOn, SoundEvent buttonClickOff, SoundEvent buttonClickOn, SoundType hangingSignSoundType, SoundEvent fenceGateClose, SoundEvent fenceGateOpen) {
-            this.function = s -> {
-                BlockSetType blockSetType = new BlockSetType(s, soundType, doorClose, doorOpen, trapdoorClose, trapdoorOpen, pressurePlateClickOff, pressurePlateClickOn, buttonClickOff, buttonClickOn);
-                BlockSetType.register(blockSetType);
-                return new WoodType(s, blockSetType, soundType, hangingSignSoundType, fenceGateClose, fenceGateOpen);
-            };
+        @Override
+        public WoodType apply(String s) {
+            BlockSetType blockSetType = new BlockSetType(s, soundType, doorClose, doorOpen, trapdoorClose, trapdoorOpen, pressurePlateClickOff, pressurePlateClickOn, buttonClickOff, buttonClickOn);
+            BlockSetType.register(blockSetType);
+            WoodType woodType1 = new WoodType(s, blockSetType, soundType, hangingSignSoundType, fenceGateClose, fenceGateOpen);
+            WoodType.register(woodType1);
+            return woodType1;
         }
     }
 }
