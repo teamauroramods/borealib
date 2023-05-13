@@ -1,7 +1,7 @@
-package com.teamaurora.magnetosphere.api.base.v1.util.tabs;
+package com.teamaurora.magnetosphere.api.base.v1.event.events.misc;
 
 import com.teamaurora.magnetosphere.api.base.v1.event.Event;
-import com.teamaurora.magnetosphere.impl.base.util.tabs.ModifyCreativeTabEventImpl;
+import com.teamaurora.magnetosphere.impl.base.event.events.misc.CreativeTabEventsImpl;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -9,16 +9,26 @@ import net.minecraft.world.level.ItemLike;
 
 import java.util.Collection;
 
-@FunctionalInterface
-public interface ModifyCreativeTabEvent {
+public final class CreativeTabEvents {
 
-    static Event<ModifyCreativeTabEvent> event(CreativeModeTab tab) {
-        return ModifyCreativeTabEventImpl.event(tab);
+    public static final Event<ModifyEntriesAll> MODIFY_ENTRIES_ALL = Event.createLoop(ModifyEntriesAll.class);
+
+    @FunctionalInterface
+    public interface ModifyEntries {
+        void onModify(FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, Output output, boolean canUseGameMasterBlocks);
     }
 
-    void onModify(FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, Output output, boolean canUseGameMasterBlocks);
+    @FunctionalInterface
+    public interface ModifyEntriesAll {
+        void modifyEntries(CreativeModeTab group, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, Output output, boolean canUseGameMasterBlocks);
+    }
 
-    interface Output extends CreativeModeTab.Output {
+    public static Event<CreativeTabEvents> modifyEntriesEvent(CreativeModeTab tab) {
+        return CreativeTabEventsImpl.event(tab);
+    }
+
+
+    public interface Output extends CreativeModeTab.Output {
         void acceptAfter(ItemStack after, ItemStack stack, CreativeModeTab.TabVisibility visibility);
 
         void acceptBefore(ItemStack before, ItemStack stack, CreativeModeTab.TabVisibility visibility);
