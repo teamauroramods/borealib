@@ -2,7 +2,7 @@ package com.teamaurora.magnetosphere.impl.base.platform.fabric;
 
 import com.teamaurora.magnetosphere.api.base.v1.platform.ModContainer;
 import com.teamaurora.magnetosphere.api.base.v1.platform.Platform;
-import com.teamaurora.magnetosphere.impl.fabric.MagnetosphereFabric;
+import com.teamaurora.magnetosphere.core.fabric.MagnetosphereFabric;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;

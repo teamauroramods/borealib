@@ -3,7 +3,7 @@ package com.teamaurora.magnetosphere.api.base.v1.modloading.forge;
 import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.magnetosphere.api.base.v1.platform.ModContainer;
 import com.teamaurora.magnetosphere.api.base.v1.util.forge.ForgeHelper;
-import com.teamaurora.magnetosphere.impl.Magnetosphere;
+import com.teamaurora.magnetosphere.core.Magnetosphere;
 import com.teamaurora.magnetosphere.impl.base.modloading.forge.ParallelDispatcherImpl;
 import com.teamaurora.magnetosphere.impl.base.platform.forge.ModContainerImpl;
 import net.minecraft.core.HolderLookup;

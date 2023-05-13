@@ -2,6 +2,8 @@ package com.teamaurora.magnetosphere.impl.base.platform;
 
 import com.teamaurora.magnetosphere.api.base.v1.platform.ModContainer;
 import com.teamaurora.magnetosphere.api.base.v1.platform.Platform;
+import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.thread.BlockableEventLoop;
@@ -15,72 +17,82 @@ import java.util.stream.Stream;
 @ApiStatus.Internal
 public final class PlatformImpl {
 
+    private static boolean QUILT;
+
+    static {
+        try {
+            Class.forName("org.quiltmc.loader.api.QuiltLoader");
+            QUILT = true;
+        } catch (ClassNotFoundException ignored) {
+        }
+    }
+
+    @ExpectPlatform
     public static boolean isForge() {
         return Platform.expect();
     }
 
+    @ExpectPlatform
     public static boolean isFabric() {
-        return PlatformImpl.isFabric();
+        return Platform.expect();
     }
 
     public static boolean isQuilt() {
-        return PlatformImpl.isQuilt();
+        return isFabric() && QUILT;
     }
 
-    public static void ifForge(Runnable runnable) {
-        if (isForge()) runnable.run();
-    }
-
-    public static void ifFabric(Runnable runnable) {
-        if (isFabric()) runnable.run();
-    }
-
-    public static void ifQuilt(Runnable runnable) {
-        if (isQuilt()) runnable.run();
-    }
-
+    @ExpectPlatform
     public static boolean isDevelopment() {
-        return PlatformImpl.isDevelopment();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static boolean isProduction() {
-        return PlatformImpl.isProduction();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static boolean isClient() {
-        return PlatformImpl.isClient();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static boolean isServer() {
-        return PlatformImpl.isServer();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static boolean isOptifrickLoaded() {
-        return PlatformImpl.isOptifrickLoaded();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static BlockableEventLoop<?> getGameExecutor() {
-        return PlatformImpl.getGameExecutor();
+        return Platform.expect();
     }
 
     public static String getGameVersion() {
-        return PlatformImpl.getGameVersion();
+        return SharedConstants.getCurrentVersion().getId();
     }
 
+    @ExpectPlatform
     public static Path getGameDir() {
-        return PlatformImpl.getGameDir();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static Path getConfigDir() {
-        return PlatformImpl.getConfigDir();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static Path getModsDir() {
-        return PlatformImpl.getModsDir();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static boolean isModLoaded(String modId) {
-        return PlatformImpl.isModLoaded(modId);
+        return Platform.expect();
     }
 
     public static boolean areAllLoaded(String... modIds) {
@@ -103,23 +115,18 @@ public final class PlatformImpl {
         return false;
     }
 
+    @ExpectPlatform
     public static Stream<ModContainer> getMods() {
-        return PlatformImpl.getMods();
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static Optional<ModContainer> getMod(String modId) {
-        return PlatformImpl.getMod(modId);
+        return Platform.expect();
     }
 
+    @ExpectPlatform
     public static Optional<MinecraftServer> getRunningServer() {
-        return PlatformImpl.getRunningServer();
-    }
-
-    public static Optional<RegistryAccess> getRegistryAccess() {
-        return PlatformImpl.getRegistryAccess();
-    }
-
-    public static Optional<RecipeManager> getRecipeManager() {
-        return PlatformImpl.getRecipeManager();
+        return Platform.expect();
     }
 }

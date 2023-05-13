@@ -208,18 +208,4 @@ public interface Platform {
     static Optional<MinecraftServer> getRunningServer() {
         return PlatformImpl.getRunningServer();
     }
-
-    /**
-     * @return The access to registries for the running server or client
-     */
-    static Optional<RegistryAccess> getRegistryAccess() {
-        return PlatformImpl.getRegistryAccess();
-    }
-
-    /**
-     * @return The recipe manager for the running server or client
-     */
-    static Optional<RecipeManager> getRecipeManager() {
-        return PlatformImpl.getRecipeManager();
-    }
 }

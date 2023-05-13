@@ -2,7 +2,7 @@ package com.teamaurora.magnetosphere.impl.base.util.tabs.forge;
 
 import com.teamaurora.magnetosphere.api.base.v1.event.Event;
 import com.teamaurora.magnetosphere.api.base.v1.util.tabs.ModifyCreativeTabEvent;
-import com.teamaurora.magnetosphere.impl.Magnetosphere;
+import com.teamaurora.magnetosphere.core.Magnetosphere;
 import com.teamaurora.magnetosphere.impl.base.util.tabs.ModifyCreativeTabEventImpl;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;

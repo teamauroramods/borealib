@@ -11,7 +11,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.teamaurora.magnetosphere.impl.fabric.MagnetosphereFabric"
+      "com.teamaurora.magnetosphere.core.fabric.MagnetosphereFabric"
     ]
   },
   "mixins": [

@@ -1,6 +1,6 @@
 package com.teamaurora.magnetosphere.impl.content_registries.client.forge;
 
-import com.teamaurora.magnetosphere.impl.Magnetosphere;
+import com.teamaurora.magnetosphere.core.Magnetosphere;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.world.level.ItemLike;

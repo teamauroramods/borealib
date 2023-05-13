@@ -1,11 +1,9 @@
 package com.teamaurora.magnetosphere.impl.content_registries.forge;
 
-import com.teamaurora.magnetosphere.mixin.forge.FireBlockAccessor;
+import com.teamaurora.magnetosphere.core.mixin.forge.FireBlockAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FireBlock;
 import org.jetbrains.annotations.ApiStatus;
-
-import java.util.Arrays;
 
 @ApiStatus.Internal
 public class FlammabilityRegistryImplImpl {
