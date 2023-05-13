@@ -10,6 +10,8 @@ dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    implementation "com.electronwill.night-config:core:${rootProject.nightconfig_version}"
+    implementation "com.electronwill.night-config:toml:${rootProject.nightconfig_version}"
     // Remove the next line if you don't want to depend on the API
 }
 

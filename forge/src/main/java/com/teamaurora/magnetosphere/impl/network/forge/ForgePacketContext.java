@@ -1,9 +1,14 @@
 package com.teamaurora.magnetosphere.impl.network.forge;
 
+import com.teamaurora.magnetosphere.api.base.v1.platform.Platform;
 import com.teamaurora.magnetosphere.api.network.v1.message.MagnetospherePacket;
 import com.teamaurora.magnetosphere.core.extensions.forge.FMLHandshakeHandlerExtension;
 import io.netty.util.AttributeKey;
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundDisconnectPacket;
+import net.minecraft.network.protocol.login.ClientboundLoginDisconnectPacket;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.jetbrains.annotations.ApiStatus;
@@ -30,7 +35,7 @@ public class ForgePacketContext implements MagnetospherePacket.Context {
 
     @Override
     public void waitFor(Future<?> future) {
-        Connection connection = this.ctx.get().getNetworkManager();
+        Connection connection = this.getNetworkManager();
         if (connection.getPacketListener() instanceof FMLHandshakeHandlerExtension) {
             ((FMLHandshakeHandlerExtension) connection.channel().attr(AttributeKey.valueOf("fml:handshake")).get()).magnetosphere$addWait(future);
         }
@@ -42,6 +47,34 @@ public class ForgePacketContext implements MagnetospherePacket.Context {
     }
 
     @Override
+    public void disconnect(Component message) {
+        Connection connection = this.getNetworkManager();
+        switch (this.getDirection()) {
+            case PLAY_SERVERBOUND -> {
+                connection.send(new ClientboundDisconnectPacket(message), new PacketSendListener() {
+                    @Override
+                    public void onSuccess() {
+                        connection.disconnect(message);
+                    }
+                });
+                connection.setReadOnly();
+                Platform.getRunningServer().ifPresent(server -> server.executeBlocking(connection::handleDisconnection));
+            }
+            case LOGIN_SERVERBOUND -> {
+                connection.send(new ClientboundLoginDisconnectPacket(message), new PacketSendListener() {
+                    @Override
+                    public void onSuccess() {
+                        connection.disconnect(message);
+                    }
+                });
+                connection.setReadOnly();
+                Platform.getRunningServer().ifPresent(server -> server.executeBlocking(connection::handleDisconnection));
+            }
+            case PLAY_CLIENTBOUND, LOGIN_CLIENTBOUND -> connection.disconnect(message);
+        }
+    }
+
+    @Override
     public MagnetospherePacket.Direction getDirection() {
         return switch (this.ctx.get().getDirection()) {
             case PLAY_TO_SERVER -> MagnetospherePacket.Direction.PLAY_SERVERBOUND;
@@ -49,5 +82,10 @@ public class ForgePacketContext implements MagnetospherePacket.Context {
             case LOGIN_TO_SERVER -> MagnetospherePacket.Direction.LOGIN_SERVERBOUND;
             case LOGIN_TO_CLIENT -> MagnetospherePacket.Direction.LOGIN_CLIENTBOUND;
         };
+    }
+
+    @Override
+    public Connection getNetworkManager() {
+        return this.ctx.get().getNetworkManager();
     }
 }

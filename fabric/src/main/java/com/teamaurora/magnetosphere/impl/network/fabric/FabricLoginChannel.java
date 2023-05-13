@@ -5,6 +5,7 @@ import com.teamaurora.magnetosphere.api.network.v1.message.MagnetospherePacket;
 import com.teamaurora.magnetosphere.api.network.v1.message.PacketDecoder;
 import com.teamaurora.magnetosphere.api.network.v1.message.login.MagnetosphereLoginPacket;
 import com.teamaurora.magnetosphere.core.extensions.fabric.ServerLoginPacketListenerImplExtension;
+import com.teamaurora.magnetosphere.core.mixin.fabric.ClientHandshakePacketListenerImplAccessor;
 import com.teamaurora.magnetosphere.impl.network.NetworkManagerImpl;
 import com.teamaurora.magnetosphere.impl.network.context.fabric.FabricLoginPacketContext;
 import com.teamaurora.magnetosphere.impl.network.context.fabric.FabricPacketContext;
@@ -20,6 +21,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
@@ -64,9 +67,22 @@ public class FabricLoginChannel extends NetworkChannelImpl implements LoginNetwo
         }));
     }
 
-    private CompletableFuture<@Nullable FriendlyByteBuf> processClient(Minecraft minecraft, PacketListener listener, FriendlyByteBuf data, @Nullable Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
+    private CompletableFuture<@Nullable FriendlyByteBuf> processClient(Minecraft minecraft, ClientPacketListener listener, FriendlyByteBuf data, @Nullable Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
         CompletableFuture<FriendlyByteBuf> future = new CompletableFuture<>();
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND), new FabricLoginPacketContext(pkt -> {
+        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND), new FabricLoginPacketContext(((ClientHandshakePacketListenerImplAccessor)listener).getConnection(), pkt -> {
+            try {
+                future.complete(this.serialize(pkt, MagnetospherePacket.Direction.LOGIN_SERVERBOUND));
+            } catch (Throwable t) {
+                t.printStackTrace();
+                future.completeExceptionally(t);
+            }
+        }, __ -> {}, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND), this.clientMessageHandler);
+        return future;
+    }
+
+    private CompletableFuture<@Nullable FriendlyByteBuf> processClient(Minecraft minecraft, ClientHandshakePacketListenerImpl listener, FriendlyByteBuf data, @Nullable Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
+        CompletableFuture<FriendlyByteBuf> future = new CompletableFuture<>();
+        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND), new FabricLoginPacketContext(((ClientHandshakePacketListenerImplAccessor)listener).getConnection(), pkt -> {
             try {
                 future.complete(this.serialize(pkt, MagnetospherePacket.Direction.LOGIN_SERVERBOUND));
             } catch (Throwable t) {
@@ -85,7 +101,7 @@ public class FabricLoginChannel extends NetworkChannelImpl implements LoginNetwo
             return;
         }
 
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.LOGIN_SERVERBOUND), new FabricPacketContext(synchronizer, MagnetospherePacket.Direction.LOGIN_SERVERBOUND) {
+        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.LOGIN_SERVERBOUND), new FabricPacketContext(((ServerLoginPacketListenerImplAccessor) listener).getConnection(),synchronizer, MagnetospherePacket.Direction.LOGIN_SERVERBOUND) {
             @Override
             public void reply(MagnetospherePacket<?> packet) {
                 throw new UnsupportedOperationException("The server is not allowed to reply during the login phase");

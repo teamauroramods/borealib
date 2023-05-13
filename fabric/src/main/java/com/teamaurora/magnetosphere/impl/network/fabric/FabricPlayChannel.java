@@ -3,6 +3,7 @@ package com.teamaurora.magnetosphere.impl.network.fabric;
 import com.teamaurora.magnetosphere.api.network.v1.PlayNetworkChannel;
 import com.teamaurora.magnetosphere.api.network.v1.message.MagnetospherePacket;
 import com.teamaurora.magnetosphere.api.network.v1.message.PacketDecoder;
+import com.teamaurora.magnetosphere.core.mixin.fabric.ServerGamePacketListenerImplAccessor;
 import com.teamaurora.magnetosphere.impl.network.NetworkManagerImpl;
 import com.teamaurora.magnetosphere.impl.network.context.fabric.FabricPlayPacketContext;
 import net.fabricmc.api.EnvType;
@@ -43,11 +44,11 @@ public class FabricPlayChannel extends NetworkChannelImpl implements PlayNetwork
     }
 
     private void processClientPlay(Minecraft client, ClientPacketListener listener, FriendlyByteBuf data, PacketSender responseSender) {
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.PLAY_CLIENTBOUND), new FabricPlayPacketContext(msg -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(msg, MagnetospherePacket.Direction.PLAY_SERVERBOUND))), MagnetospherePacket.Direction.PLAY_CLIENTBOUND), this.clientMessageHandler);
+        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.PLAY_CLIENTBOUND), new FabricPlayPacketContext(listener.getConnection(), msg -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(msg, MagnetospherePacket.Direction.PLAY_SERVERBOUND))), MagnetospherePacket.Direction.PLAY_CLIENTBOUND), this.clientMessageHandler);
     }
 
     private void processServerPlay(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, FriendlyByteBuf data, PacketSender responseSender) {
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.PLAY_SERVERBOUND), new FabricPlayPacketContext(pkt -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(pkt, MagnetospherePacket.Direction.PLAY_CLIENTBOUND))), MagnetospherePacket.Direction.PLAY_SERVERBOUND), this.serverMessageHandler);
+        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.PLAY_SERVERBOUND), new FabricPlayPacketContext(((ServerGamePacketListenerImplAccessor) listener).getConnection(), pkt -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(pkt, MagnetospherePacket.Direction.PLAY_CLIENTBOUND))), MagnetospherePacket.Direction.PLAY_SERVERBOUND), this.serverMessageHandler);
     }
 
     @Override

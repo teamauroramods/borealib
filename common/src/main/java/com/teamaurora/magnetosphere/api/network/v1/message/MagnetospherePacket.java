@@ -1,6 +1,12 @@
 package com.teamaurora.magnetosphere.api.network.v1.message;
 
+import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.PacketListener;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -20,7 +26,20 @@ public interface MagnetospherePacket<T> {
 
         void reply(MagnetospherePacket<?> packet);
 
+        void disconnect(Component message);
+
         Direction getDirection();
+
+        Connection getNetworkManager();
+
+        @Nullable
+        default ServerPlayer getSender() {
+            PacketListener netHandler = this.getNetworkManager().getPacketListener();
+            if (netHandler instanceof ServerGamePacketListenerImpl netHandlerPlayServer) {
+                return netHandlerPlayServer.player;
+            }
+            return null;
+        }
     }
 
     enum Direction {

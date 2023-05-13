@@ -23,7 +23,7 @@ public final class CreativeTabEvents {
         void modifyEntries(CreativeModeTab group, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, Output output, boolean canUseGameMasterBlocks);
     }
 
-    public static Event<CreativeTabEvents> modifyEntriesEvent(CreativeModeTab tab) {
+    public static Event<CreativeTabEvents.ModifyEntries> modifyEntriesEvent(CreativeModeTab tab) {
         return CreativeTabEventsImpl.event(tab);
     }
 

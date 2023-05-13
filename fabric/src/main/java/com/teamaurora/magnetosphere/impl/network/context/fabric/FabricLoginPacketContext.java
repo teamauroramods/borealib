@@ -2,6 +2,7 @@ package com.teamaurora.magnetosphere.impl.network.context.fabric;
 
 import com.teamaurora.magnetosphere.api.network.v1.message.MagnetospherePacket;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
+import net.minecraft.network.Connection;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Consumer;
@@ -12,8 +13,8 @@ public class FabricLoginPacketContext extends FabricPacketContext {
     private final Consumer<MagnetospherePacket<?>> response;
     private boolean replied;
 
-    public FabricLoginPacketContext(Consumer<MagnetospherePacket<?>> response, ServerLoginNetworking.LoginSynchronizer synchronizer, MagnetospherePacket.Direction direction) {
-        super(synchronizer, direction);
+    public FabricLoginPacketContext(Connection connection, Consumer<MagnetospherePacket<?>> response, ServerLoginNetworking.LoginSynchronizer synchronizer, MagnetospherePacket.Direction direction) {
+        super(connection, synchronizer, direction);
         this.response = response;
     }
 
