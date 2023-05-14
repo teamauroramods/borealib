@@ -313,7 +313,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
                 } else if (min.equals(Integer.MIN_VALUE)) {
                     return "< " + max;
                 }
-            } // TODO add more special cases?
+            }
             return min + " ~ " + max;
         }
     }
