@@ -17,8 +17,6 @@ public class Magnetosphere implements ModLoaderService {
 
     public static final String MOD_ID = "magnetosphere";
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final EtchedConfig.Client CONFIG = ConfigRegistry.register(MOD_ID, ModConfig.Type.SERVER, EtchedConfig.Client::new);
-    public static final EtchedConfig.Client CONFIG2 = ConfigRegistry.register(MOD_ID, ModConfig.Type.COMMON, EtchedConfig.Client::new);
 
     public static ModLoaderService findMod(String id) {
         return ServiceLoader.load(ModLoaderService.class)
@@ -44,19 +42,5 @@ public class Magnetosphere implements ModLoaderService {
 
     @Override
     public void onCommonPostInit(ParallelDispatcher dispatcher) {
-    }
-
-    public static class EtchedConfig {
-
-        public static class Client {
-
-            public final ConfigValue<Boolean> showNotes;
-
-            public Client(ConfigBuilder builder) {
-                builder.push("Game Feel");
-                this.showNotes = builder.comment("Displays note particles appear above jukeboxes while a record is playing.").define("Display Note Particles", true);
-                builder.pop();
-            }
-        }
     }
 }
