@@ -1,6 +1,6 @@
 package com.teamaurora.magnetosphere.core.mixin.fabric;
 
-import com.teamaurora.magnetosphere.api.base.v1.event.events.lifecycle.ServerLifecycleEvents;
+import com.teamaurora.magnetosphere.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,4 +1,4 @@
-package com.teamaurora.magnetosphere.api.base.v1.event.events.lifecycle;
+package com.teamaurora.magnetosphere.api.event.lifecycle.v1;
 
 import com.teamaurora.magnetosphere.api.base.v1.event.Event;
 import net.minecraft.server.MinecraftServer;

@@ -1,7 +1,7 @@
-package com.teamaurora.magnetosphere.api.base.v1.event.events.misc;
+package com.teamaurora.magnetosphere.api.event.creativetabs.v1;
 
 import com.teamaurora.magnetosphere.api.base.v1.event.Event;
-import com.teamaurora.magnetosphere.impl.base.event.events.misc.CreativeTabEventsImpl;
+import com.teamaurora.magnetosphere.impl.event.creativetabs.CreativeTabEventsImpl;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +27,8 @@ public final class CreativeTabEvents {
         return CreativeTabEventsImpl.event(tab);
     }
 
+    private CreativeTabEvents() {
+    }
 
     public interface Output extends CreativeModeTab.Output {
         void acceptAfter(ItemStack after, ItemStack stack, CreativeModeTab.TabVisibility visibility);

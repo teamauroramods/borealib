@@ -3,6 +3,7 @@
   "package": "com.teamaurora.magnetosphere.core.mixin.fabric",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.ClientHandshakePacketListenerImplMixin",
     "client.IntegratedServerMixin"
   ],
   "mixins": [

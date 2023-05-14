@@ -1,13 +1,12 @@
-package com.teamaurora.magnetosphere.impl.base.event.events.misc;
+package com.teamaurora.magnetosphere.impl.event.creativetabs;
 
 import com.teamaurora.magnetosphere.api.base.v1.event.Event;
-import com.teamaurora.magnetosphere.api.base.v1.event.events.misc.CreativeTabEvents;
+import com.teamaurora.magnetosphere.api.event.creativetabs.v1.CreativeTabEvents;
 import net.minecraft.world.item.CreativeModeTab;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 

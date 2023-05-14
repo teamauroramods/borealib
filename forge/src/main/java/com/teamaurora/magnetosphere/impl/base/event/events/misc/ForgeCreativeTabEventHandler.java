@@ -1,9 +1,9 @@
 package com.teamaurora.magnetosphere.impl.base.event.events.misc;
 
 import com.teamaurora.magnetosphere.api.base.v1.event.Event;
-import com.teamaurora.magnetosphere.api.base.v1.event.events.misc.CreativeTabEvents;
+import com.teamaurora.magnetosphere.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.magnetosphere.core.Magnetosphere;
-import com.teamaurora.magnetosphere.impl.base.event.events.misc.CreativeTabEventsImpl;
+import com.teamaurora.magnetosphere.impl.event.creativetabs.CreativeTabEventsImpl;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
