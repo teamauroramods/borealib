@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class ConfigTracker {
 
     public static final ConfigTracker INSTANCE = new ConfigTracker();
-    static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
     private final ConcurrentHashMap<String, ModConfigImpl> fileMap;
     private final EnumMap<ModConfig.Type, Set<ModConfigImpl>> configSets;
     private final ConcurrentHashMap<String, Map<ModConfig.Type, ModConfigImpl>> configsByMod;
@@ -55,8 +55,6 @@ public class ConfigTracker {
         this.configSets.get(config.getType()).add(config);
         this.configsByMod.computeIfAbsent(config.getModId(), (k) -> new EnumMap<>(ModConfig.Type.class)).put(config.getType(), config);
         LOGGER.debug("Config file {} for {} tracking", config.getFileName(), config.getModId());
-        if (config.getType() != ModConfig.Type.SERVER)
-            openConfig(config, FabricLoader.getInstance().getConfigDir());
     }
 
     public void loadConfigs(ModConfig.Type type, Path configBasePath) {
@@ -117,7 +115,7 @@ public class ConfigTracker {
         return Optional.ofNullable(this.configsByMod.getOrDefault(modId, Collections.emptyMap()).getOrDefault(type, null)).flatMap(config -> Optional.ofNullable(config.getFullPath())).map(Object::toString).orElse(null);
     }
 
-    public Optional<ModConfig> getConfig(String modId, ModConfig.Type type) {
+    public Optional<ModConfigImpl> getConfig(String modId, ModConfig.Type type) {
         return Optional.ofNullable(this.configsByMod.getOrDefault(modId, Collections.emptyMap()).getOrDefault(type, null));
     }
 }

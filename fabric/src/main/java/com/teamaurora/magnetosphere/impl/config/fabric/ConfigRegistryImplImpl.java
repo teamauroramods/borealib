@@ -24,7 +24,7 @@ public class ConfigRegistryImplImpl {
         return pair.getLeft();
     }
 
-    public static Optional<ModConfig> get(String modId, ModConfig.Type type) {
+    public static Optional<ModConfigImpl> get(String modId, ModConfig.Type type) {
         return ConfigTracker.INSTANCE.getConfig(modId, type);
     }
 }

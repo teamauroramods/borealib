@@ -4,9 +4,8 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.io.ParsingException;
 import com.google.common.collect.ImmutableMap;
-import com.teamaurora.magnetosphere.api.base.v1.platform.Platform;
-import com.teamaurora.magnetosphere.api.config.v1.ModConfig;
 import com.teamaurora.magnetosphere.core.Magnetosphere;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 import org.apache.commons.io.FilenameUtils;
@@ -20,13 +19,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ApiStatus.Internal
-public class FabricConfigFiles {
-
+public class ConfigLoadingHelper {
+    private static final LevelResource SERVER_CONFIG_LEVEL_RESOURCE = new LevelResource("serverconfig");
+    private static final String DEFAULTCONFIGS = "defaultconfigs";
     public static final Map<String, Map<String, Object>> DEFAULT_CONFIG_VALUES = new ConcurrentHashMap<>();
-    static final LevelResource SERVERCONFIG = new LevelResource("serverconfig");
-    static final String DEFAULT_CONFIGS_NAME = "defaultconfigs";
 
-    public static Path getOrCreateDirectory(Path dirPath, String dirLabel) {
+
+    private static Path getOrCreateDirectory(Path dirPath, String dirLabel) {
         if (!Files.isDirectory(dirPath.getParent())) {
             getOrCreateDirectory(dirPath.getParent(), "parent of " + dirLabel);
         }
@@ -50,13 +49,13 @@ public class FabricConfigFiles {
     }
 
     public static Path getServerConfigDirectory(final MinecraftServer server) {
-        final Path serverConfig = server.getWorldPath(SERVERCONFIG);
+        final Path serverConfig = server.getWorldPath(SERVER_CONFIG_LEVEL_RESOURCE);
         getOrCreateDirectory(serverConfig, "server config directory");
         return serverConfig;
     }
 
     public static Path getDefaultConfigsDirectory() {
-        Path defaultConfigs = Platform.getGameDir().resolve(DEFAULT_CONFIGS_NAME);
+        Path defaultConfigs = FabricLoader.getInstance().getGameDir().resolve(DEFAULTCONFIGS);
         getOrCreateDirectory(defaultConfigs, "default configs directory");
         return defaultConfigs;
     }
@@ -78,7 +77,7 @@ public class FabricConfigFiles {
         }
     }
 
-    public static void tryRegisterDefaultConfig(ModConfig modConfig) {
+    public static void tryRegisterDefaultConfig(ModConfigImpl modConfig) {
         String fileName = modConfig.getFileName();
         Path path = getDefaultConfigsDirectory().resolve(fileName);
         if (Files.exists(path)) {
@@ -89,8 +88,9 @@ public class FabricConfigFiles {
                 if (values != null && !values.isEmpty()) {
                     DEFAULT_CONFIG_VALUES.put(fileName.intern(), ImmutableMap.copyOf(values));
                 }
-                Magnetosphere.LOGGER.info("Loaded default config values for future corrections from file at path {}", path);
+                Magnetosphere.LOGGER.debug("Loaded default config values for future corrections from file at path {}", path);
             } catch (Exception ignored) {
+
             }
         }
     }

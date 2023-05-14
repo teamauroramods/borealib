@@ -6,7 +6,6 @@ import com.teamaurora.magnetosphere.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.magnetosphere.api.event.lifecycle.v1.ServerLifecycleEvents;
 import com.teamaurora.magnetosphere.core.Magnetosphere;
 import com.teamaurora.magnetosphere.impl.config.fabric.ConfigTracker;
-import com.teamaurora.magnetosphere.impl.config.fabric.FabricConfigFiles;
 import com.teamaurora.magnetosphere.impl.event.creativetabs.CreativeTabEventsImpl;
 import com.teamaurora.magnetosphere.impl.registry.fabric.DeferredRegisterImplImpl;
 import net.fabricmc.api.EnvType;
@@ -16,9 +15,13 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 @ApiStatus.Internal
@@ -26,27 +29,43 @@ import java.util.List;
 public class MagnetosphereFabric implements MagnetosphereModInitializer {
 
     static MinecraftServer server;
+    private static final LevelResource SERVERCONFIG = new LevelResource("serverconfig");
 
     @Override
     public String id() {
         return Magnetosphere.MOD_ID;
     }
 
+    private static Path getServerConfigPath(MinecraftServer server) {
+        Path serverConfig = server.getWorldPath(SERVERCONFIG);
+        if (!Files.isDirectory(serverConfig)) {
+            try {
+                Files.createDirectories(serverConfig);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to create " + serverConfig, e);
+            }
+        }
+        return serverConfig;
+    }
+
     @Override
     public void onInitialize() {
         MagnetosphereModInitializer.super.onInitialize();
+        ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+            ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.CLIENT, FabricLoader.getInstance().getConfigDir());
         DeferredRegisterImplImpl.init();
         ServerLifecycleEvents.PRE_STARTING.register(server1 -> {
             MagnetosphereFabric.server = server1;
             return true;
         });
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.SERVER, FabricConfigFiles.getServerConfigDirectory(server));
+            ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.SERVER, getServerConfigPath(server));
         });
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPING.register(server -> ServerLifecycleEvents.STOPPING.invoker().forServer(server));
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPED.register(server1 -> {
             MagnetosphereFabric.server = null;
-            ConfigTracker.INSTANCE.unloadConfigs(ModConfig.Type.SERVER, FabricConfigFiles.getServerConfigDirectory(server1));
+            ConfigTracker.INSTANCE.unloadConfigs(ModConfig.Type.SERVER, getServerConfigPath(server1));
             ServerLifecycleEvents.STOPPED.invoker().forServer(server1);
         });
         CreativeTabEventsImpl.forEach((tab, event) -> {

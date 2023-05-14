@@ -88,9 +88,11 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
 
     private void resetCaches(Iterable<Object> configValues) {
         configValues.forEach(value -> {
-            if (value instanceof ConfigValue<?> configValue) {
+            if (value instanceof ConfigValue) {
+                ConfigValue<?> configValue = (ConfigValue<?>) value;
                 configValue.clearCache();
-            } else if (value instanceof Config innerConfig) {
+            } else if (value instanceof Config) {
+                Config innerConfig = (Config) value;
                 this.resetCaches(innerConfig.valueMap().values());
             }
         });
@@ -118,14 +120,13 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
     }
 
     public synchronized int correct(CommentedConfig config, ConfigSpec.CorrectionListener listener, ConfigSpec.CorrectionListener commentListener) {
-        LinkedList<String> parentPath = new LinkedList<>(); //Linked list for fast add/removes
+        LinkedList<String> parentPath = new LinkedList<>();
         int ret = -1;
         try {
             isCorrecting = true;
-            // Forge Config API Port: add default values map read from 'defaultconfigs' directory as method parameter
             final Map<String, Object> defaultMap;
             if (config instanceof FileConfig fileConfig) {
-                defaultMap = FabricConfigFiles.DEFAULT_CONFIG_VALUES.get(fileConfig.getNioPath().getFileName().toString().intern());
+                defaultMap = ConfigLoadingHelper.DEFAULT_CONFIG_VALUES.get(fileConfig.getNioPath().getFileName().toString().intern());
             } else {
                 defaultMap = null;
             }
@@ -153,6 +154,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
 
             if (specValue instanceof Config) {
                 if (configValue instanceof CommentedConfig) {
+                    // Forge Config API Port: add default values map read from 'defaultconfigs' directory as method parameter
                     count += correct((Config)specValue, (CommentedConfig)configValue, defaultMap != null && defaultMap.get(key) instanceof Config defaultConfig ? defaultConfig.valueMap() : null, parentPath, parentPathUnmodifiable, listener, commentListener, dryRun);
                     if (count > 0 && dryRun)
                         return count;
@@ -169,16 +171,15 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
 
                 String newComment = levelComments.get(parentPath);
                 String oldComment = config.getComment(key);
-                if (!stringsNotEqual(oldComment, newComment)) {
+                if (stringsNotEqual(oldComment, newComment)) {
                     if(commentListener != null)
                         commentListener.onCorrect(action, parentPathUnmodifiable, oldComment, newComment);
-
                     if (dryRun)
                         return 1;
-
                     config.setComment(key, newComment);
                 }
-            } else {
+            }
+            else {
                 ValueSpec valueSpec = (ValueSpec)specValue;
                 if (!valueSpec.test(configValue)) {
                     if (dryRun)
@@ -204,7 +205,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
                     count++;
                 }
                 String oldComment = config.getComment(key);
-                if (!stringsNotEqual(oldComment, valueSpec.getComment())) {
+                if (stringsNotEqual(oldComment, valueSpec.getComment())) {
                     if (commentListener != null)
                         commentListener.onCorrect(action, parentPathUnmodifiable, oldComment, valueSpec.getComment());
 
