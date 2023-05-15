@@ -3,9 +3,12 @@
   "package": "com.teamaurora.magnetosphere.core.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.LayerDefinitionsMixin"
   ],
   "mixins": [
-    "BlockBehaviourPropertiesMixin"
+    "BlockBehaviourPropertiesMixin",
+    "BlockEntityTypeMixin",
+    "DispenserBlockAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

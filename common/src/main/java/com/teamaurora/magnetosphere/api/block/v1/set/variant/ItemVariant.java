@@ -22,20 +22,20 @@ public final class ItemVariant<T> {
     private final boolean automaticLang;
     private final String prefix;
     private final String suffix;
-    private final Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit;
-    private final Supplier<BiConsumer<T, RegistryReference<Block>>> serverInit;
-    private final TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> commonPostInit;
-    private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit;
-    private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> serverPostInit;
+    private final Supplier<BiConsumer<T, RegistryReference<Item>>> clientInit;
+    private final Supplier<BiConsumer<T, RegistryReference<Item>>> serverInit;
+    private final TriConsumer<ParallelDispatcher, T, RegistryReference<Item>> commonPostInit;
+    private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> clientPostInit;
+    private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> serverPostInit;
     private final Consumer<Item> onRegister;
     private final BlockSet.ComponentFactory<Item, T> factory;
 
     private ItemVariant(boolean automaticLang, String prefix, String suffix,
-                        Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit,
-                        Supplier<BiConsumer<T, RegistryReference<Block>>> serverInit,
-                        TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> commonPostInit,
-                        Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit,
-                        Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> serverPostInit,
+                        Supplier<BiConsumer<T, RegistryReference<Item>>> clientInit,
+                        Supplier<BiConsumer<T, RegistryReference<Item>>> serverInit,
+                        TriConsumer<ParallelDispatcher, T, RegistryReference<Item>> commonPostInit,
+                        Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> clientPostInit,
+                        Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> serverPostInit,
                         Consumer<Item> onRegister,
                         BlockSet.ComponentFactory<Item, T> factory) {
         this.automaticLang = automaticLang;
@@ -74,23 +74,23 @@ public final class ItemVariant<T> {
         return this.suffix;
     }
 
-    public Supplier<BiConsumer<T, RegistryReference<Block>>> getClientInit() {
+    public Supplier<BiConsumer<T, RegistryReference<Item>>> getClientInit() {
         return this.clientInit;
     }
 
-    public Supplier<BiConsumer<T, RegistryReference<Block>>> getServerInit() {
+    public Supplier<BiConsumer<T, RegistryReference<Item>>> getServerInit() {
         return this.serverInit;
     }
 
-    public TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> getCommonPostInit() {
+    public TriConsumer<ParallelDispatcher, T, RegistryReference<Item>> getCommonPostInit() {
         return this.commonPostInit;
     }
 
-    public Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> getClientPostInit() {
+    public Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> getClientPostInit() {
         return this.clientPostInit;
     }
 
-    public Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> getServerPostInit() {
+    public Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> getServerPostInit() {
         return this.serverPostInit;
     }
 
@@ -107,11 +107,11 @@ public final class ItemVariant<T> {
         private boolean automaticLang = true;
         private String prefix = "";
         private String suffix = "";
-        private Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit;
-        private Supplier<BiConsumer<T, RegistryReference<Block>>> serverInit;
-        private TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> commonPostInit;
-        private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit;
-        private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> serverPostInit;
+        private Supplier<BiConsumer<T, RegistryReference<Item>>> clientInit;
+        private Supplier<BiConsumer<T, RegistryReference<Item>>> serverInit;
+        private TriConsumer<ParallelDispatcher, T, RegistryReference<Item>> commonPostInit;
+        private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> clientPostInit;
+        private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> serverPostInit;
         private Consumer<Item> onRegister;
         private final BlockSet.ComponentFactory<Item, T> factory;
 
@@ -134,27 +134,27 @@ public final class ItemVariant<T> {
             return this;
         }
 
-        public Builder<T> clientInit(Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit) {
+        public Builder<T> clientInit(Supplier<BiConsumer<T, RegistryReference<Item>>> clientInit) {
             this.clientInit = clientInit;
             return this;
         }
 
-        public Builder<T> serverInit(Supplier<BiConsumer<T, RegistryReference<Block>>> serverInit) {
+        public Builder<T> serverInit(Supplier<BiConsumer<T, RegistryReference<Item>>> serverInit) {
             this.serverInit = serverInit;
             return this;
         }
 
-        public Builder<T> commonPostInit(TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> commonPostInit) {
+        public Builder<T> commonPostInit(TriConsumer<ParallelDispatcher, T, RegistryReference<Item>> commonPostInit) {
             this.commonPostInit = commonPostInit;
             return this;
         }
 
-        public Builder<T> clientPostInit(Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit) {
+        public Builder<T> clientPostInit(Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> clientPostInit) {
             this.clientPostInit = clientPostInit;
             return this;
         }
 
-        public Builder<T> serverPostInit(Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> serverPostInit) {
+        public Builder<T> serverPostInit(Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> serverPostInit) {
             this.serverPostInit = serverPostInit;
             return this;
         }

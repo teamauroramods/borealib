@@ -1,4 +1,4 @@
-package com.teamaurora.magnetosphere.impl.content_registries.client;
+package com.teamaurora.magnetosphere.impl.content_registries.client.render;
 
 import com.teamaurora.magnetosphere.api.base.v1.platform.Platform;
 import dev.architectury.injectables.annotations.ExpectPlatform;

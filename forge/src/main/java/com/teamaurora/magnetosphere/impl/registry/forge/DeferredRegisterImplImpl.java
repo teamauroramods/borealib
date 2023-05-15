@@ -1,15 +1,11 @@
 package com.teamaurora.magnetosphere.impl.registry.forge;
 
-import com.mojang.serialization.Lifecycle;
 import com.teamaurora.magnetosphere.api.base.v1.util.forge.ForgeHelper;
-import com.teamaurora.magnetosphere.api.registry.v1.RegistryProperties;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryReference;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryView;
 import com.teamaurora.magnetosphere.impl.registry.DeferredRegisterImpl;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.WritableRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,10 +23,6 @@ import java.util.function.Supplier;
 public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
 
     private final Map<RegistryReferenceImpl<? extends T, T>, Supplier<? extends T>> entries = new LinkedHashMap<>();
-    @Nullable
-    private Supplier<RegistryBuilder<T>> registryFactory;
-    @Nullable
-    private Supplier<RegistryProperties<T>> propertiesSupplier;
 
     protected DeferredRegisterImplImpl(ResourceKey<? extends Registry<T>> registryKey, String modId) {
         super(registryKey, modId);
@@ -47,25 +39,6 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
         if (this.entries.putIfAbsent(ret, object) != null)
             throw new IllegalArgumentException("Duplicate registration " + name);
         return ret;
-    }
-
-    @Override
-    public Supplier<RegistryView<T>> makeRegistry(Supplier<RegistryProperties<T>> properties) {
-        if (RegistryManager.ACTIVE.getRegistry(this.registryKey) != null || this.registryFactory != null)
-            throw new IllegalStateException("Cannot create a registry for a type that already exists");
-        this.propertiesSupplier = properties;
-        this.registryFactory = () -> {
-            RegistryBuilder<T> builder = new RegistryBuilder<>();
-            builder.setName(this.registryKey.location());
-            if (!properties.get().saveToDisk())
-                builder.disableSaving();
-            if (!properties.get().syncToClients())
-                builder.disableSync();
-            if (!properties.get().getOnAdd().isEmpty())
-                builder.onAdd((internal, manager, id, key, object, old) -> properties.get().getOnAdd().forEach(c -> c.onAdd(id, key.location(), object)));
-            return builder;
-        };
-        return new RegistryHolder<>(this.registryKey);
     }
 
     @NotNull
@@ -88,18 +61,6 @@ public class DeferredRegisterImplImpl<T> extends DeferredRegisterImpl<T> {
 
         public EventDispatcher(final DeferredRegisterImplImpl<T> register) {
             this.register = register;
-        }
-
-        @SubscribeEvent
-        public void handleEvent(NewRegistryEvent event) {
-            if (register.registryFactory != null)
-                event.create(register.registryFactory.get(), (registry) -> {
-                    List<Consumer<RegistryView<T>>> onFill = register.propertiesSupplier.get().getOnFill();
-                    if (!onFill.isEmpty()) {
-                        RegistryView<T> view = new ForgeRegistryView<>(registry);
-                        onFill.forEach(c -> c.accept(view));
-                    }
-                });
         }
 
         @SubscribeEvent

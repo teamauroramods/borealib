@@ -1,10 +1,9 @@
 package com.teamaurora.magnetosphere.core;
 
 import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
-import com.teamaurora.magnetosphere.api.config.v1.ConfigBuilder;
-import com.teamaurora.magnetosphere.api.config.v1.ConfigRegistry;
-import com.teamaurora.magnetosphere.api.config.v1.ConfigValue;
-import com.teamaurora.magnetosphere.api.config.v1.ModConfig;
+import com.teamaurora.magnetosphere.api.content_registries.v1.client.render.EntityRendererRegistry;
+import com.teamaurora.magnetosphere.core.client.render.entity.CustomBoatRenderer;
+import com.teamaurora.magnetosphere.core.registry.MagnetosphereEntityTypes;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,12 +31,19 @@ public class Magnetosphere implements ModLoaderService {
     }
 
     @Override
+    public void onClientInit() {
+        EntityRendererRegistry.register(MagnetosphereEntityTypes.CHEST_BOAT, ctx -> new CustomBoatRenderer<>(ctx, true));
+        EntityRendererRegistry.register(MagnetosphereEntityTypes.BOAT, ctx -> new CustomBoatRenderer<>(ctx, false));
+    }
+
+    @Override
     public String id() {
         return MOD_ID;
     }
 
     @Override
     public void onCommonInit() {
+        MagnetosphereEntityTypes.init();
     }
 
     @Override

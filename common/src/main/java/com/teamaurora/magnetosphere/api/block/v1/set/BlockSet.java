@@ -1,5 +1,6 @@
 package com.teamaurora.magnetosphere.api.block.v1.set;
 
+import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.magnetosphere.api.block.v1.set.variant.BlockVariant;
 import com.teamaurora.magnetosphere.api.block.v1.set.variant.ItemVariant;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryReference;
@@ -21,10 +22,12 @@ import java.util.function.Supplier;
  */
 public abstract class BlockSet<T> {
 
-    private final Set<BlockVariant<T>> blockVariants = new HashSet<>();
-    private final Set<ItemVariant<T>> itemVariants = new HashSet<>();
-    private final Map<BlockVariant<T>, RegistryReference<Block>> blocksByVariant = new HashMap<>();
-    private final Map<ItemVariant<T>, RegistryReference<Item>> itemsByVariant = new HashMap<>();
+    // These maps and lists are linked as register order is VERY important
+    // Some blocks may require others to be registered before them to function properly
+    private final Set<BlockVariant<T>> blockVariants = new LinkedHashSet<>();
+    private final Set<ItemVariant<T>> itemVariants = new LinkedHashSet<>();
+    private final Map<BlockVariant<T>, RegistryReference<Block>> blocksByVariant = new LinkedHashMap<>();
+    private final Map<ItemVariant<T>, RegistryReference<Item>> itemsByVariant = new LinkedHashMap<>();
     private final String namespace;
     private final String baseName;
     private boolean registered;
@@ -103,12 +106,73 @@ public abstract class BlockSet<T> {
             } else {
                 reference = register.register(name, blockSupplier);
             }
+            this.blocksByVariant.put(variant, reference);
             if (variant.getOnRegister() != null)
                 reference.listen(variant.getOnRegister());
         });
-        this.itemVariants.forEach(variant -> register.getItemRegistry().register(variant.createName(this.namespace, this.baseName), variant.getFactory().create(this.getThis())));
+        this.itemVariants.forEach(variant -> {
+            RegistryReference<Item> reference = register.getItemRegistry().register(variant.createName(this.namespace, this.baseName), variant.getFactory().create(this.getThis()));
+            this.itemsByVariant.put(variant, reference);
+            if (variant.getOnRegister() != null)
+                reference.listen(variant.getOnRegister());
+        });
         this.registered = true;
         return this.getThis();
+    }
+
+    public void clientInit() {
+        this.blocksByVariant.forEach((v, reference) -> {
+            if (v.getClientInit() != null)
+                v.getClientInit().get().accept(this.getThis(), reference);
+        });
+        this.itemsByVariant.forEach((v, reference) -> {
+            if (v.getClientInit() != null)
+                v.getClientInit().get().accept(this.getThis(), reference);
+        });
+    }
+
+    public void clientPostInit(ModLoaderService.ParallelDispatcher dispatcher) {
+        this.blocksByVariant.forEach((v, reference) -> {
+            if (v.getClientPostInit() != null)
+                v.getClientPostInit().get().accept(dispatcher, this.getThis(), reference);
+        });
+        this.itemsByVariant.forEach((v, reference) -> {
+            if (v.getClientPostInit() != null)
+                v.getClientPostInit().get().accept(dispatcher, this.getThis(), reference);
+        });
+    }
+
+    public void commonPostInit(ModLoaderService.ParallelDispatcher dispatcher) {
+        this.blocksByVariant.forEach((v, reference) -> {
+            if (v.getCommonPostInit() != null)
+                v.getCommonPostInit().accept(dispatcher, this.getThis(), reference);
+        });
+        this.itemsByVariant.forEach((v, reference) -> {
+            if (v.getCommonPostInit() != null)
+                v.getCommonPostInit().accept(dispatcher, this.getThis(), reference);
+        });
+    }
+
+    public void serverInit() {
+        this.blocksByVariant.forEach((v, reference) -> {
+            if (v.getServerInit() != null)
+                v.getServerInit().get().accept(this.getThis(), reference);
+        });
+        this.itemsByVariant.forEach((v, reference) -> {
+            if (v.getServerInit() != null)
+                v.getServerInit().get().accept(this.getThis(), reference);
+        });
+    }
+
+    public void serverPostInit(ModLoaderService.ParallelDispatcher dispatcher) {
+        this.blocksByVariant.forEach((v, reference) -> {
+            if (v.getServerPostInit() != null)
+                v.getServerPostInit().get().accept(dispatcher, this.getThis(), reference);
+        });
+        this.itemsByVariant.forEach((v, reference) -> {
+            if (v.getServerPostInit() != null)
+                v.getServerPostInit().get().accept(dispatcher, this.getThis(), reference);
+        });
     }
 
     protected void validateMutable() {

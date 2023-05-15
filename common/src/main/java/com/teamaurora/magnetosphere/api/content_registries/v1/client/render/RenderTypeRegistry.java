@@ -1,4 +1,4 @@
-package com.teamaurora.magnetosphere.api.content_registries.v1.client;
+package com.teamaurora.magnetosphere.api.content_registries.v1.client.render;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;

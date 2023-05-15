@@ -1,7 +1,6 @@
 package com.teamaurora.magnetosphere.api.registry.v1.extended;
 
 import com.teamaurora.magnetosphere.api.registry.v1.DeferredRegister;
-import com.teamaurora.magnetosphere.api.registry.v1.RegistryProperties;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryReference;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryView;
 import net.minecraft.core.Registry;
@@ -33,11 +32,6 @@ public class ExtendedDeferredRegister<T> implements DeferredRegister<T> {
     @Override
     public <R extends T> RegistryReference<R> register(ResourceLocation name, Supplier<? extends R> object) {
         return this.parent.register(name, object);
-    }
-
-    @Override
-    public Supplier<RegistryView<T>> makeRegistry(Supplier<RegistryProperties<T>> properties) {
-        return this.parent.makeRegistry(properties);
     }
 
     @NotNull

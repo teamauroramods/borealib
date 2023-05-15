@@ -47,6 +47,4 @@ public interface DeferredRegister<T> extends Iterable<RegistryReference<T>> {
     default Stream<RegistryReference<T>> stream() {
         return StreamSupport.stream(this.spliterator(), false);
     }
-
-    Supplier<RegistryView<T>> makeRegistry(Supplier<RegistryProperties<T>> properties);
 }
