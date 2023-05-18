@@ -1,12 +1,19 @@
 package com.teamaurora.magnetosphere.api.block.v1.set.wood;
 
 import com.teamaurora.magnetosphere.api.block.v1.set.BlockSet;
+import com.teamaurora.magnetosphere.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.magnetosphere.api.item.v1.CustomBoatType;
 import com.teamaurora.magnetosphere.core.registry.MagnetosphereRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,6 +22,8 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -77,6 +86,39 @@ public final class WoodSet extends BlockSet<WoodSet> {
     public WoodSet includeSapling(Supplier<AbstractTreeGrower> treeGrower) {
         this.treeGrower = treeGrower;
         return this.include(WoodVariants.SAPLING, WoodVariants.POTTED_SAPLING);
+    }
+
+    public void registerCreativeTabs() {
+        CreativeTabEvents.MODIFY_ENTRIES_ALL.register((tab, flags, parameters, output, canUseGameMasterBlocks) -> {
+            if (tab == CreativeModeTabs.BUILDING_BLOCKS) {
+                output.acceptAllItemsAfter(Items.MANGROVE_BUTTON, List.of(
+                        this.variantOrThrow(WoodVariants.LOG).get(),
+                        this.variantOrThrow(WoodVariants.WOOD).get(),
+                        this.variantOrThrow(WoodVariants.STRIPPED_LOG).get(),
+                        this.variantOrThrow(WoodVariants.STRIPPED_WOOD).get(),
+                        this.variantOrThrow(WoodVariants.PLANKS).get(),
+                        this.variantOrThrow(WoodVariants.STAIRS).get(),
+                        this.variantOrThrow(WoodVariants.SLAB).get(),
+                        this.variantOrThrow(WoodVariants.FENCE).get(),
+                        this.variantOrThrow(WoodVariants.FENCE_GATE).get(),
+                        this.variantOrThrow(WoodVariants.DOOR).get(),
+                        this.variantOrThrow(WoodVariants.TRAPDOOR).get(),
+                        this.variantOrThrow(WoodVariants.PRESSURE_PLATE).get(),
+                        this.variantOrThrow(WoodVariants.BUTTON).get()
+                ));
+            } else if (tab == CreativeModeTabs.NATURAL_BLOCKS) {
+                output.acceptAfter(Items.MANGROVE_LOG, this.variantOrThrow(WoodVariants.LOG).get());
+                this.variant(WoodVariants.LEAVES).ifPresent(r -> output.acceptAfter(Items.FLOWERING_AZALEA_LEAVES, r.get()));
+                this.variant(WoodVariants.SAPLING).ifPresent(r -> output.acceptAfter(Items.DARK_OAK_SAPLING, r.get()));
+            } else if (tab == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+                output.acceptAfter(Items.MANGROVE_SIGN, this.itemVariantOrThrow(WoodVariants.SIGN_ITEM).get());
+            } else if (tab == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+                output.acceptAllItemsAfter(Items.MANGROVE_CHEST_BOAT, List.of(
+                        this.itemVariantOrThrow(WoodVariants.BOAT).get(),
+                        this.itemVariantOrThrow(WoodVariants.CHEST_BOAT).get()
+                ));
+            }
+        });
     }
 
     public Supplier<BlockBehaviour.Properties> getBaseProperties() {

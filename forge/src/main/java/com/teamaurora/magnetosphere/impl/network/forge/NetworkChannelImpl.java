@@ -50,7 +50,7 @@ public class NetworkChannelImpl {
             } catch (IOException e) {
                 throw new IllegalStateException("Failed to read packet data", e);
             }
-        }).consumer((msg, ctx) ->
+        }).consumerMainThread((msg, ctx) ->
         {
             NetworkManagerImpl.processMessage(msg, new ForgePacketContext(this.channel, ctx), ctx.get().getDirection().getReceptionSide().isClient() ? this.clientMessageHandler : this.serverMessageHandler);
             ctx.get().setPacketHandled(true);

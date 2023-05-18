@@ -60,6 +60,15 @@ public class CustomBoat extends Boat {
     }
 
     @Override
+    public void setVariant(Type type) {
+    }
+
+    @Override
+    public Type getVariant() {
+        return Type.OAK;
+    }
+
+    @Override
     public Item getDropItem() {
         CustomBoatType type = this.getBoatCustomType();
         return type != null ? CustomBoatItem.getBoatItem(type, false) : null;

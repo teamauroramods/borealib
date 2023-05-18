@@ -20,7 +20,7 @@ public final class CreativeTabEvents {
 
     @FunctionalInterface
     public interface ModifyEntriesAll {
-        void modifyEntries(CreativeModeTab group, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, Output output, boolean canUseGameMasterBlocks);
+        void modifyEntries(CreativeModeTab tab, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, Output output, boolean canUseGameMasterBlocks);
     }
 
     public static Event<CreativeTabEvents.ModifyEntries> modifyEntriesEvent(CreativeModeTab tab) {
@@ -58,6 +58,10 @@ public final class CreativeTabEvents {
 
         default void acceptAllAfter(ItemStack after, Collection<ItemStack> stacks) {
             this.acceptAllAfter(after, stacks, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        }
+
+        default void acceptAllItemsAfter(ItemLike after, Collection<ItemLike> stacks) {
+            this.acceptAllAfter(after, stacks.stream().map(ItemStack::new).toList());
         }
 
         default void acceptAfter(ItemLike after, ItemStack stack) {
@@ -118,6 +122,10 @@ public final class CreativeTabEvents {
 
         default void acceptAllBefore(ItemLike before, Collection<ItemStack> stacks) {
             acceptAllBefore(new ItemStack(before), stacks);
+        }
+
+        default void acceptAllItemsBefore(ItemLike before, Collection<ItemLike> stacks) {
+            this.acceptAllBefore(before, stacks.stream().map(ItemStack::new).toList());
         }
     }
 }

@@ -3,6 +3,8 @@ package com.teamaurora.magnetosphere.api.datagen.v1.providers.model;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
+import com.teamaurora.magnetosphere.api.block.v1.set.wood.WoodSet;
+import com.teamaurora.magnetosphere.api.block.v1.set.wood.WoodVariants;
 import net.minecraft.core.Direction;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -49,6 +51,16 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         this.blockStateOutput = blockStateOutput;
         this.modelOutput = modelOutput;
         this.skippedAutoModelsOutput = skippedAutoModelsOutput;
+    }
+
+    protected void createWoodSet(WoodSet set) {
+        set.variant(WoodVariants.SAPLING).ifPresent(ref -> this.createPlant(set.variantOrThrow(WoodVariants.SAPLING).get(), set.variantOrThrow(WoodVariants.POTTED_SAPLING).get(), BlockModelGenerators.TintState.NOT_TINTED));
+        this.woodProvider(set.variantOrThrow(WoodVariants.LOG).get())
+                .logWithHorizontal(set.variantOrThrow(WoodVariants.LOG).get())
+                .wood(set.variantOrThrow(WoodVariants.WOOD).get());
+        this.woodProvider(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get())
+                .logWithHorizontal(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get())
+                .wood(set.variantOrThrow(WoodVariants.STRIPPED_WOOD).get());
     }
 
     public Map<Block, TexturedModel> getTexturedModels() {

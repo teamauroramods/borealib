@@ -17,8 +17,6 @@ public final class MagnetosphereEntityTypes {
     public static final RegistryReference<EntityType<CustomBoat>> BOAT = ENTITIES.register("boat", () -> EntityType.Builder.<CustomBoat>of(CustomBoat::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).build("magnetosphere:boat"));
     public static final RegistryReference<EntityType<CustomChestBoat>> CHEST_BOAT = ENTITIES.register("chest_boat", () -> EntityType.Builder.<CustomChestBoat>of(CustomChestBoat::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).build("magnetosphere:chest_boat"));
 
-    public static void init() {
-    }
     private MagnetosphereEntityTypes() {
     }
 }

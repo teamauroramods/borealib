@@ -3,6 +3,7 @@ package com.teamaurora.magnetosphere.core;
 import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.magnetosphere.api.content_registries.v1.client.render.EntityRendererRegistry;
 import com.teamaurora.magnetosphere.core.client.render.entity.CustomBoatRenderer;
+import com.teamaurora.magnetosphere.core.network.MagnetosphereMessages;
 import com.teamaurora.magnetosphere.core.registry.MagnetosphereEntityTypes;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -43,10 +44,11 @@ public class Magnetosphere implements ModLoaderService {
 
     @Override
     public void onCommonInit() {
-        MagnetosphereEntityTypes.init();
+
     }
 
     @Override
     public void onCommonPostInit(ParallelDispatcher dispatcher) {
+        MagnetosphereMessages.init();
     }
 }
