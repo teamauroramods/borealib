@@ -159,7 +159,7 @@ public interface Platform {
      * @param modIds The mods to check for
      * @return Whether all the given mods are loaded
      */
-    static boolean areAllLoaded(String... modIds) {
+    static boolean allModsLoaded(String... modIds) {
         if (modIds == null) return true;
         for (String modId : modIds) {
             if (!isModLoaded(modId)) {
@@ -175,7 +175,7 @@ public interface Platform {
      * @param modIds The mods to check for
      * @return Whether all the given mods are loaded
      */
-    static boolean areAnyLoaded(String... modIds) {
+    static boolean anyModsLoaded(String... modIds) {
         if (modIds == null) return true;
         for (String modId : modIds) {
             if (isModLoaded(modId)) {
@@ -207,5 +207,9 @@ public interface Platform {
      */
     static Optional<MinecraftServer> getRunningServer() {
         return PlatformImpl.getRunningServer();
+    }
+
+    static Optional<RegistryAccess> getRegistryAccess() {
+        return getRunningServer().map(MinecraftServer::registryAccess);
     }
 }

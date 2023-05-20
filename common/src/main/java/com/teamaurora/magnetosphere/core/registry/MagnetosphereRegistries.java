@@ -1,7 +1,7 @@
 package com.teamaurora.magnetosphere.core.registry;
 
 import com.mojang.serialization.Lifecycle;
-import com.teamaurora.magnetosphere.api.item.v1.CustomBoatType;
+import com.teamaurora.magnetosphere.api.entity.v1.CustomBoatType;
 import com.teamaurora.magnetosphere.core.Magnetosphere;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.resources.ResourceKey;

@@ -5,6 +5,7 @@ import com.teamaurora.magnetosphere.api.content_registries.v1.client.render.Enti
 import com.teamaurora.magnetosphere.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.magnetosphere.core.network.MagnetosphereMessages;
 import com.teamaurora.magnetosphere.core.registry.MagnetosphereEntityTypes;
+import com.teamaurora.magnetosphere.impl.convention_tags.ConventionTagSynchronizer;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +45,7 @@ public class Magnetosphere implements ModLoaderService {
 
     @Override
     public void onCommonInit() {
-
+        ConventionTagSynchronizer.init();
     }
 
     @Override

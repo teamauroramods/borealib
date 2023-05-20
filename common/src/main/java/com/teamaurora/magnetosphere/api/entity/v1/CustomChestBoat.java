@@ -1,7 +1,6 @@
 package com.teamaurora.magnetosphere.api.entity.v1;
 
 import com.teamaurora.magnetosphere.api.item.v1.CustomBoatItem;
-import com.teamaurora.magnetosphere.api.item.v1.CustomBoatType;
 import com.teamaurora.magnetosphere.core.registry.MagnetosphereEntityTypes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

@@ -2,6 +2,7 @@ package com.teamaurora.magnetosphere.api.item.v1;
 
 import com.teamaurora.magnetosphere.api.content_registries.v1.DispenserBehaviorRegistry;
 import com.teamaurora.magnetosphere.api.entity.v1.CustomBoat;
+import com.teamaurora.magnetosphere.api.entity.v1.CustomBoatType;
 import com.teamaurora.magnetosphere.api.entity.v1.CustomChestBoat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -29,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 /**
  * A boat item that supports spawning custom {@link CustomBoatType}.

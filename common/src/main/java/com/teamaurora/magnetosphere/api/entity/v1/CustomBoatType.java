@@ -1,4 +1,4 @@
-package com.teamaurora.magnetosphere.api.item.v1;
+package com.teamaurora.magnetosphere.api.entity.v1;
 
 import net.minecraft.resources.ResourceLocation;
 

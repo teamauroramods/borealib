@@ -6,8 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import com.teamaurora.magnetosphere.api.entity.v1.CustomBoat;
-import com.teamaurora.magnetosphere.api.item.v1.CustomBoatType;
-import com.teamaurora.magnetosphere.core.Magnetosphere;
+import com.teamaurora.magnetosphere.api.entity.v1.CustomBoatType;
 import com.teamaurora.magnetosphere.core.registry.MagnetosphereRegistries;
 import net.minecraft.client.model.BoatModel;
 import net.minecraft.client.model.ChestBoatModel;
@@ -22,7 +21,6 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 

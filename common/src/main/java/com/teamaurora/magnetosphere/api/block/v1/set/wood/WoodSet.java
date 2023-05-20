@@ -2,18 +2,14 @@ package com.teamaurora.magnetosphere.api.block.v1.set.wood;
 
 import com.teamaurora.magnetosphere.api.block.v1.set.BlockSet;
 import com.teamaurora.magnetosphere.api.event.creativetabs.v1.CreativeTabEvents;
-import com.teamaurora.magnetosphere.api.item.v1.CustomBoatType;
+import com.teamaurora.magnetosphere.api.entity.v1.CustomBoatType;
 import com.teamaurora.magnetosphere.core.registry.MagnetosphereRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -22,10 +18,8 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class WoodSet extends BlockSet<WoodSet> {
