@@ -1,15 +1,20 @@
 package com.teamaurora.magnetosphere.api.block.v1.set.wood;
 
 import com.teamaurora.magnetosphere.api.block.v1.set.BlockSet;
-import com.teamaurora.magnetosphere.api.event.creativetabs.v1.CreativeTabEvents;
+import com.teamaurora.magnetosphere.api.content_registries.v1.TagRegistry;
 import com.teamaurora.magnetosphere.api.entity.v1.CustomBoatType;
+import com.teamaurora.magnetosphere.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.magnetosphere.core.registry.MagnetosphereRegistries;
 import net.minecraft.core.Registry;
+import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -30,6 +35,9 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private MaterialColor barkColor = MaterialColor.WOOD;
     private MaterialColor woodColor = MaterialColor.PODZOL;
     private Supplier<AbstractTreeGrower> treeGrower;
+    private final TagKey<Block> blockLogTag;
+    private final TagKey<Item> itemLogTag;
+    private BlockFamily family;
 
     private WoodSet(String namespace, String baseName, WoodTypeProvider woodTypeProvider) {
         super(namespace, baseName);
@@ -39,6 +47,8 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 new CustomBoatType(new ResourceLocation(namespace, "textures/entity/boat/" + baseName + ".png"), new ResourceLocation(namespace, "textures/entity/chest_boat/" + baseName + ".png"))
         );
         this.baseProperties = () -> BlockBehaviour.Properties.of(Material.WOOD).strength(2F, 3F).sound(this.woodType.soundType());
+        this.blockLogTag = TagRegistry.bindBlock(new ResourceLocation(namespace, baseName + "_logs"));
+        this.itemLogTag = TagRegistry.bindItem(new ResourceLocation(namespace, baseName + "_logs"));
         this.include(WoodVariants.STRIPPED_WOOD,
                         WoodVariants.STRIPPED_LOG,
                         WoodVariants.PLANKS,
@@ -115,6 +125,30 @@ public final class WoodSet extends BlockSet<WoodSet> {
         });
     }
 
+    /**
+     * Used during data generation. Do not call under normal circumstances as the blocks might not be registered.
+     *
+     * @return A block family wrapping the woodset
+     */
+    public BlockFamily getOrCreateBlockFamily() {
+        if (this.family == null) {
+            this.family = new BlockFamily.Builder(this.variantOrThrow(WoodVariants.PLANKS).get())
+                    .button(this.variantOrThrow(WoodVariants.BUTTON).get())
+                    .fence(this.variantOrThrow(WoodVariants.FENCE).get())
+                    .fenceGate(this.variantOrThrow(WoodVariants.FENCE_GATE).get())
+                    .pressurePlate(this.variantOrThrow(WoodVariants.PRESSURE_PLATE).get())
+                    .sign(this.variantOrThrow(WoodVariants.STANDING_SIGN).get(), this.variantOrThrow(WoodVariants.WALL_SIGN).get())
+                    .slab(this.variantOrThrow(WoodVariants.SLAB).get())
+                    .stairs(this.variantOrThrow(WoodVariants.STAIRS).get())
+                    .door(this.variantOrThrow(WoodVariants.DOOR).get())
+                    .trapdoor(this.variantOrThrow(WoodVariants.TRAPDOOR).get())
+                    .recipeGroupPrefix("wooden")
+                    .recipeUnlockedBy("has_planks")
+                    .getFamily();
+        }
+        return this.family;
+    }
+
     public Supplier<BlockBehaviour.Properties> getBaseProperties() {
         return this.baseProperties;
     }
@@ -137,6 +171,14 @@ public final class WoodSet extends BlockSet<WoodSet> {
 
     public MaterialColor getWoodColor() {
         return this.woodColor;
+    }
+
+    public TagKey<Block> getBlockLogTag() {
+        return this.blockLogTag;
+    }
+
+    public TagKey<Item> getItemLogTag() {
+        return this.itemLogTag;
     }
 
     @Override
