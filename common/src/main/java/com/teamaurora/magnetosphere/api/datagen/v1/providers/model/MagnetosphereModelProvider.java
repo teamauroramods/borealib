@@ -77,7 +77,7 @@ public class MagnetosphereModelProvider implements DataProvider {
 
     @Override
     public String getName() {
-        return null;
+        return "Block State Definitions";
     }
 
     private <T> CompletableFuture<?> saveCollection(CachedOutput cache, Map<T, ? extends Supplier<JsonElement>> objectToJsonMap, Function<T, Path> function) {

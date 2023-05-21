@@ -426,4 +426,8 @@ public abstract class MagnetosphereRecipeProvider extends SimpleConditionalDataP
         return getItemName(itemLike) + "_from_blasting";
     }
 
+    @Override
+    public String getName() {
+        return "Recipes";
+    }
 }
