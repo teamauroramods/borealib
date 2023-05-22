@@ -53,14 +53,21 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         this.skippedAutoModelsOutput = skippedAutoModelsOutput;
     }
 
-    protected void createWoodSet(WoodSet set) {
-        set.variant(WoodVariants.SAPLING).ifPresent(ref -> this.createPlant(set.variantOrThrow(WoodVariants.SAPLING).get(), set.variantOrThrow(WoodVariants.POTTED_SAPLING).get(), BlockModelGenerators.TintState.NOT_TINTED));
+    protected void createWoodSet(WoodSet set, boolean coloredLeaves) {
+        set.variant(WoodVariants.SAPLING).ifPresent(b -> this.createPlant(b.get(), set.variantOrThrow(WoodVariants.POTTED_SAPLING).get(), BlockModelGenerators.TintState.NOT_TINTED));
+        set.variant(WoodVariants.LEAVES).ifPresent(b -> {
+            if (coloredLeaves)
+                this.createTrivialBlock(b.get(), TexturedModel.LEAVES);
+            else
+                this.createTrivialCube(b.get());
+        });
         this.woodProvider(set.variantOrThrow(WoodVariants.LOG).get())
                 .logWithHorizontal(set.variantOrThrow(WoodVariants.LOG).get())
                 .wood(set.variantOrThrow(WoodVariants.WOOD).get());
         this.woodProvider(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get())
                 .logWithHorizontal(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get())
                 .wood(set.variantOrThrow(WoodVariants.STRIPPED_WOOD).get());
+        this.family(set.variantOrThrow(WoodVariants.PLANKS).get()).generateFor(set.getOrCreateBlockFamily());
     }
 
     public Map<Block, TexturedModel> getTexturedModels() {
