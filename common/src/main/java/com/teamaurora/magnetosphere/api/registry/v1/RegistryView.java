@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.StatType;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.FloatProviderType;
 import net.minecraft.util.valueproviders.IntProviderType;
 import net.minecraft.world.effect.MobEffect;
@@ -159,6 +160,10 @@ public interface RegistryView<T> extends Keyable, IdMap<T> {
         return RegistryViewImpl.getRegistry(location);
     }
 
+    static Set<Map.Entry<ResourceLocation, RegistryView<?>>> allRegistries() {
+        return RegistryViewImpl.allRegistries();
+    }
+
     /**
      * @return The codec to identify objects of this registry
      */
@@ -246,6 +251,8 @@ public interface RegistryView<T> extends Keyable, IdMap<T> {
     default Stream<T> stream() {
         return StreamSupport.stream(this.spliterator(), false);
     }
+
+    Iterable<T> getTagOrEmpty(TagKey<T> tagKey);
 
     /**
      * Checks to see if a value with the specified name exists.

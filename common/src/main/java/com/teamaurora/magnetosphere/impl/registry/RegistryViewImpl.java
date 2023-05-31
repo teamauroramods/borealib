@@ -6,6 +6,9 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.Map;
+import java.util.Set;
+
 @ApiStatus.Internal
 public final class RegistryViewImpl {
 
@@ -14,4 +17,8 @@ public final class RegistryViewImpl {
         return Platform.expect();
     }
 
+    @ExpectPlatform
+    public static Set<Map.Entry<ResourceLocation, RegistryView<?>>> allRegistries() {
+        return Platform.expect();
+    }
 }

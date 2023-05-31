@@ -4,8 +4,6 @@ import com.teamaurora.magnetosphere.api.block.v1.BlockUtils;
 import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.magnetosphere.api.block.v1.set.variant.BlockVariant;
 import com.teamaurora.magnetosphere.api.block.v1.set.variant.ItemVariant;
-import com.teamaurora.magnetosphere.api.content_registries.v1.FlammabilityRegistry;
-import com.teamaurora.magnetosphere.api.content_registries.v1.StrippingRegistry;
 import com.teamaurora.magnetosphere.api.content_registries.v1.client.render.RenderTypeRegistry;
 import com.teamaurora.magnetosphere.api.item.v1.CustomBoatItem;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryReference;

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ApiStatus.Internal
@@ -24,5 +25,9 @@ public class RegistryViewImplImpl {
                 return new ForgeRegistryView<>(registry);
             return null;
         });
+    }
+
+    public static Set<Map.Entry<ResourceLocation, RegistryView<?>>> allRegistries() {
+        return REGISTRIES.entrySet();
     }
 }

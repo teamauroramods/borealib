@@ -7,13 +7,12 @@ import com.teamaurora.magnetosphere.api.registry.v1.RegistryView;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -69,6 +68,13 @@ public final class VanillaRegistryView<T> implements RegistryView<T> {
     @Override
     public Set<Map.Entry<ResourceKey<T>, T>> entrySet() {
         return this.parent.entrySet();
+    }
+
+    @Override
+    public Iterable<T> getTagOrEmpty(TagKey<T> tagKey) {
+        List<T> values = new ArrayList<>();
+        this.parent.getTagOrEmpty(tagKey).forEach(h -> values.add(h.value()));
+        return values;
     }
 
     @Override

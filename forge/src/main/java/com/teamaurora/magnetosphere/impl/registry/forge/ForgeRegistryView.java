@@ -6,12 +6,16 @@ import com.teamaurora.magnetosphere.api.registry.v1.RegistryView;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.tags.ITag;
+import net.minecraftforge.registries.tags.ITagManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -73,6 +77,16 @@ public final class ForgeRegistryView<T> implements RegistryView<T> {
     @Override
     public Set<Map.Entry<ResourceKey<T>, T>> entrySet() {
         return this.registry.getEntries();
+    }
+
+    @Override
+    public Iterable<T> getTagOrEmpty(TagKey<T> tagKey) {
+        ITagManager<T> tags = this.registry.tags();
+        if (tags != null) {
+            return tags.getTag(tagKey);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override

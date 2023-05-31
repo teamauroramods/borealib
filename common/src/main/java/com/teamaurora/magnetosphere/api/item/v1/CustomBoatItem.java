@@ -1,6 +1,5 @@
 package com.teamaurora.magnetosphere.api.item.v1;
 
-import com.teamaurora.magnetosphere.api.content_registries.v1.DispenserBehaviorRegistry;
 import com.teamaurora.magnetosphere.api.entity.v1.CustomBoat;
 import com.teamaurora.magnetosphere.api.entity.v1.CustomBoatType;
 import com.teamaurora.magnetosphere.api.entity.v1.CustomChestBoat;

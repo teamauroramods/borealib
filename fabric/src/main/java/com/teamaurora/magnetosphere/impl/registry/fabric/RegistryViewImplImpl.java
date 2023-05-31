@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RegistryViewImplImpl {
@@ -23,5 +24,9 @@ public class RegistryViewImplImpl {
                 return new VanillaRegistryView<>(vanillaRegistry);
             return null;
         });
+    }
+
+    public static Set<Map.Entry<ResourceLocation, RegistryView<?>>> allRegistries() {
+        return REGISTRIES.entrySet();
     }
 }

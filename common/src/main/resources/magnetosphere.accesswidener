@@ -22,6 +22,8 @@ accessible method net/minecraft/world/level/block/state/properties/BlockSetType 
 accessible method net/minecraft/world/level/block/state/properties/WoodType register (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
 accessible method net/minecraft/world/level/storage/LevelResource <init> (Ljava/lang/String;)V
 
+accessible method net/minecraft/util/ExtraCodecs$EitherCodec <init> (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)V
+
 transitive-accessible method net/minecraft/world/item/AxeItem <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V
 transitive-accessible method net/minecraft/world/item/DiggerItem <init> (FFLnet/minecraft/world/item/Tier;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/Item$Properties;)V
 transitive-accessible method net/minecraft/world/item/HoeItem <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
