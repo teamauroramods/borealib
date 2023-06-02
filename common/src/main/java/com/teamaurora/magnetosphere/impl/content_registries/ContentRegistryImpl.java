@@ -2,7 +2,9 @@ package com.teamaurora.magnetosphere.impl.content_registries;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.teamaurora.magnetosphere.api.content_registries.v1.ContentRegistry;
+import com.teamaurora.magnetosphere.api.network.v1.message.PacketDecoder;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryView;
 import com.teamaurora.magnetosphere.core.Magnetosphere;
 import net.minecraft.resources.ResourceLocation;
@@ -10,10 +12,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -91,5 +90,31 @@ public class ContentRegistryImpl<T, R> implements ContentRegistry<T, R> {
     @Override
     public Codec<R> elementCodec() {
         return this.elementCodec;
+    }
+
+    void reload(List<JsonElement> jsonElements) {
+        this.byValue.clear();
+        this.byTag.clear();
+        Codec<ContentRegistryFile<R>> codec = ContentRegistryFile.codec(this.elementCodec);
+        List<ContentRegistryFile.RegistryEntry<R>> list = new ArrayList<>();
+        jsonElements.forEach(json -> {
+            ContentRegistryFile<R> file = codec.parse(JsonOps.INSTANCE, json).getOrThrow(false, Magnetosphere.LOGGER::error);
+            if (file.replace()) list.clear();
+            list.addAll(file.values());
+        });
+        list.forEach(entry -> {
+            if (entry.key().tag()) {
+                if (entry.key().required()) Magnetosphere.LOGGER.warn("Tag entry " + entry.key().id() + " in content registry " + this.id + " redundantly marked as optional; all tag values are optional by default");
+                this.byTag.put(TagKey.create(this.key(), entry.key().id()), entry.object());
+            } else {
+                T value = this.registry().get(entry.key().id());
+                if (value == null) {
+                    if (entry.key().required())
+                        Magnetosphere.LOGGER.error("Required content registry element in " + this.id + " missing, ignoring");
+                    return;
+                }
+                this.byValue.put(value, entry.object());
+            }
+        });
     }
 }

@@ -2,13 +2,11 @@ package com.teamaurora.magnetosphere.impl.content_registries;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public record ContentRegistryFile<T>(List<RegistryEntry<T>> values, boolean replace) {
@@ -17,7 +15,7 @@ public record ContentRegistryFile<T>(List<RegistryEntry<T>> values, boolean repl
         Codec<List<RegistryEntry<T>>> valuesCodec = ExtraCodecs.nonEmptyList(Codec.unboundedMap(KeyEntry.CODEC, elementCodec).xmap(map -> {
             return map.entrySet().stream().map(e -> new RegistryEntry<>(e.getKey(), e.getValue())).toList();
         }, list1 -> {
-            return list1.stream().collect(Collectors.toMap(RegistryEntry::entry, RegistryEntry::object));
+            return list1.stream().collect(Collectors.toMap(RegistryEntry::key, RegistryEntry::object));
         }));
         return RecordCodecBuilder.create(instance -> instance.group(
                 valuesCodec.fieldOf("values").forGetter(ContentRegistryFile::values),
@@ -40,6 +38,6 @@ public record ContentRegistryFile<T>(List<RegistryEntry<T>> values, boolean repl
         });
     }
 
-    public record RegistryEntry<T>(KeyEntry entry, T object) {
+    public record RegistryEntry<T>(KeyEntry key, T object) {
     }
 }
