@@ -3,12 +3,17 @@
   "package": "com.teamaurora.magnetosphere.core.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.WorldOpenFlowsMixin",
+    "client.CreateWorldScreenMixin",
     "client.LayerDefinitionsMixin"
   ],
   "mixins": [
     "BlockBehaviourPropertiesMixin",
     "BlockEntityTypeMixin",
     "DispenserBlockAccessor",
+    "GameTestServerMixin",
+    "MainMixin",
+    "MinecraftServerMixin",
     "ReloadableServerResourcesMixin"
   ],
   "injectors": {

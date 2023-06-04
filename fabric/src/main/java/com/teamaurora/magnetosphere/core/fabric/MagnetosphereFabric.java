@@ -8,7 +8,6 @@ import com.teamaurora.magnetosphere.core.Magnetosphere;
 import com.teamaurora.magnetosphere.impl.config.fabric.ConfigLoadingHelper;
 import com.teamaurora.magnetosphere.impl.config.fabric.ConfigTracker;
 import com.teamaurora.magnetosphere.impl.event.creativetabs.CreativeTabEventsImpl;
-import com.teamaurora.magnetosphere.impl.registry.fabric.DeferredRegisterImplImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -20,9 +19,6 @@ import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 @ApiStatus.Internal
@@ -61,6 +57,7 @@ public class MagnetosphereFabric implements MagnetosphereModInitializer {
             ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
                 event.invoker().onModify(entries.getEnabledFeatures(), entries.getContext(), wrapOutput(entries), entries.shouldShowOpRestrictedItems());
             });
+
         });
     }
 

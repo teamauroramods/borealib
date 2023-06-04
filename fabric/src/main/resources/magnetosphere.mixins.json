@@ -10,7 +10,6 @@
     "AxeItemMixin",
     "ClientHandshakePacketListenerImplAccessor",
     "DedicatedServerMixin",
-    "DyeColorMixin",
     "MinecraftServerMixin",
     "PlayerListMixin",
     "ServerGamePacketListenerImplAccessor",

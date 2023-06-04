@@ -41,13 +41,13 @@ public abstract class SimpleStackedJsonResourceReloadListener extends SimplePrep
     protected Map<ResourceLocation, List<JsonElement>> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<ResourceLocation, List<JsonElement>> map = new HashMap<>();
         for (String path : this.createStackPaths()) {
-            FileToIdConverter converter = FileToIdConverter.json(this.directory + path);
+            FileToIdConverter converter = FileToIdConverter.json(this.directory + "/" + path);
             Map<ResourceLocation, List<Resource>> resources = converter.listMatchingResourceStacks(resourceManager);
             if (resources.isEmpty()) continue;
             for (Map.Entry<ResourceLocation, List<Resource>> resourceEntry : resources.entrySet()) {
                 ResourceLocation rawId = resourceEntry.getKey();
                 ResourceLocation idToUse = converter.fileToId(rawId);
-                List<JsonElement> list = map.computeIfAbsent(resourceEntry.getKey(), __ -> new ArrayList<>());
+                List<JsonElement> list = map.computeIfAbsent(idToUse, __ -> new ArrayList<>());
                 for (Resource resource : resourceEntry.getValue()) {
                     try {
                         Reader reader = resource.openAsReader();

@@ -5,30 +5,32 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
+import com.teamaurora.magnetosphere.api.content_registries.v1.ContentRegistries;
 import com.teamaurora.magnetosphere.api.content_registries.v1.ContentRegistry;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryView;
+import com.teamaurora.magnetosphere.api.resource_loader.v1.ReloadListenerKeys;
+import com.teamaurora.magnetosphere.api.resource_loader.v1.ResourceLoader;
 import com.teamaurora.magnetosphere.api.resource_loader.v1.SimpleStackedJsonResourceReloadListener;
 import com.teamaurora.magnetosphere.core.Magnetosphere;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
+@ApiStatus.Internal
 public class ContentRegistriesImpl extends SimpleStackedJsonResourceReloadListener {
 
     private static final Map<ResourceLocation, ContentRegistryImpl<?, ?>> KNOWN_REGISTRIES = new ConcurrentHashMap<>();
     private static final ResourceLocation NAME = Magnetosphere.location("content_registries");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    public static final ContentRegistriesImpl INSTANCE = new ContentRegistriesImpl();
+    private static final ContentRegistriesImpl INSTANCE = new ContentRegistriesImpl();
 
     private ContentRegistriesImpl() {
         super(GSON, "content_registries");
@@ -65,7 +67,7 @@ public class ContentRegistriesImpl extends SimpleStackedJsonResourceReloadListen
     @Override
     protected void apply(Map<ResourceLocation, List<JsonElement>> map, ResourceManager resourceManager, ProfilerFiller profiler) {
         map.forEach((location, jsonElements) -> {
-            // Resource location is formatted to <modid>:<path> which should be the registry name
+
             ContentRegistryImpl<?, ?> registry = KNOWN_REGISTRIES.get(location);
             if (registry != null) {
                 registry.reload(jsonElements);
@@ -73,5 +75,11 @@ public class ContentRegistriesImpl extends SimpleStackedJsonResourceReloadListen
                 Magnetosphere.LOGGER.error("Unknown content registry " + location + ", ignoring");
             }
         });
+    }
+
+    public static void init() {
+        ResourceLoader resourceLoader = ResourceLoader.get(PackType.SERVER_DATA);
+        resourceLoader.addReloaderOrdering(ReloadListenerKeys.TAGS, NAME);
+        resourceLoader.registerReloadListener(INSTANCE);
     }
 }

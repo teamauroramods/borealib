@@ -4,25 +4,26 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.teamaurora.magnetosphere.api.content_registries.v1.ContentRegistry;
-import com.teamaurora.magnetosphere.api.network.v1.message.PacketDecoder;
 import com.teamaurora.magnetosphere.api.registry.v1.RegistryView;
 import com.teamaurora.magnetosphere.core.Magnetosphere;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@ApiStatus.Internal
 public class ContentRegistryImpl<T, R> implements ContentRegistry<T, R> {
 
     private final ResourceLocation id;
     private final RegistryView<T> registry;
     private final Codec<R> elementCodec;
-    final Map<T, R> byValue;
-    final Map<TagKey<T>, R> byTag;
+    private final Map<T, R> byValue;
+    private final Map<TagKey<T>, R> byTag;
 
     ContentRegistryImpl(ResourceLocation id, RegistryView<T> registry, Codec<R> elementCodec) {
         this.id = id;
@@ -44,32 +45,32 @@ public class ContentRegistryImpl<T, R> implements ContentRegistry<T, R> {
 
     @Override
     @Nullable
-    public R get(T value) {
-        R entry = this.getDirect(value);
-        if (entry == null) {
+    public R get(T entry) {
+        R value = this.byValue.get(entry);
+        if (value == null) {
             for (Map.Entry<TagKey<T>, R> tagEntry : this.byTag.entrySet()) {
                 for (T tagValue : this.registry.getTagOrEmpty(tagEntry.getKey())) {
-                    if (tagValue.equals(value)) {
-                        if (entry != null)
-                            Magnetosphere.LOGGER.warn("Overriding value " + this.registry.getKey(value) + " of content registry " + this.id + " with value defined by parent tag " + tagEntry.getKey().toString());
-                        entry = tagEntry.getValue();
+                    if (tagValue.equals(entry)) {
+                        if (value != null)
+                            Magnetosphere.LOGGER.warn("Overriding value " + this.registry.getKey(entry) + " of content registry " + this.id + " with value defined by parent tag " + tagEntry.getKey().toString());
+                        value = tagEntry.getValue();
                     }
                 }
             }
         }
-        return entry;
+        return value;
     }
 
     @Override
     @Nullable
     public R getDirect(T value) {
-        return this.byValue.get(value);
+       return this.byValue.get(value);
     }
 
     @Override
     @Nullable
-    public R get(TagKey<T> value) {
-        return this.byTag.get(value);
+    public R getByTag(TagKey<T> tagKey) {
+        return this.byTag.get(tagKey);
     }
 
     @Override
@@ -116,5 +117,6 @@ public class ContentRegistryImpl<T, R> implements ContentRegistry<T, R> {
                 this.byValue.put(value, entry.object());
             }
         });
+        Magnetosphere.LOGGER.info("Loaded " + list.size() + " entries for content registry " + this.id);
     }
 }

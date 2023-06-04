@@ -84,7 +84,7 @@ public class CustomBoatItem extends Item {
         } else {
             BOAT_ITEMS.put(type, this);
         }
-        DispenserBehaviorRegistry.register(this, DISPENSE_BEHAVIOR);
+        DispenserBlock.registerBehavior(this, DISPENSE_BEHAVIOR);
     }
 
     @Nullable

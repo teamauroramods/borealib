@@ -6,7 +6,6 @@
   ],
   "mixins": [
     "AxeItemMixin",
-    "FireBlockAccessor",
     "ReloadListenerMixin",
     "SimpleJsonResourceReloadListenerMixin"
   ],

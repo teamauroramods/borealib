@@ -5,10 +5,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ApiStatus.Internal
 public record ContentRegistryFile<T>(List<RegistryEntry<T>> values, boolean replace) {
 
     public static <T> Codec<ContentRegistryFile<T>> codec(Codec<T> elementCodec) {

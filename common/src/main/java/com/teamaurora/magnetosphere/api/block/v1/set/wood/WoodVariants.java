@@ -24,63 +24,43 @@ import org.apache.logging.log4j.util.TriConsumer;
 
 public final class WoodVariants {
 
-    private static final TriConsumer<ModLoaderService.ParallelDispatcher, WoodSet, RegistryReference<Block>> LOG_FLAMMMABLE = (dispatcher, woodSet, block) ->
-            dispatcher.enqueueWork(() -> FlammabilityRegistry.register(5, 5, block.get()));
-    private static final TriConsumer<ModLoaderService.ParallelDispatcher, WoodSet, RegistryReference<Block>> WOOD_FLAMMABLE = (dispatcher, woodSet, block) ->
-            dispatcher.enqueueWork(() -> FlammabilityRegistry.register(5, 20, block.get()));
-
     public static final BlockVariant<WoodSet> STRIPPED_WOOD = BlockVariant.<WoodSet>builder(set ->
                     () -> new RotatedPillarBlock(plankColors(set).explosionResistance(2.0f)))
             .prefix("stripped")
             .suffix("wood")
-            .commonPostInit(LOG_FLAMMMABLE)
             .build();
     public static final BlockVariant<WoodSet> STRIPPED_LOG = BlockVariant.<WoodSet>builder(set ->
                     () -> new RotatedPillarBlock(plankColors(set).explosionResistance(2.0f)))
             .prefix("stripped")
             .suffix("log")
-            .commonPostInit(LOG_FLAMMMABLE)
             .build();
     public static final BlockVariant<WoodSet> PLANKS = BlockVariant.<WoodSet>builder(set ->
                     () -> new RotatedPillarBlock(plankColors(set)))
             .suffix("planks")
-            .commonPostInit(WOOD_FLAMMABLE)
             .build();
     public static final BlockVariant<WoodSet> LOG = BlockVariant.<WoodSet>builder(set ->
                     () -> new RotatedPillarBlock(axisDependentColors(set).explosionResistance(2.0f)))
             .suffix("log")
-            .commonPostInit((d, s, o) -> {
-                LOG_FLAMMMABLE.accept(d, s, o);
-                StrippingRegistry.register(o.get(), s.variantOrThrow(STRIPPED_LOG).get());
-            })
             .build();
     public static final BlockVariant<WoodSet> WOOD = BlockVariant.<WoodSet>builder(set ->
                     () -> new RotatedPillarBlock(barkColors(set).explosionResistance(2.0f)))
             .suffix("wood")
-            .commonPostInit((d, s, o) -> {
-                LOG_FLAMMMABLE.accept(d, s, o);
-                StrippingRegistry.register(o.get(), s.variantOrThrow(STRIPPED_WOOD).get());
-            })
             .build();
     public static final BlockVariant<WoodSet> SLAB = BlockVariant.<WoodSet>builder(set ->
                     () -> new SlabBlock(plankColors(set)))
             .suffix("slab")
-            .commonPostInit(WOOD_FLAMMABLE)
             .build();
     public static final BlockVariant<WoodSet> STAIRS = BlockVariant.<WoodSet>builder(set ->
                     () -> new StairBlock(set.variantOrThrow(PLANKS).get().defaultBlockState(), plankColors(set)))
             .suffix("stairs")
-            .commonPostInit(WOOD_FLAMMABLE)
             .build();
     public static final BlockVariant<WoodSet> FENCE = BlockVariant.<WoodSet>builder(set ->
                     () -> new FenceBlock(plankColors(set)))
             .suffix("fence")
-            .commonPostInit(WOOD_FLAMMABLE)
             .build();
     public static final BlockVariant<WoodSet> FENCE_GATE = BlockVariant.<WoodSet>builder(set ->
                     () -> new FenceGateBlock(plankColors(set), set.getWoodType()))
             .suffix("fence_gate")
-            .commonPostInit(WOOD_FLAMMABLE)
             .build();
     public static final BlockVariant<WoodSet> PRESSURE_PLATE = BlockVariant.<WoodSet>builder(set ->
                     () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, plankColors(set).strength(0.5f).noCollission(), set.getWoodType().setType()))

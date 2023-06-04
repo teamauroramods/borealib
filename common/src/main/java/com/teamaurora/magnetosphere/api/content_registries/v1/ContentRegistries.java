@@ -6,6 +6,8 @@ import com.teamaurora.magnetosphere.impl.content_registries.ContentRegistriesImp
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+
 public interface ContentRegistries {
 
     @Nullable

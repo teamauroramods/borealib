@@ -26,7 +26,7 @@ public interface ContentRegistry<T, R> {
     R getDirect(T entry);
 
     @Nullable
-    R get(TagKey<T> entry);
+    R getByTag(TagKey<T> tagKey);
 
     default ResourceKey<? extends Registry<T>> key() {
         return this.registry().key();
