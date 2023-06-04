@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @ApiStatus.Internal
@@ -24,13 +24,16 @@ public class ContentRegistryImpl<T, R> implements ContentRegistry<T, R> {
     private final Codec<R> elementCodec;
     private final Map<T, R> byValue;
     private final Map<TagKey<T>, R> byTag;
+    @Nullable
+    private final Consumer<ContentRegistry<T, R>> onReload;
 
-    ContentRegistryImpl(ResourceLocation id, RegistryView<T> registry, Codec<R> elementCodec) {
+    ContentRegistryImpl(ResourceLocation id, RegistryView<T> registry, Codec<R> elementCodec, @Nullable Consumer<ContentRegistry<T, R>> onReload) {
         this.id = id;
         this.registry = registry;
         this.elementCodec = elementCodec;
         this.byValue = new HashMap<>();
         this.byTag = new HashMap<>();
+        this.onReload = onReload;
     }
 
     @Override
@@ -117,6 +120,7 @@ public class ContentRegistryImpl<T, R> implements ContentRegistry<T, R> {
                 this.byValue.put(value, entry.object());
             }
         });
+        if (this.onReload != null) this.onReload.accept(this);
         Magnetosphere.LOGGER.info("Loaded " + list.size() + " entries for content registry " + this.id);
     }
 }

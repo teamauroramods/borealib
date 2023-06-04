@@ -3,10 +3,8 @@ package com.teamaurora.magnetosphere.core;
 import com.google.common.collect.Maps;
 import com.teamaurora.magnetosphere.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.magnetosphere.api.content_registries.v1.BlockContentRegistries;
-import com.teamaurora.magnetosphere.api.content_registries.v1.ContentRegistries;
 import com.teamaurora.magnetosphere.api.content_registries.v1.FlammableBlockEntry;
 import com.teamaurora.magnetosphere.api.content_registries.v1.client.render.EntityRendererRegistry;
-import com.teamaurora.magnetosphere.api.event.lifecycle.v1.ResourceLoaderEvents;
 import com.teamaurora.magnetosphere.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.magnetosphere.core.network.MagnetosphereMessages;
 import com.teamaurora.magnetosphere.core.registry.MagnetosphereEntityTypes;
@@ -58,18 +56,6 @@ public class Magnetosphere implements ModLoaderService {
         BlockContentRegistries.init();
         BlockContentRegistriesImpl.init();
         ContentRegistriesImpl.init();
-        // Fabric doesn't modify the odds maps, so it's ok to clear them
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
-            FireBlock fireBlock = (FireBlock) Blocks.FIRE;
-            fireBlock.igniteOdds.clear();
-            fireBlock.burnOdds.clear();
-            fireBlock.igniteOdds.putAll(Maps.transformValues(BlockContentRegistriesImpl.INITIAL_FLAMMABLE_BLOCKS, FlammableBlockEntry::encouragement));
-            fireBlock.burnOdds.putAll(Maps.transformValues(BlockContentRegistriesImpl.INITIAL_FLAMMABLE_BLOCKS, FlammableBlockEntry::flammability));
-            BlockContentRegistries.FLAMMABILITY.forEach((block, data) -> {
-                fireBlock.igniteOdds.put(block, data.encouragement());
-                fireBlock.burnOdds.put(block, data.flammability());
-            });
-        });
     }
 
     @Override

@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @ApiStatus.Internal
@@ -47,9 +48,9 @@ public class ContentRegistriesImpl extends SimpleStackedJsonResourceReloadListen
         return (ContentRegistry<T, R>) KNOWN_REGISTRIES.get(registryId);
     }
 
-    public static <T, R> ContentRegistry<T, R> create(ResourceLocation registryId, RegistryView<T> parentRegistry, Codec<R> elementCodec) {
+    public static <T, R> ContentRegistry<T, R> create(ResourceLocation registryId, RegistryView<T> parentRegistry, Codec<R> elementCodec, @Nullable Consumer<ContentRegistry<T, R>> onReload) {
         if (KNOWN_REGISTRIES.containsKey(registryId)) throw new IllegalStateException("Duplicate content registry " + registryId);
-        ContentRegistryImpl<T, R> registry = new ContentRegistryImpl<>(registryId, parentRegistry, elementCodec);
+        ContentRegistryImpl<T, R> registry = new ContentRegistryImpl<>(registryId, parentRegistry, elementCodec, onReload);
         KNOWN_REGISTRIES.put(registryId, registry);
         return registry;
     }
