@@ -4,22 +4,22 @@ loaderVersion = "[44,)"
 license = "MIT"
 
 [[mods]]
-modId = "magnetosphere"
+modId = "borealib"
 version = "${version}"
-displayName = "Magnetosphere"
-authors = "ebo2022"
+displayName = "Borealib"
+authors = "Team Aurora"
 description = '''
 '''
 #logoFile = ""
 
-[[dependencies.magnetosphere]]
+[[dependencies.borealib]]
 modId = "forge"
 mandatory = true
 versionRange = "[45,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.magnetosphere]]
+[[dependencies.borealib]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.4,)"

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "magnetosphere",
+  "id": "borealib",
   "version": "${version}",
-  "name": "Magnetosphere",
+  "name": "Borealib",
   "description": "A.",
   "authors": [
     "Team Aurora"
@@ -15,8 +15,8 @@
     ]
   },
   "mixins": [
-    "magnetosphere.mixins.json",
-    "magnetosphere-common.mixins.json"
+    "borealib.mixins.json",
+    "borealib-common.mixins.json"
   ],
   "depends": {
     "fabric": "*",
