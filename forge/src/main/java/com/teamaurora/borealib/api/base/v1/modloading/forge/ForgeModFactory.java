@@ -85,3 +85,5 @@ public final class ForgeModFactory {
         public @NotNull String getName() {
             return "Dynamic Registries: " + this.modId;
         }
+    }
+}

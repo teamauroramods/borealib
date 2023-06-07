@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodVariants;
-import com.teamaurora.borealib.api.convention_tags.v1.MagnetosphereItemTags;
+import com.teamaurora.borealib.api.convention_tags.v1.PlatformItemTags;
 import com.teamaurora.borealib.api.datagen.v1.SimpleConditionalDataProvider;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -156,7 +156,7 @@ public abstract class MagnetosphereRecipeProvider extends SimpleConditionalDataP
     }
 
     protected static void chestBoat(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.TRANSPORTATION, itemLike).requires(MagnetosphereItemTags.CHESTS_WOODEN).requires(itemLike2).group("chest_boat").unlockedBy("has_boat", has(ItemTags.BOATS)).save(consumer);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.TRANSPORTATION, itemLike).requires(PlatformItemTags.CHESTS_WOODEN).requires(itemLike2).group("chest_boat").unlockedBy("has_boat", has(ItemTags.BOATS)).save(consumer);
     }
 
     private static RecipeBuilder buttonBuilder(ItemLike itemLike, Ingredient ingredient) {
@@ -168,11 +168,11 @@ public abstract class MagnetosphereRecipeProvider extends SimpleConditionalDataP
     }
 
     private static RecipeBuilder fenceBuilder(ItemLike itemLike, Ingredient ingredient) {
-        return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).define('W', ingredient).define('#', MagnetosphereItemTags.RODS_WOODEN).pattern("W#W").pattern("W#W");
+        return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).define('W', ingredient).define('#', PlatformItemTags.RODS_WOODEN).pattern("W#W").pattern("W#W");
     }
 
     private static RecipeBuilder fenceGateBuilder(ItemLike itemLike, Ingredient ingredient) {
-        return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, itemLike).define('#', MagnetosphereItemTags.RODS_WOODEN).define('W', ingredient).pattern("#W#").pattern("#W#");
+        return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, itemLike).define('#', PlatformItemTags.RODS_WOODEN).define('W', ingredient).pattern("#W#").pattern("#W#");
     }
 
     protected static void pressurePlate(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
@@ -200,7 +200,7 @@ public abstract class MagnetosphereRecipeProvider extends SimpleConditionalDataP
     }
 
     private static RecipeBuilder signBuilder(ItemLike itemLike, Ingredient ingredient) {
-        return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).group("sign").define('#', ingredient).define('X', MagnetosphereItemTags.RODS_WOODEN).pattern("###").pattern("###").pattern(" X ");
+        return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).group("sign").define('#', ingredient).define('X', PlatformItemTags.RODS_WOODEN).pattern("###").pattern("###").pattern(" X ");
     }
 
     protected static void hangingSign(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
@@ -228,7 +228,7 @@ public abstract class MagnetosphereRecipeProvider extends SimpleConditionalDataP
     }
 
     protected static void banner(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike).define('#', itemLike2).define('|', MagnetosphereItemTags.RODS_WOODEN).pattern("###").pattern("###").pattern(" | ").group("banner").unlockedBy(getHasName(itemLike2), has(itemLike2)).save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike).define('#', itemLike2).define('|', PlatformItemTags.RODS_WOODEN).pattern("###").pattern("###").pattern(" | ").group("banner").unlockedBy(getHasName(itemLike2), has(itemLike2)).save(consumer);
     }
 
     protected static void stainedGlassFromGlassAndDye(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
@@ -428,4 +428,6 @@ public abstract class MagnetosphereRecipeProvider extends SimpleConditionalDataP
 
     @Override
     public String getName() {
-       
+        return "Recipes";
+    }
+}

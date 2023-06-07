@@ -72,4 +72,6 @@ public interface MagnetosphereModInitializer extends ModInitializer, DataGenerat
 
     @Override
     default void buildRegistry(RegistrySetBuilder builder) {
-        Borealib.findMod(this.id()).buildRegistries(b
+        Borealib.findMod(this.id()).buildRegistries(builder);
+    }
+}

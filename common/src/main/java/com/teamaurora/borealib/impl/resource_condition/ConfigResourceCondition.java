@@ -117,3 +117,5 @@ public class ConfigResourceCondition implements ResourceCondition {
             if (this.mode != NumberComparator.EQUAL)
                 json.addProperty("comparator", this.mode.getSymbol());
         }
+    }
+}

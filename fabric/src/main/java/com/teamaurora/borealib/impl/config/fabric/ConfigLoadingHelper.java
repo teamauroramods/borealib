@@ -112,4 +112,7 @@ public class ConfigLoadingHelper {
             }
             Files.copy(commentedFileConfig, bakFile);
         } catch (IOException exception) {
-            Borealib.LOGGER.warn("Failed to back up config file {}", commentedF
+            Borealib.LOGGER.warn("Failed to back up config file {}", commentedFileConfig, exception);
+        }
+    }
+}

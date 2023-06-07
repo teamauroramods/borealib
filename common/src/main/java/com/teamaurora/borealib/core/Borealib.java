@@ -6,9 +6,9 @@ import com.teamaurora.borealib.api.content_registries.v1.client.render.EntityRen
 import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.borealib.core.network.BorealibMessages;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
+import com.teamaurora.borealib.impl.content_registries.BlockContentRegistriesImpl;
 import com.teamaurora.borealib.impl.content_registries.ContentRegistriesImpl;
 import com.teamaurora.borealib.impl.convention_tags.ConventionTagSynchronizer;
-import com.teamaurora.magnetosphere.impl.content_registries.BlockContentRegistriesImpl;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

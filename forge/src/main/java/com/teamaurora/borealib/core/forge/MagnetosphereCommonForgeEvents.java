@@ -1,14 +1,14 @@
-package com.teamaurora.magnetosphere.core.forge;
+package com.teamaurora.borealib.core.forge;
 
-import com.teamaurora.magnetosphere.api.event.lifecycle.v1.ServerLifecycleEvents;
-import com.teamaurora.magnetosphere.core.Magnetosphere;
+import com.teamaurora.borealib.api.event.lifecycle.v1.ServerLifecycleEvents;
+import com.teamaurora.borealib.core.Borealib;
 import net.minecraftforge.event.server.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-@Mod.EventBusSubscriber(modid = Magnetosphere.MOD_ID)
+@Mod.EventBusSubscriber(modid = Borealib.MOD_ID)
 public class MagnetosphereCommonForgeEvents {
 
     @SubscribeEvent

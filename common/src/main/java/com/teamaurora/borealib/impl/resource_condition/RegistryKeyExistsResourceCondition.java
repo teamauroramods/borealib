@@ -28,3 +28,5 @@ public class RegistryKeyExistsResourceCondition implements ResourceCondition {
             Registry<?> dynamicRegistry = Platform.getRegistryAccess().flatMap(r -> r.registry(ResourceKey.createRegistryKey(registryId))).orElse(null);
             return dynamicRegistry != null && dynamicRegistry.containsKey(key);
         }
+    }
+}

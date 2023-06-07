@@ -3,6 +3,7 @@ package com.teamaurora.borealib.api.resource_loader.v1;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionRegistry;
+import com.teamaurora.borealib.core.Borealib;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -63,4 +64,12 @@ public abstract class SimpleStackedJsonResourceReloadListener extends SimplePrep
                             }
                             throw throwable;
                         }
-       
+                    } catch (Exception e) {
+                        Borealib.LOGGER.error("Couldn't parse data file " + idToUse + " from " + rawId, e);
+                    }
+                }
+            }
+        }
+        return map;
+    }
+}

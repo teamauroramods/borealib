@@ -1,7 +1,7 @@
-package com.teamaurora.magnetosphere.api.convention_tags.v1;
+package com.teamaurora.borealib.api.convention_tags.v1;
 
-import com.teamaurora.magnetosphere.api.content_registries.v1.TagRegistry;
-import com.teamaurora.magnetosphere.core.Magnetosphere;
+import com.teamaurora.borealib.api.content_registries.v1.TagRegistry;
+import com.teamaurora.borealib.core.Borealib;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
@@ -182,6 +182,6 @@ public final class PlatformItemTags {
     }
 
     private static TagKey<Item> tag(String path) {
-        return TagRegistry.bindItem(Magnetosphere.location(path));
+        return TagRegistry.bindItem(Borealib.location(path));
     }
 }

@@ -48,3 +48,5 @@ public class ColorRegistryImplImpl {
                 event.getBlockColors().register(blockColor, block.get());
             }
         });
+    }
+}

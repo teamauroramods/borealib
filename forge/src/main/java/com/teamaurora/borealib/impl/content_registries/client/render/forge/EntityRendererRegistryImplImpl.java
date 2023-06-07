@@ -40,3 +40,5 @@ public class EntityRendererRegistryImplImpl {
 
     public static void registerLayerDefinition(ModelLayerLocation layerLocation, Supplier<LayerDefinition> supplier) {
         LAYER_DEFINITION_FACTORIES.add(event -> event.registerLayerDefinition(layerLocation, supplier));
+    }
+}

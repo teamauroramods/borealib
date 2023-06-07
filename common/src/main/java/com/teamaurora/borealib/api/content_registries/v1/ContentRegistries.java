@@ -19,4 +19,7 @@ public interface ContentRegistries {
         return ContentRegistriesImpl.create(registryId, parentRegistry, elementCodec, onReload);
     }
 
-    static <T, R> ContentRegistry<T, R> create(ResourceLocation registryI
+    static <T, R> ContentRegistry<T, R> create(ResourceLocation registryId, RegistryView<T> parentRegistry, Codec<R> elementCodec) {
+        return create(registryId, parentRegistry, elementCodec, null);
+    }
+}

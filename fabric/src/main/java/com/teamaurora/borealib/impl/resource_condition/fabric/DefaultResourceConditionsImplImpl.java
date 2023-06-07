@@ -95,4 +95,12 @@ public class DefaultResourceConditionsImplImpl {
 
         @Override
         public void write(JsonObject json) {
-            this
+            this.condition.writeParameters(json);
+        }
+
+        @Override
+        public ResourceLocation getName() {
+            return this.condition.getConditionId();
+        }
+    }
+}

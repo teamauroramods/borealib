@@ -41,4 +41,7 @@ public class ResourceConditionRegistryImplImpl {
         return CraftingHelper.processConditions(json, CONDITIONS_KEY, ICondition.IContext.EMPTY);
     }
 
-    public static S
+    public static String getConditionsKey() {
+        return CONDITIONS_KEY;
+    }
+}

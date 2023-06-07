@@ -2,8 +2,6 @@ package com.teamaurora.borealib.api.convention_tags.v1;
 
 import com.teamaurora.borealib.api.content_registries.v1.TagRegistry;
 import com.teamaurora.borealib.core.Borealib;
-import com.teamaurora.magnetosphere.api.content_registries.v1.TagRegistry;
-import com.teamaurora.magnetosphere.core.Magnetosphere;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;

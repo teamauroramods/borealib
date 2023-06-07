@@ -74,4 +74,7 @@ public class ResourceLoaderImplImpl extends ResourceLoaderImpl {
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onEvent(RegisterClientReloadListenersEvent event) {
             addReloadersInOrder(PackType.CLIENT_RESOURCES, Collections.emptyList()).forEach(event::registerReloadListener);
+        }
+    }
+}
       

@@ -51,4 +51,6 @@ public class TagRegistryImpl {
                }
            }
        }
-       return new TagManager.LoadResult<>(adder.key(), adder.a
+       return new TagManager.LoadResult<>(adder.key(), adder.asMap());
+    }
+}

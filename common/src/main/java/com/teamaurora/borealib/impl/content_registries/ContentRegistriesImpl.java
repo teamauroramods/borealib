@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.teamaurora.borealib.api.content_registries.v1.ContentRegistry;
 import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.resource_loader.v1.ReloadListenerKeys;
 import com.teamaurora.borealib.api.resource_loader.v1.ResourceLoader;
 import com.teamaurora.borealib.api.resource_loader.v1.SimpleStackedJsonResourceReloadListener;
 import com.teamaurora.borealib.core.Borealib;
@@ -77,4 +78,7 @@ public class ContentRegistriesImpl extends SimpleStackedJsonResourceReloadListen
 
     public static void init() {
         ResourceLoader resourceLoader = ResourceLoader.get(PackType.SERVER_DATA);
-        resourceLoader.addReloaderOrdering(Reloa
+        resourceLoader.addReloaderOrdering(ReloadListenerKeys.TAGS, NAME);
+        resourceLoader.registerReloadListener(INSTANCE);
+    }
+}

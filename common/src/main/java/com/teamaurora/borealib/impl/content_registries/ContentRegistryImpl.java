@@ -115,4 +115,12 @@ public class ContentRegistryImpl<T, R> implements ContentRegistry<T, R> {
                 if (value == null) {
                     if (entry.key().required())
                         Borealib.LOGGER.error("Required content registry element in " + this.id + " missing, ignoring");
-                    
+                    return;
+                }
+                this.byValue.put(value, entry.object());
+            }
+        });
+        if (this.onReload != null) this.onReload.accept(this);
+        Borealib.LOGGER.info("Loaded " + list.size() + " entries for content registry " + this.id);
+    }
+}

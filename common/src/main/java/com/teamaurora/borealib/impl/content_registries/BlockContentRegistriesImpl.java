@@ -1,10 +1,9 @@
-package com.teamaurora.magnetosphere.impl.content_registries;
+package com.teamaurora.borealib.impl.content_registries;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.teamaurora.magnetosphere.api.content_registries.v1.BlockContentRegistries;
-import com.teamaurora.magnetosphere.api.content_registries.v1.ContentRegistry;
-import com.teamaurora.magnetosphere.api.content_registries.v1.FlammableBlockEntry;
+import com.teamaurora.borealib.api.content_registries.v1.ContentRegistry;
+import com.teamaurora.borealib.api.content_registries.v1.FlammableBlockEntry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;

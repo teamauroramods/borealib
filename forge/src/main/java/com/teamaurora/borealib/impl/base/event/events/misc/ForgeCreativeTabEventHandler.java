@@ -40,3 +40,5 @@ public class ForgeCreativeTabEventHandler {
         if (event1 != null) {
             event1.invoker().onModify(event.getFlags(), event.getParameters(), output, event.hasPermissions());
         }
+    }
+}

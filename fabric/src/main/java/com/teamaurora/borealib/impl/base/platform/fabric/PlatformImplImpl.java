@@ -2,7 +2,7 @@ package com.teamaurora.borealib.impl.base.platform.fabric;
 
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
-import com.teamaurora.borealib.core.fabric.MagnetosphereFabric;
+import com.teamaurora.borealib.core.fabric.BorealibFabric;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -80,4 +80,6 @@ public class PlatformImplImpl {
     }
 
     public static Optional<MinecraftServer> getRunningServer() {
-        return Optional.ofNullable(MagnetosphereFabric.getServer());
+        return Optional.ofNullable(BorealibFabric.getServer());
+    }
+}
