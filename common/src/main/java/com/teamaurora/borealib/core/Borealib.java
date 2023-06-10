@@ -3,12 +3,16 @@ package com.teamaurora.borealib.core;
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.borealib.api.content_registries.v1.BlockContentRegistries;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.EntityRendererRegistry;
+import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionRegistry;
 import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.borealib.core.network.BorealibMessages;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
 import com.teamaurora.borealib.impl.content_registries.BlockContentRegistriesImpl;
 import com.teamaurora.borealib.impl.content_registries.ContentRegistriesImpl;
 import com.teamaurora.borealib.impl.convention_tags.ConventionTagSynchronizer;
+import com.teamaurora.borealib.impl.resource_condition.ConfigResourceCondition;
+import com.teamaurora.borealib.impl.resource_condition.RegistryKeyExistsResourceCondition;
+import com.teamaurora.borealib.impl.resource_condition.TestsEnabledResourceCondition;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +24,14 @@ import java.util.ServiceLoader;
 public class Borealib implements ModLoaderService {
 
     public static final String MOD_ID = "borealib";
+    public static final boolean TESTS_ENABLED;
     public static final Logger LOGGER = LogManager.getLogger();
+
+    static {
+        TESTS_ENABLED = "true".equalsIgnoreCase(System.getProperty("borealib.enableTests"));
+        if (TESTS_ENABLED)
+            LogManager.getLogger().info("Borealib testing mode enabled!");
+    }
 
     public static ModLoaderService findMod(String id) {
         return ServiceLoader.load(ModLoaderService.class)
@@ -52,6 +63,9 @@ public class Borealib implements ModLoaderService {
         BlockContentRegistries.init();
         BlockContentRegistriesImpl.init();
         ContentRegistriesImpl.init();
+        ResourceConditionRegistry.register(ConfigResourceCondition.NAME, new ConfigResourceCondition());
+        ResourceConditionRegistry.register(RegistryKeyExistsResourceCondition.NAME, new RegistryKeyExistsResourceCondition());
+        ResourceConditionRegistry.register(TestsEnabledResourceCondition.NAME, new TestsEnabledResourceCondition());
     }
 
     @Override

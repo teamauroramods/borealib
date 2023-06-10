@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * Handles Fabric {@link ModLoaderService} initialization.
  * <p>In <code>fabric.mod.json</code>, this should be listed as a mod initializer entrypoint AND a datagen entrypoint if required.
  */
-public interface MagnetosphereModInitializer extends ModInitializer, DataGeneratorEntrypoint {
+public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEntrypoint {
 
     /**
      * @return The id of the mod to initialize; should be the same one as specified in your {@link ModLoaderService}
