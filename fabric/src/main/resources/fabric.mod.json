@@ -1,13 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "borealib",
-  "version": "${version}",
-  "name": "Borealib",
-  "description": "A.",
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
   "authors": [
-    "Team Aurora"
+    "Team Aurors"
   ],
-  "license": "MIT",
+  "contributors": [
+    "Exoplanetary",
+    "ebo2022",
+    "Audako",
+    "StevenPlayzz",
+    "JustinPlayzz"
+  ],
+  "contact": {
+    "homepage": "https://discord.com/invite/VzXSCFp",
+    "issues": "https://github.com/MoonflowerTeam/${archives_base_name}/issues",
+    "sources": "https://github.com/MoonflowerTeam/${archives_base_name}/"
+  },
+  "license": "GPLv3",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -15,11 +27,11 @@
     ]
   },
   "mixins": [
-    "borealib.mixins.json",
-    "borealib-common.mixins.json"
+    "${mod_id}.mixins.json",
+    "${mod_id}-common.mixins.json"
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.19.4"
+    "minecraft": "~${minecraft_version}"
   }
 }

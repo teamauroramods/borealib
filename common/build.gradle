@@ -12,7 +12,14 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     implementation "com.electronwill.night-config:core:${rootProject.nightconfig_version}"
     implementation "com.electronwill.night-config:toml:${rootProject.nightconfig_version}"
-    // Remove the next line if you don't want to depend on the API
+}
+
+processResources {
+    inputs.property "mod_id", project.mod_id
+
+    filesMatching(["architectury.common.json"]) {
+        expand "mod_id": project.mod_id
+    }
 }
 
 publishing {

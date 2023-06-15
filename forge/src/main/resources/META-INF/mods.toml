@@ -1,27 +1,31 @@
 modLoader = "javafml"
-loaderVersion = "[44,)"
-#issueTrackerURL = ""
-license = "MIT"
+loaderVersion = "[${forge_major_version},)"
+issueTrackerURL = "https://github.com/MoonflowerTeam/${archives_base_name}/issues"
+license = "LGPLv3"
 
 [[mods]]
-modId = "borealib"
-version = "${version}"
-displayName = "Borealib"
-authors = "Team Aurora"
-description = '''
-'''
-#logoFile = ""
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+description = "${mod_description}"
+logoFile = "${mod_id}.logo.png"
+authors = "Moonflower"
+credits = "Jackson, Ocelot"
+displayURL= "https://www.moonflower.gg/"
 
-[[dependencies.borealib]]
+[modproperties.${mod_id}]
+catalogueImageIcon="${mod_id}.icon.png"
+
+[[dependencies.${mod_id}]]
 modId = "forge"
 mandatory = true
-versionRange = "[45,)"
-ordering = "NONE"
+versionRange = "[${forge_major_version},)"
+ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies.borealib]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19.4,)"
-ordering = "NONE"
+versionRange = "[${minecraft_version},)"
+ordering = "AFTER"
 side = "BOTH"
