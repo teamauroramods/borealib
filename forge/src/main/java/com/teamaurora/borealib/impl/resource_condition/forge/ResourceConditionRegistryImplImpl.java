@@ -9,6 +9,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ApiStatus.Internal
+@Mod.EventBusSubscriber(modid = Borealib.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ResourceConditionRegistryImplImpl {
 
     private static final Set<IConditionSerializer<?>> CONDITIONS = ConcurrentHashMap.newKeySet();

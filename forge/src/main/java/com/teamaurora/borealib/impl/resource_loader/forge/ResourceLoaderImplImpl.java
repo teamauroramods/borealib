@@ -58,14 +58,14 @@ public class ResourceLoaderImplImpl extends ResourceLoaderImpl {
             Iterator<NamedReloadListener> iterator = toAdd.iterator();
             while (iterator.hasNext()) {
                 NamedReloadListener listener = iterator.next();
-                if (resolvedIds.containsAll(loader.ordering.stream().filter(pair -> pair.getSecond() == listener.getId()).map(Pair::getFirst).toList())) {
+                if (resolvedIds.containsAll(listener.getDependencies())) {
                     resolvedIds.add(listener.getId());
                     listeners.add(listener);
                     iterator.remove();
                 }
             }
         }
-        toAdd.forEach(l -> LogManager.getLogger().warn("Could not locate dependencies for listener " + l.getName()));
+        toAdd.forEach(l -> Borealib.LOGGER.warn("Could not locate dependencies for listener " + l.getName()));
         return listeners;
     }
 

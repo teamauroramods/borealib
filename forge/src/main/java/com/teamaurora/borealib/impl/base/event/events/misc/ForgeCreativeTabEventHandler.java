@@ -7,7 +7,7 @@ import com.teamaurora.borealib.impl.event.creativetabs.CreativeTabEventsImpl;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ForgeCreativeTabEventHandler {
 
     @SubscribeEvent
-    public static void onEvent(CreativeModeTabEvent.BuildContents event) {
+    public static void onEvent(BuildCreativeModeTabContentsEvent event) {
         CreativeTabEvents.Output output = new CreativeTabEvents.Output() {
             @Override
             public void acceptAfter(ItemStack after, ItemStack stack, CreativeModeTab.TabVisibility visibility) {
@@ -35,8 +35,8 @@ public class ForgeCreativeTabEventHandler {
                 }
             }
         };
-        CreativeTabEvents.MODIFY_ENTRIES_ALL.invoker().modifyEntries(event.getTab(), event.getFlags(), event.getParameters(), output, event.hasPermissions());
-        Event<CreativeTabEvents.ModifyEntries> event1 = CreativeTabEventsImpl.get(event.getTab());
+        CreativeTabEvents.MODIFY_ENTRIES_ALL.invoker().modifyEntries(event.getTabKey(), event.getTab(), event.getFlags(), event.getParameters(), output, event.hasPermissions());
+        Event<CreativeTabEvents.ModifyEntries> event1 = CreativeTabEventsImpl.get(event.getTabKey());
         if (event1 != null) {
             event1.invoker().onModify(event.getFlags(), event.getParameters(), output, event.hasPermissions());
         }

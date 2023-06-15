@@ -1,6 +1,5 @@
 package com.teamaurora.borealib.api.block.v1.set.wood;
 
-import com.teamaurora.borealib.api.block.v1.BlockUtils;
 import com.teamaurora.borealib.api.block.v1.set.variant.BlockVariant;
 import com.teamaurora.borealib.api.block.v1.set.variant.ItemVariant;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.RenderTypeRegistry;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 
 public final class WoodVariants {
 
@@ -98,18 +96,18 @@ public final class WoodVariants {
             .suffix("sign")
             .build();
     public static final BlockVariant<WoodSet> LEAVES = BlockVariant.<WoodSet>builder(set ->
-                    () -> new LeavesBlock(BlockBehaviour.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.AZALEA_LEAVES).noOcclusion().isValidSpawn(WoodVariants::ocelotOrParrot).isSuffocating(WoodVariants::never).isViewBlocking(WoodVariants::never)))
+                    () -> new LeavesBlock(BlockBehaviour.Properties.of().strength(0.2F).randomTicks().sound(SoundType.AZALEA_LEAVES).noOcclusion().isValidSpawn(WoodVariants::ocelotOrParrot).isSuffocating(WoodVariants::never).isViewBlocking(WoodVariants::never)))
             .suffix("leaves")
             .build();
     public static final BlockVariant<WoodSet> SAPLING = BlockVariant.<WoodSet>builder(set ->
-                    () -> new SaplingBlock(set.getTreeGrower().get(), BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.CHERRY_SAPLING)))
+                    () -> new SaplingBlock(set.getTreeGrower().get(), BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.CHERRY_SAPLING)))
             .suffix("sapling")
             .clientPostInit(() -> (d, s, o) -> {
                 d.enqueueWork(() -> RenderTypeRegistry.register(RenderType.cutout(), o.get()));
             })
             .build();
     public static final BlockVariant<WoodSet> POTTED_SAPLING = BlockVariant.<WoodSet>builder(set ->
-                    () -> new FlowerPotBlock(set.variantOrThrow(SAPLING).get(), BlockBehaviour.Properties.of(Material.DECORATION).instabreak().noOcclusion()))
+                    () -> new FlowerPotBlock(set.variantOrThrow(SAPLING).get(), BlockBehaviour.Properties.of().instabreak().noOcclusion()))
             .noBlockItem()
             .prefix("potted")
             .suffix("sapling")
@@ -130,15 +128,15 @@ public final class WoodVariants {
     }
 
     private static BlockBehaviour.Properties axisDependentColors(WoodSet set) {
-        return BlockUtils.colorFunction(set.getBaseProperties().get(), blockState -> blockState.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? set.getWoodColor() : set.getBarkColor());
+        return set.getBaseProperties().get().mapColor(blockState -> blockState.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? set.getWoodColor() : set.getBarkColor());
     }
 
     private static BlockBehaviour.Properties plankColors(WoodSet set) {
-        return set.getBaseProperties().get().color(set.getWoodColor());
+        return set.getBaseProperties().get().mapColor(set.getWoodColor());
     }
 
     private static BlockBehaviour.Properties barkColors(WoodSet set) {
-        return set.getBaseProperties().get().color(set.getWoodColor());
+        return set.getBaseProperties().get().mapColor(set.getWoodColor());
     }
 
     private static Boolean never(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, EntityType<?> entityType) {

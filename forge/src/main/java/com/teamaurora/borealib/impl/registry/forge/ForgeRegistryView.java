@@ -14,10 +14,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 @ApiStatus.Internal
@@ -39,6 +36,11 @@ public final class ForgeRegistryView<T> implements RegistryView<T> {
     @Nullable
     public ResourceLocation getKey(T value) {
         return this.registry.getKey(value);
+    }
+
+    @Override
+    public Optional<ResourceKey<T>> getResourceKey(T value) {
+        return this.registry.getResourceKey(value);
     }
 
     @Override

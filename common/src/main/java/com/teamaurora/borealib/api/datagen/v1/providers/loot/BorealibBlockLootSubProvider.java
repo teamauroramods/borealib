@@ -9,13 +9,13 @@ import net.minecraft.world.item.Item;
 
 import java.util.Set;
 
-public abstract class MagnetosphereBlockLootSubProvider extends BlockLootSubProvider {
+public abstract class BorealibBlockLootSubProvider extends BlockLootSubProvider {
 
-    protected MagnetosphereBlockLootSubProvider(Set<Item> explosionResistant, FeatureFlagSet featureFlags) {
+    protected BorealibBlockLootSubProvider(Set<Item> explosionResistant, FeatureFlagSet featureFlags) {
         super(explosionResistant, featureFlags);
     }
 
-    protected MagnetosphereBlockLootSubProvider(Set<Item> explosionResistant) {
+    protected BorealibBlockLootSubProvider(Set<Item> explosionResistant) {
         this(explosionResistant, FeatureFlags.REGISTRY.allFlags());
     }
 

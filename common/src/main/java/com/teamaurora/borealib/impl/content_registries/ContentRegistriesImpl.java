@@ -77,8 +77,6 @@ public class ContentRegistriesImpl extends SimpleStackedJsonResourceReloadListen
     }
 
     public static void init() {
-        ResourceLoader resourceLoader = ResourceLoader.get(PackType.SERVER_DATA);
-        resourceLoader.addReloaderOrdering(ReloadListenerKeys.TAGS, NAME);
-        resourceLoader.registerReloadListener(INSTANCE);
+        ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(INSTANCE);
     }
 }

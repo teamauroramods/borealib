@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": {
+    "minecraft:quartz_pillar": "minecraft:stripped_oak_log"
+  },
+  "conditions": [
+    {
+      "type": "borealib:tests_enabled"
+    }
+  ]
+}

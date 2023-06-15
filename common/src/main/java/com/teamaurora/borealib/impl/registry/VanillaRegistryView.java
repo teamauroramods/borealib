@@ -34,6 +34,11 @@ public class VanillaRegistryView<T> implements RegistryView<T> {
     }
 
     @Override
+    public Optional<ResourceKey<T>> getResourceKey(T value) {
+        return this.parent.getResourceKey(value);
+    }
+
+    @Override
     public int getId(@Nullable T value) {
         return this.parent.getId(value);
     }

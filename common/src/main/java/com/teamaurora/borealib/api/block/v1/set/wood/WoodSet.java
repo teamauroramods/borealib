@@ -9,10 +9,13 @@ import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BlockFamily;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -22,8 +25,7 @@ import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
@@ -35,8 +37,8 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private final WoodType woodType;
     private final Supplier<BlockBehaviour.Properties> baseProperties;
     private final Supplier<CustomBoatType> boatType;
-    private MaterialColor barkColor = MaterialColor.WOOD;
-    private MaterialColor woodColor = MaterialColor.PODZOL;
+    private MapColor barkColor = MapColor.WOOD;
+    private MapColor woodColor = MapColor.PODZOL;
     private Supplier<AbstractTreeGrower> treeGrower;
     private final TagKey<Block> blockLogTag;
     private final TagKey<Item> itemLogTag;
@@ -49,7 +51,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
         super(namespace, baseName);
         this.woodType = woodTypeProvider.apply(namespace, baseName);
         this.boatType = BOAT_TYPE_WRITER.register(new ResourceLocation(namespace, baseName), () -> new CustomBoatType(new ResourceLocation(namespace, "textures/entity/boat/" + baseName + ".png"), new ResourceLocation(namespace, "textures/entity/chest_boat/" + baseName + ".png")));
-        this.baseProperties = () -> BlockBehaviour.Properties.of(Material.WOOD).strength(2F, 3F).sound(this.woodType.soundType());
+        this.baseProperties = () -> BlockBehaviour.Properties.of().strength(2F, 3F).sound(this.woodType.soundType());
         this.blockLogTag = TagRegistry.bindBlock(new ResourceLocation(namespace, baseName + "_logs"));
         this.itemLogTag = TagRegistry.bindItem(new ResourceLocation(namespace, baseName + "_logs"));
         this.include(WoodVariants.STRIPPED_WOOD,
@@ -80,7 +82,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
         return of(namespace, baseName, WoodTypeProvider.DEFAULT);
     }
 
-    public WoodSet color(MaterialColor barkColor, MaterialColor woodColor) {
+    public WoodSet color(MapColor barkColor, MapColor woodColor) {
         this.barkColor = barkColor;
         this.woodColor = woodColor;
         return this;
@@ -95,37 +97,35 @@ public final class WoodSet extends BlockSet<WoodSet> {
         return this.include(WoodVariants.SAPLING, WoodVariants.POTTED_SAPLING);
     }
 
-    public void registerCreativeTabs() {
-        CreativeTabEvents.MODIFY_ENTRIES_ALL.register((tab, flags, parameters, output, canUseGameMasterBlocks) -> {
-            if (tab == CreativeModeTabs.BUILDING_BLOCKS) {
-                output.acceptAllItemsAfter(Items.MANGROVE_BUTTON, List.of(
-                        this.variantOrThrow(WoodVariants.LOG).get(),
-                        this.variantOrThrow(WoodVariants.WOOD).get(),
-                        this.variantOrThrow(WoodVariants.STRIPPED_LOG).get(),
-                        this.variantOrThrow(WoodVariants.STRIPPED_WOOD).get(),
-                        this.variantOrThrow(WoodVariants.PLANKS).get(),
-                        this.variantOrThrow(WoodVariants.STAIRS).get(),
-                        this.variantOrThrow(WoodVariants.SLAB).get(),
-                        this.variantOrThrow(WoodVariants.FENCE).get(),
-                        this.variantOrThrow(WoodVariants.FENCE_GATE).get(),
-                        this.variantOrThrow(WoodVariants.DOOR).get(),
-                        this.variantOrThrow(WoodVariants.TRAPDOOR).get(),
-                        this.variantOrThrow(WoodVariants.PRESSURE_PLATE).get(),
-                        this.variantOrThrow(WoodVariants.BUTTON).get()
-                ));
-            } else if (tab == CreativeModeTabs.NATURAL_BLOCKS) {
-                output.acceptAfter(Items.MANGROVE_LOG, this.variantOrThrow(WoodVariants.LOG).get());
-                this.variant(WoodVariants.LEAVES).ifPresent(r -> output.acceptAfter(Items.FLOWERING_AZALEA_LEAVES, r.get()));
-                this.variant(WoodVariants.SAPLING).ifPresent(r -> output.acceptAfter(Items.DARK_OAK_SAPLING, r.get()));
-            } else if (tab == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-                output.acceptAfter(Items.MANGROVE_SIGN, this.itemVariantOrThrow(WoodVariants.SIGN_ITEM).get());
-            } else if (tab == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-                output.acceptAllItemsAfter(Items.MANGROVE_CHEST_BOAT, List.of(
-                        this.itemVariantOrThrow(WoodVariants.BOAT).get(),
-                        this.itemVariantOrThrow(WoodVariants.CHEST_BOAT).get()
-                ));
-            }
-        });
+    public void registerCreativeTabs(ResourceKey<CreativeModeTab> tabKey, CreativeModeTab tab, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, CreativeTabEvents.Output output, boolean canUseGameMasterBlocks) {
+        if (tabKey == CreativeModeTabs.BUILDING_BLOCKS) {
+            output.acceptAllItemsAfter(Items.MANGROVE_BUTTON, List.of(
+                    this.variantOrThrow(WoodVariants.LOG).get(),
+                    this.variantOrThrow(WoodVariants.WOOD).get(),
+                    this.variantOrThrow(WoodVariants.STRIPPED_LOG).get(),
+                    this.variantOrThrow(WoodVariants.STRIPPED_WOOD).get(),
+                    this.variantOrThrow(WoodVariants.PLANKS).get(),
+                    this.variantOrThrow(WoodVariants.STAIRS).get(),
+                    this.variantOrThrow(WoodVariants.SLAB).get(),
+                    this.variantOrThrow(WoodVariants.FENCE).get(),
+                    this.variantOrThrow(WoodVariants.FENCE_GATE).get(),
+                    this.variantOrThrow(WoodVariants.DOOR).get(),
+                    this.variantOrThrow(WoodVariants.TRAPDOOR).get(),
+                    this.variantOrThrow(WoodVariants.PRESSURE_PLATE).get(),
+                    this.variantOrThrow(WoodVariants.BUTTON).get()
+            ));
+        } else if (tabKey == CreativeModeTabs.NATURAL_BLOCKS) {
+            output.acceptAfter(Items.MANGROVE_LOG, this.variantOrThrow(WoodVariants.LOG).get());
+            this.variant(WoodVariants.LEAVES).ifPresent(r -> output.acceptAfter(Items.FLOWERING_AZALEA_LEAVES, r.get()));
+            this.variant(WoodVariants.SAPLING).ifPresent(r -> output.acceptAfter(Items.DARK_OAK_SAPLING, r.get()));
+        } else if (tabKey == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            output.acceptAfter(Items.MANGROVE_SIGN, this.itemVariantOrThrow(WoodVariants.SIGN_ITEM).get());
+        } else if (tabKey == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            output.acceptAllItemsAfter(Items.MANGROVE_CHEST_BOAT, List.of(
+                    this.itemVariantOrThrow(WoodVariants.BOAT).get(),
+                    this.itemVariantOrThrow(WoodVariants.CHEST_BOAT).get()
+            ));
+        }
     }
 
     /**
@@ -168,11 +168,11 @@ public final class WoodSet extends BlockSet<WoodSet> {
         return this.woodType;
     }
 
-    public MaterialColor getBarkColor() {
+    public MapColor getBarkColor() {
         return this.barkColor;
     }
 
-    public MaterialColor getWoodColor() {
+    public MapColor getWoodColor() {
         return this.woodColor;
     }
 
@@ -253,7 +253,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
 
         @Override
         public WoodType apply(String namespace, String baseName) {
-            BlockSetType blockSetType = new BlockSetType(namespace + ":" + baseName, soundType, doorClose, doorOpen, trapdoorClose, trapdoorOpen, pressurePlateClickOff, pressurePlateClickOn, buttonClickOff, buttonClickOn);
+            BlockSetType blockSetType = new BlockSetType(namespace + ":" + baseName, true, soundType, doorClose, doorOpen, trapdoorClose, trapdoorOpen, pressurePlateClickOff, pressurePlateClickOn, buttonClickOff, buttonClickOn);
             BlockSetType.register(blockSetType);
             WoodType woodType1 = new WoodType(blockSetType.name(), blockSetType, soundType, hangingSignSoundType, fenceGateClose, fenceGateOpen);
             WoodType.register(woodType1);

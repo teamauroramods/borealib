@@ -1,7 +1,7 @@
 {
   "selector": {
     "type": "borealib:and",
-    "selectors": [
+    "values": [
       {
         "type": "borealib:tests_enabled"
       },

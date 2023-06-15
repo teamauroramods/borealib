@@ -38,7 +38,7 @@ public class CustomBoat extends Boat {
     public void tick() {
         super.tick();
         if (this.getBoatCustomType() == null) {
-            Boat boat = new Boat(this.level, this.getX(), this.getY(), this.getZ());
+            Boat boat = new Boat(this.level(), this.getX(), this.getY(), this.getZ());
             boat.copyPosition(this);
             if (this.hasCustomName()) {
                 boat.setCustomName(this.getCustomName());
@@ -47,7 +47,7 @@ public class CustomBoat extends Boat {
 
             boat.setInvulnerable(this.isInvulnerable());
 
-            this.level.addFreshEntity(boat);
+            this.level().addFreshEntity(boat);
             if (this.isPassenger())
                 boat.startRiding(this.getVehicle(), true);
 

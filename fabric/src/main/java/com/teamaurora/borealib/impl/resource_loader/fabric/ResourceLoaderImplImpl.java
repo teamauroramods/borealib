@@ -44,7 +44,7 @@ public class ResourceLoaderImplImpl extends ResourceLoaderImpl {
 
             @Override
             public Collection<ResourceLocation> getFabricDependencies() {
-                return ordering.stream().filter(pair -> pair.getSecond() == getFabricId()).map(Pair::getFirst).collect(Collectors.toList());
+                return reloadListener.getDependencies();
             }
         });
     }

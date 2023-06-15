@@ -4,6 +4,7 @@ import com.teamaurora.borealib.api.base.v1.modloading.fabric.DelegatedModInitial
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.borealib.api.event.lifecycle.v1.ServerLifecycleEvents;
+import com.teamaurora.borealib.api.registry.v1.RegistryView;
 import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.impl.config.fabric.ConfigLoadingHelper;
 import com.teamaurora.borealib.impl.config.fabric.ConfigTracker;
@@ -59,8 +60,8 @@ public class BorealibFabric implements DelegatedModInitializer {
             ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
                 event.invoker().onModify(entries.getEnabledFeatures(), entries.getContext(), wrapOutput(entries), entries.shouldShowOpRestrictedItems());
             });
-
         });
+        ItemGroupEvents.MODIFY_ENTRIES_ALL.register((group, entries) -> CreativeTabEvents.MODIFY_ENTRIES_ALL.invoker().modifyEntries(RegistryView.CREATIVE_MODE_TABS.getResourceKey(group).orElseThrow(), group, entries.getEnabledFeatures(), entries.getContext(), wrapOutput(entries), entries.shouldShowOpRestrictedItems()));
     }
 
     private static CreativeTabEvents.Output wrapOutput(FabricItemGroupEntries entries) {

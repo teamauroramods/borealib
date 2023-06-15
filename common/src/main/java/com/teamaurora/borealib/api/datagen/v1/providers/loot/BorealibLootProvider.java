@@ -9,11 +9,10 @@ import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.data.loot.packs.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
-import net.minecraft.world.level.storage.loot.ValidationContext;
+import net.minecraft.world.level.storage.loot.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-public class MagnetosphereLootProvider implements DataProvider {
+public class BorealibLootProvider implements DataProvider {
 
     private final PackOutput.PathProvider pathProvider;
     private final List<LootTableProvider.SubProviderEntry> subProviders;
@@ -35,12 +34,12 @@ public class MagnetosphereLootProvider implements DataProvider {
             new SubProviderEntry(VanillaPiglinBarterLoot::new, LootContextParamSets.PIGLIN_BARTER),
             new SubProviderEntry(VanillaGiftLoot::new, LootContextParamSets.GIFT));
 
-    public MagnetosphereLootProvider(PackOutput packOutput) {
+    public BorealibLootProvider(PackOutput packOutput) {
         this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "loot_tables");
         this.subProviders = new ArrayList<>();
     }
 
-    public MagnetosphereLootProvider add(Supplier<LootTableSubProvider> subProvider, LootContextParamSet paramSet) {
+    public BorealibLootProvider add(Supplier<LootTableSubProvider> subProvider, LootContextParamSet paramSet) {
         this.subProviders.add(new LootTableProvider.SubProviderEntry(subProvider, paramSet));
         return this;
     }
@@ -67,9 +66,15 @@ public class MagnetosphereLootProvider implements DataProvider {
         } catch (Throwable ignored) {
         }
 
-        ValidationContext validationContext = new ValidationContext(LootContextParamSets.ALL_PARAMS, resourcelocationx -> null, registry::get);
-        lootTables.forEach((resourceLocationx, lootTable) -> LootTables.validate(validationContext, resourceLocationx, lootTable));
-
+        ValidationContext validationContext = new ValidationContext(LootContextParamSets.ALL_PARAMS, new LootDataResolver() {
+            @Nullable
+            public <T> T getElement(LootDataId<T> lootDataId) {
+                return lootDataId.type() == LootDataType.TABLE ? (T) lootTables.get(lootDataId.location()) : null;
+            }
+        });
+        lootTables.forEach((resourceLocationx, lootTable) -> {
+            lootTable.validate(validationContext.setParams(lootTable.getParamSet()).enterElement("{" + resourceLocationx + "}", new LootDataId<>(LootDataType.TABLE, resourceLocationx)));
+        });
         Multimap<String, String> problems = validationContext.getProblems();
         if (!problems.isEmpty()) {
             problems.forEach((string, string2) -> LOGGER.warn("Found validation problem in {}: {}", string, string2));
@@ -79,7 +84,7 @@ public class MagnetosphereLootProvider implements DataProvider {
                 ResourceLocation resourceLocation = entry.getKey();
                 LootTable lootTable = entry.getValue();
                 Path path = this.pathProvider.json(resourceLocation);
-                return DataProvider.saveStable(cachedOutput, LootTables.serialize(lootTable), path);
+                return DataProvider.saveStable(cachedOutput, LootDataType.TABLE.parser().toJsonTree(lootTable), path);
             }).toArray(CompletableFuture[]::new));
         }
     }

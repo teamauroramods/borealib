@@ -29,6 +29,7 @@ import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
@@ -150,6 +151,7 @@ public interface RegistryView<T> extends Keyable, IdMap<T> {
     RegistryView<BannerPattern> BANNER_PATTERN = of(Registries.BANNER_PATTERN);
     RegistryView<Instrument> INSTRUMENT = of(Registries.INSTRUMENT);
     RegistryView<String> DECORATED_POT_PATTERNS = of(Registries.DECORATED_POT_PATTERNS);
+    RegistryView<CreativeModeTab> CREATIVE_MODE_TABS = of(Registries.CREATIVE_MODE_TAB);
 
     static <T> RegistryView<T> of(ResourceKey<? extends Registry<T>> key) {
         return RegistryViewImpl.getRegistry(key.location());
@@ -176,6 +178,14 @@ public interface RegistryView<T> extends Keyable, IdMap<T> {
      */
     @Nullable
     ResourceLocation getKey(T value);
+
+    /**
+     * Retrieves the resource key for the specified value.
+     *
+     * @param value The value to get the key for
+     * @return A key for that value or {@link Optional#empty()} if this registry doesn't contain that value
+     */
+    Optional<ResourceKey<T>> getResourceKey(T value);
 
     /**
      * Retrieves the id for the specified value. This can only be used for a custom registry.

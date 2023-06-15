@@ -24,8 +24,8 @@ import java.util.List;
 public class BuiltInBiomeSelectors {
 
     public static final DeferredRegister<Codec<? extends BiomeSelector>> WRITER = DeferredRegister.customWriter(BorealibRegistries.BIOME_SELECTOR_TYPES, Borealib.MOD_ID);
-    private static final RegistryReference<Codec<OrSelector>> OR_CODEC = WRITER.register("or", () -> CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(OrSelector::new, OrSelector::parents).fieldOf("selectors").codec());
-    private static final RegistryReference<Codec<AndSelector>> AND_CODEC = WRITER.register("and", () -> CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(AndSelector::new, AndSelector::parents).fieldOf("selectors").codec());
+    private static final RegistryReference<Codec<OrSelector>> OR_CODEC = WRITER.register("or", () -> CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(OrSelector::new, OrSelector::parents).fieldOf("values").codec());
+    private static final RegistryReference<Codec<AndSelector>> AND_CODEC = WRITER.register("and", () -> CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(AndSelector::new, AndSelector::parents).fieldOf("values").codec());
     private static final RegistryReference<Codec<BiomeCheck>> BIOME_CHECK_CODEC = WRITER.register("is_biome", () -> Biome.LIST_CODEC.xmap(BiomeCheck::new, BiomeCheck::biomes).fieldOf("biomes").codec());
     private static final RegistryReference<Codec<DimensionCheck>> DIMENSION_CHECK_CODEC = WRITER.register("generates_in", () -> ResourceKey.codec(Registries.LEVEL_STEM).xmap(DimensionCheck::new, DimensionCheck::dimension).fieldOf("dimension").codec());
     private static final RegistryReference<Codec<StructureCheck>> STRUCTURE_CHECK_CODEC = WRITER.register("has_structure", () -> ResourceKey.codec(Registries.STRUCTURE).xmap(StructureCheck::new, StructureCheck::structure).fieldOf("structure").codec());
@@ -36,6 +36,7 @@ public class BuiltInBiomeSelectors {
             Codec.BOOL.fieldOf("expected_value").forGetter(ConfigToggle::expectedValue)
     ).apply(instance, ConfigToggle::new)));
     private static final RegistryReference<Codec<TestsEnabledSelector>> TESTS_ENABLED_CODEC = WRITER.register("tests_enabled", () -> Codec.unit(TestsEnabledSelector.INSTANCE));
+    private static final RegistryReference<Codec<NotSelector>> NOT_CODEC = WRITER.register("not", () -> BiomeSelector.CODEC.xmap(NotSelector::new, NotSelector::selector).fieldOf("value").codec());
 
     public static BiomeSelector or(List<BiomeSelector> parents) {
         return new OrSelector(parents);
@@ -132,7 +133,7 @@ public class BuiltInBiomeSelectors {
         }
 
         @Override
-        public Codec<? extends BiomeSelector> type() {
+        public Codec<StructureCheck> type() {
             return STRUCTURE_CHECK_CODEC.get();
         }
     }
@@ -150,7 +151,7 @@ public class BuiltInBiomeSelectors {
         }
 
         @Override
-        public Codec<? extends BiomeSelector> type() {
+        public Codec<ConfigToggle> type() {
             return CONFIG_TOGGLE_CODEC.get();
         }
     }
@@ -165,8 +166,21 @@ public class BuiltInBiomeSelectors {
         }
 
         @Override
-        public Codec<? extends BiomeSelector> type() {
+        public Codec<TestsEnabledSelector> type() {
             return TESTS_ENABLED_CODEC.get();
+        }
+    }
+
+    private record NotSelector(BiomeSelector selector) implements BiomeSelector {
+
+        @Override
+        public boolean test(Context context) {
+            return !this.selector.test(context);
+        }
+
+        @Override
+        public Codec<NotSelector> type() {
+            return NOT_CODEC.get();
         }
     }
 }

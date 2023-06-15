@@ -2,6 +2,7 @@ package com.teamaurora.borealib.api.event.creativetabs.v1;
 
 import com.teamaurora.borealib.api.base.v1.event.Event;
 import com.teamaurora.borealib.impl.event.creativetabs.CreativeTabEventsImpl;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -20,10 +21,10 @@ public final class CreativeTabEvents {
 
     @FunctionalInterface
     public interface ModifyEntriesAll {
-        void modifyEntries(CreativeModeTab tab, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, Output output, boolean canUseGameMasterBlocks);
+        void modifyEntries(ResourceKey<CreativeModeTab> tabKey, CreativeModeTab tab, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, Output output, boolean canUseGameMasterBlocks);
     }
 
-    public static Event<CreativeTabEvents.ModifyEntries> modifyEntriesEvent(CreativeModeTab tab) {
+    public static Event<CreativeTabEvents.ModifyEntries> modifyEntriesEvent(ResourceKey<CreativeModeTab> tab) {
         return CreativeTabEventsImpl.event(tab);
     }
 

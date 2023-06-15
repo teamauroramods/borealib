@@ -6,7 +6,6 @@
     "client.LayerDefinitionsMixin"
   ],
   "mixins": [
-    "BlockBehaviourPropertiesMixin",
     "BlockEntityTypeMixin",
     "DispenserBlockAccessor",
     "ReloadableServerResourcesMixin"

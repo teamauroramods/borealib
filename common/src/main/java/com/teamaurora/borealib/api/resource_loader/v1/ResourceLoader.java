@@ -21,12 +21,4 @@ public interface ResourceLoader {
      * @param reloadListener The listener to register
      */
     void registerReloadListener(NamedReloadListener reloadListener);
-
-    /**
-     * Request that a reload listener be registered before another if possible.
-     *
-     * @param before The reloader to register before
-     * @param after  The reloader to register after
-     */
-    void addReloaderOrdering(ResourceLocation before, ResourceLocation after);
 }

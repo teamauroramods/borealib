@@ -6,7 +6,7 @@
   ],
   "mixins": [
     "AxeItemMixin",
-    "ReloadListenerMixin",
+    "HandshakeHandlerMixin",
     "SimpleJsonResourceReloadListenerMixin"
   ],
   "injectors": {
