@@ -37,7 +37,7 @@ public class ForgePacketContext implements MagnetospherePacket.Context {
     public void waitFor(Future<?> future) {
         Connection connection = this.getNetworkManager();
         if (connection.getPacketListener() instanceof FMLHandshakeHandlerExtension) {
-            ((FMLHandshakeHandlerExtension) connection.channel().attr(AttributeKey.valueOf("fml:handshake")).get()).magnetosphere$addWait(future);
+            ((FMLHandshakeHandlerExtension) connection.channel().attr(AttributeKey.valueOf("fml:handshake")).get()).borealib$addWait(future);
         }
     }
 

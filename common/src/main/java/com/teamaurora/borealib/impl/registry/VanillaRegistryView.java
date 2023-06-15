@@ -15,9 +15,9 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @ApiStatus.Internal
-public final class VanillaRegistryView<T> implements RegistryView<T> {
+public class VanillaRegistryView<T> implements RegistryView<T> {
 
-    private final Registry<T> parent;
+    protected final Registry<T> parent;
 
     public VanillaRegistryView(Registry<T> parent) {
         this.parent = parent;

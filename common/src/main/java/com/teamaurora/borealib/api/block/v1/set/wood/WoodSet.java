@@ -4,6 +4,8 @@ import com.teamaurora.borealib.api.block.v1.set.BlockSet;
 import com.teamaurora.borealib.api.content_registries.v1.TagRegistry;
 import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
 import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
+import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
+import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BlockFamily;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -31,7 +34,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
 
     private final WoodType woodType;
     private final Supplier<BlockBehaviour.Properties> baseProperties;
-    private final CustomBoatType boatType;
+    private final Supplier<CustomBoatType> boatType;
     private MaterialColor barkColor = MaterialColor.WOOD;
     private MaterialColor woodColor = MaterialColor.PODZOL;
     private Supplier<AbstractTreeGrower> treeGrower;
@@ -39,13 +42,13 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private final TagKey<Item> itemLogTag;
     private BlockFamily family;
 
+    @ApiStatus.Internal
+    public static final DeferredRegister<CustomBoatType> BOAT_TYPE_WRITER = DeferredRegister.customWriter(BorealibRegistries.BOAT_TYPES, Borealib.MOD_ID);
+
     private WoodSet(String namespace, String baseName, WoodTypeProvider woodTypeProvider) {
         super(namespace, baseName);
         this.woodType = woodTypeProvider.apply(namespace, baseName);
-        this.boatType = Registry.register(BorealibRegistries.BOAT_TYPES,
-                new ResourceLocation(namespace, baseName),
-                new CustomBoatType(new ResourceLocation(namespace, "textures/entity/boat/" + baseName + ".png"), new ResourceLocation(namespace, "textures/entity/chest_boat/" + baseName + ".png"))
-        );
+        this.boatType = BOAT_TYPE_WRITER.register(new ResourceLocation(namespace, baseName), () -> new CustomBoatType(new ResourceLocation(namespace, "textures/entity/boat/" + baseName + ".png"), new ResourceLocation(namespace, "textures/entity/chest_boat/" + baseName + ".png")));
         this.baseProperties = () -> BlockBehaviour.Properties.of(Material.WOOD).strength(2F, 3F).sound(this.woodType.soundType());
         this.blockLogTag = TagRegistry.bindBlock(new ResourceLocation(namespace, baseName + "_logs"));
         this.itemLogTag = TagRegistry.bindItem(new ResourceLocation(namespace, baseName + "_logs"));
@@ -158,7 +161,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
     }
 
     public CustomBoatType getBoatType() {
-        return this.boatType;
+        return this.boatType.get();
     }
 
     public WoodType getWoodType() {

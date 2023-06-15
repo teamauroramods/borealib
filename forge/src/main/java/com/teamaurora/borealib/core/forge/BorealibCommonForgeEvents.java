@@ -14,7 +14,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 @Mod.EventBusSubscriber(modid = Borealib.MOD_ID)
-public class MagnetosphereCommonForgeEvents {
+public class BorealibCommonForgeEvents {
 
     @SubscribeEvent
     public static void onEvent(ServerAboutToStartEvent event) {

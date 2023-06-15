@@ -26,7 +26,7 @@ public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundChangeDifficultyPacket;<init>(Lnet/minecraft/world/Difficulty;Z)V"))
     public void flushLoginPackets(Connection connection, ServerPlayer player, CallbackInfo ci) {
         if (this.extension != null) {
-            this.extension.magnetosphere$flushDelayedPackets(player.connection);
+            this.extension.borealib$flushDelayedPackets(player.connection);
             this.extension = null;
         }
     }

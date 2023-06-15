@@ -1,6 +1,8 @@
 package com.teamaurora.borealib.api.config.v1;
 
+import com.mojang.serialization.Codec;
 import com.teamaurora.borealib.impl.config.ConfigRegistryImpl;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
 import java.util.Optional;

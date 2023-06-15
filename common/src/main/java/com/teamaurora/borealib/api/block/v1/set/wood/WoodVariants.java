@@ -85,13 +85,13 @@ public final class WoodVariants {
             () -> new StandingSignBlock(plankColors(set).strength(1F).noCollission(), set.getWoodType()))
             .noBlockItem()
             .suffix("sign")
-            .onRegister(block -> ((BlockEntityTypeExtension) BlockEntityType.SIGN).magnetosphere$addAdditionalBlockTypes(block))
+            .onRegister(block -> ((BlockEntityTypeExtension) BlockEntityType.SIGN).borealib$addAdditionalBlockTypes(block))
             .build();
     public static final BlockVariant<WoodSet> WALL_SIGN = BlockVariant.<WoodSet>builder(set ->
                     () -> new WallSignBlock(plankColors(set).strength(1F).noCollission(), set.getWoodType()))
             .noBlockItem()
             .suffix("wall_sign")
-            .onRegister(block -> ((BlockEntityTypeExtension) BlockEntityType.SIGN).magnetosphere$addAdditionalBlockTypes(block))
+            .onRegister(block -> ((BlockEntityTypeExtension) BlockEntityType.SIGN).borealib$addAdditionalBlockTypes(block))
             .build();
     public static final ItemVariant<WoodSet> SIGN_ITEM = ItemVariant.<WoodSet>builder(set ->
                     () -> new SignItem(new Item.Properties().stacksTo(16), set.variantOrThrow(STANDING_SIGN).get(), set.variantOrThrow(WALL_SIGN).get()))

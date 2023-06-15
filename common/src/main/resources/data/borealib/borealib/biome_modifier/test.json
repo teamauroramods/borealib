@@ -1,0 +1,20 @@
+{
+  "selector": {
+    "type": "borealib:and",
+    "selectors": [
+      {
+        "type": "borealib:tests_enabled"
+      },
+      {
+        "type": "borealib:is_biome",
+        "biomes": "#minecraft:is_forest"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "type": "borealib:modify_sky_color",
+      "sky_color": 1234567
+    }
+  ]
+}

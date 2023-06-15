@@ -33,17 +33,17 @@ public abstract class ServerLoginPacketListenerImplMixin implements ServerLoginP
     }
 
     @Override
-    public void magnetosphere$trackPacket(ClientboundCustomQueryPacket packet) {
+    public void borealib$trackPacket(ClientboundCustomQueryPacket packet) {
         this.trackedPackets.put(packet.getTransactionId(), packet);
     }
 
     @Override
-    public void magnetosphere$delayPacket() {
+    public void borealib$delayPacket() {
         this.delayedPackets.add(this.queryId);
     }
 
     @Override
-    public void magnetosphere$flushDelayedPackets(ServerGamePacketListenerImpl listener) {
+    public void borealib$flushDelayedPackets(ServerGamePacketListenerImpl listener) {
         this.delayedPackets.forEach(packetId -> {
             ClientboundCustomQueryPacket loginPacket = this.trackedPackets.remove(packetId);
             if (loginPacket == null)

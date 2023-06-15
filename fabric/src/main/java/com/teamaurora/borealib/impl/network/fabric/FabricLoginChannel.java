@@ -61,7 +61,7 @@ public class FabricLoginChannel extends NetworkChannelImpl implements LoginNetwo
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> this.loginPackets.stream().flatMap(function -> function.apply(((ServerLoginPacketListenerImplAccessor) handler).getConnection().isMemoryConnection()).stream()).forEach(pair -> {
             Packet<?> packet = sender.createPacket(this.channelId, this.serialize((MagnetospherePacket<?>) pair.getValue(), MagnetospherePacket.Direction.LOGIN_CLIENTBOUND));
             if (packet instanceof ClientboundCustomQueryPacket) {
-                ((ServerLoginPacketListenerImplExtension) handler).magnetosphere$trackPacket((ClientboundCustomQueryPacket) packet);
+                ((ServerLoginPacketListenerImplExtension) handler).borealib$trackPacket((ClientboundCustomQueryPacket) packet);
             }
             sender.sendPacket(packet);
         }));
@@ -97,7 +97,7 @@ public class FabricLoginChannel extends NetworkChannelImpl implements LoginNetwo
         if (!understood) {
             if (!(listener instanceof ServerLoginPacketListenerImplExtension))
                 throw new IllegalStateException("Client failed to process server message");
-            ((ServerLoginPacketListenerImplExtension) listener).magnetosphere$delayPacket();
+            ((ServerLoginPacketListenerImplExtension) listener).borealib$delayPacket();
             return;
         }
 

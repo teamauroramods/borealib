@@ -27,7 +27,7 @@ public class ConfigResourceCondition implements ResourceCondition {
     @Override
     public boolean test(JsonObject json) throws JsonParseException {
         ResourceLocation configId = new ResourceLocation(GsonHelper.getAsString(json, "config"));
-        Optional<ModConfig> optional = ConfigRegistry.get(configId.getNamespace(), byName(configId.getPath()));
+        Optional<ModConfig> optional = ConfigRegistry.get(configId.getNamespace(), ModConfig.Type.CODEC.byName(configId.getPath()));
         if (optional.isEmpty() || optional.get().getConfigData() == null)
             return false;
 
@@ -46,13 +46,6 @@ public class ConfigResourceCondition implements ResourceCondition {
         if (value instanceof Number)
             return testNumber((Number) value, json, jsonValue);
         return testSimple(value, jsonValue);
-    }
-
-    private static ModConfig.Type byName(String name) {
-        for (ModConfig.Type type : ModConfig.Type.values())
-            if (type.name().toLowerCase(Locale.ROOT).equals(name))
-                return type;
-        throw new JsonSyntaxException("Unknown config type: " + name);
     }
 
     private static boolean testSimple(Object entry, JsonElement value) {

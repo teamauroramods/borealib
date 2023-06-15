@@ -7,5 +7,5 @@ import java.util.concurrent.Future;
 @ApiStatus.Internal
 public interface FMLHandshakeHandlerExtension {
 
-    void magnetosphere$addWait(Future<?> wait);
+    void borealib$addWait(Future<?> wait);
 }

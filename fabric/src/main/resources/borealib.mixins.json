@@ -8,13 +8,17 @@
   ],
   "mixins": [
     "AxeItemMixin",
+    "BiomeAccessor",
     "ClientHandshakePacketListenerImplAccessor",
     "DedicatedServerMixin",
     "MinecraftServerMixin",
     "PlayerListMixin",
+    "RegistryDataLoaderMixin",
+    "RegistrySynchronizationMixin",
     "ServerGamePacketListenerImplAccessor",
     "ServerLoginPacketListenerImplAccessor",
-    "ServerLoginPacketListenerImplMixin"
+    "ServerLoginPacketListenerImplMixin",
+    "WorldLoaderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

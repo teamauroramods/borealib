@@ -6,11 +6,11 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public interface ServerLoginPacketListenerImplExtension {
 
-    Connection magnetosphere$getConnection();
+    Connection borealib$getConnection();
 
-    void magnetosphere$trackPacket(ClientboundCustomQueryPacket packet);
+    void borealib$trackPacket(ClientboundCustomQueryPacket packet);
 
-    void magnetosphere$delayPacket();
+    void borealib$delayPacket();
 
-    void magnetosphere$flushDelayedPackets(ServerGamePacketListenerImpl listener);
+    void borealib$flushDelayedPackets(ServerGamePacketListenerImpl listener);
 }

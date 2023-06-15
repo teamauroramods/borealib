@@ -20,7 +20,7 @@ public class BlockEntityTypeMixin implements BlockEntityTypeExtension {
     private Set<Block> validBlocks;
 
     @Override
-    public void magnetosphere$addAdditionalBlockTypes(Block... blocks) {
+    public void borealib$addAdditionalBlockTypes(Block... blocks) {
         Set<Block> b = new HashSet<>(validBlocks);
         for (Block block : blocks)
             b.add(block);
