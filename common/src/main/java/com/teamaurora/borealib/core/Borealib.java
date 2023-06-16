@@ -2,10 +2,6 @@ package com.teamaurora.borealib.core;
 
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
-import com.teamaurora.borealib.api.config.v1.ConfigBuilder;
-import com.teamaurora.borealib.api.config.v1.ConfigRegistry;
-import com.teamaurora.borealib.api.config.v1.ConfigValue;
-import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.content_registries.v1.BlockContentRegistries;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.EntityRendererRegistry;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionRegistry;
@@ -16,7 +12,6 @@ import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeModifierActions;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeSelectors;
 import com.teamaurora.borealib.impl.content_registries.BlockContentRegistriesImpl;
 import com.teamaurora.borealib.impl.content_registries.ContentRegistriesImpl;
-import com.teamaurora.borealib.impl.convention_tags.ConventionTagSynchronizer;
 import com.teamaurora.borealib.impl.resource_condition.ConfigResourceCondition;
 import com.teamaurora.borealib.impl.resource_condition.RegistryKeyExistsResourceCondition;
 import com.teamaurora.borealib.impl.resource_condition.TestsEnabledResourceCondition;
@@ -68,12 +63,12 @@ public class Borealib implements ModLoaderService {
     public void onCommonInit() {
 
         // Init deferred registers
+        BorealibEntityTypes.ENTITIES.register();
         BuiltInBiomeSelectors.WRITER.register();
         BuiltInBiomeModifierActions.WRITER.register();
         WoodSet.BOAT_TYPE_WRITER.register();
 
         // Init built-in stuff
-        ConventionTagSynchronizer.init();
         BlockContentRegistries.init();
         BlockContentRegistriesImpl.init();
         ContentRegistriesImpl.init();
