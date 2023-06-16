@@ -9,10 +9,15 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -55,12 +60,17 @@ public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEn
     @Override
     default void onInitializeDataGenerator(FabricDataGenerator generator) {
         Borealib.findMod(this.id()).onDataInit(new ModLoaderService.DataGeneratorContext() {
-
             ModContainer container = new ModContainerImpl(generator.getModContainer());
+            FabricDataGenerator.Pack pack = generator.createPack();
 
             @Override
-            public DataGenerator getGenerator() {
-                return generator;
+            public <T extends DataProvider> T addProvider(DataProvider.Factory<T> factory) {
+                return pack.addProvider(factory);
+            }
+
+            @Override
+            public <T extends DataProvider> T addProvider(BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory) {
+                return pack.addProvider(registryDependentFactory::apply);
             }
 
             @Override

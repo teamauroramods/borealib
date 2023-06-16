@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 public class ConventionTagSynchronizerImpl {
     public static void init() {
         ResourceKey<Registry<Block>> blocks = Registries.BLOCK;
+        TagRegistry.syncTags(blocks, PlatformBlockTags.BARRELS_WOODEN, ConventionalBlockTags.WOODEN_BARRELS);
         TagRegistry.syncTags(blocks, PlatformBlockTags.ORES, ConventionalBlockTags.ORES);
         TagRegistry.syncTags(blocks, PlatformBlockTags.ORES_QUARTZ, ConventionalBlockTags.QUARTZ_ORES);
         TagRegistry.syncTags(blocks, PlatformBlockTags.BOOKSHELVES, ConventionalBlockTags.BOOKSHELVES);

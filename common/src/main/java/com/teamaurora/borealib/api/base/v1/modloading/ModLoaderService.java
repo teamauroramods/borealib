@@ -1,10 +1,15 @@
 package com.teamaurora.borealib.api.base.v1.modloading;
 
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface ModLoaderService {
@@ -70,10 +75,9 @@ public interface ModLoaderService {
      */
     interface DataGeneratorContext {
 
-        /**
-         * @return The actual data generator to add providers to
-         */
-        DataGenerator getGenerator();
+        <T extends DataProvider> T addProvider(DataProvider.Factory<T> factory);
+
+        <T extends DataProvider> T addProvider(BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory);
 
         /**
          * @return The mod the generator is running for

@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 
 /**
  * Handles Forge {@link ModLoaderService} initialization.
@@ -52,8 +53,13 @@ public final class ForgeModFactory {
                 ModContainer container = new ModContainerImpl(e.getModContainer());
 
                 @Override
-                public DataGenerator getGenerator() {
-                    return e.getGenerator();
+                public <T extends DataProvider> T addProvider(DataProvider.Factory<T> factory) {
+                    return e.getGenerator().addProvider(true, factory);
+                }
+
+                @Override
+                public <T extends DataProvider> T addProvider(BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory) {
+                    return e.getGenerator().<T>addProvider(true, output -> registryDependentFactory.apply(output, e.getLookupProvider()));
                 }
 
                 @Override

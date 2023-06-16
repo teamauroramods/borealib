@@ -32,12 +32,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public abstract class MagnetosphereRecipeProvider extends SimpleConditionalDataProvider {
+public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvider {
 
     private final PackOutput.PathProvider recipePathProvider;
     private final PackOutput.PathProvider advancementPathProvider;
 
-    public MagnetosphereRecipeProvider(PackOutput packOutput) {
+    public BorealibRecipeProvider(PackOutput packOutput) {
         this.recipePathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "recipes");
         this.advancementPathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "advancements");
     }
