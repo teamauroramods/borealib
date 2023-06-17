@@ -1,5 +1,8 @@
 package com.teamaurora.borealib.api.base.v1.util;
 
+/**
+ *
+ */
 public interface Mods {
     // Core
     String MINECRAFT = "minecraft";

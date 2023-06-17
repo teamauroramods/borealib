@@ -36,12 +36,4 @@ public enum NumberComparator implements BiPredicate<Number, Number>, StringRepre
     public boolean test(Number t, Number u) {
         return this.comparator.test(t, u);
     }
-
-
-    public static NumberComparator byName(String name) {
-        for (NumberComparator mode : values())
-            if (mode.name().toLowerCase(Locale.ROOT).equals(name) || mode.symbol.equals(name))
-                return mode;
-        throw new JsonSyntaxException("Unknown compare mode: " + name);
-    }
 }

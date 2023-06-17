@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.impl.network.forge;
 
 import com.google.common.base.Suppliers;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import com.teamaurora.borealib.api.network.v1.message.PacketDecoder;
 import com.teamaurora.borealib.impl.network.NetworkManagerImpl;
 import net.minecraftforge.network.NetworkDirection;
@@ -26,7 +26,7 @@ public class NetworkChannelImpl {
         this.serverMessageHandler = Suppliers.memoize(serverFactory::get);
     }
 
-    protected static NetworkDirection convert(@Nullable MagnetospherePacket.Direction direction) {
+    protected static NetworkDirection convert(@Nullable BorealibPacket.Direction direction) {
         if (direction == null)
             return null;
         return switch (direction) {
@@ -37,7 +37,7 @@ public class NetworkChannelImpl {
         };
     }
 
-    protected <MSG extends MagnetospherePacket<T>, T> SimpleChannel.MessageBuilder<MSG> getMessageBuilder(Class<MSG> clazz, PacketDecoder<MSG, T> decoder, @Nullable MagnetospherePacket.Direction direction) {
+    protected <MSG extends BorealibPacket<T>, T> SimpleChannel.MessageBuilder<MSG> getMessageBuilder(Class<MSG> clazz, PacketDecoder<MSG, T> decoder, @Nullable BorealibPacket.Direction direction) {
         return this.channel.messageBuilder(clazz, this.nextId++, convert(direction)).encoder((msg, buf) -> {
             try {
                 msg.write(buf);

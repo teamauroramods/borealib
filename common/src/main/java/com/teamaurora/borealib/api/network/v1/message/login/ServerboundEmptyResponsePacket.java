@@ -2,7 +2,7 @@ package com.teamaurora.borealib.api.network.v1.message.login;
 
 import net.minecraft.network.FriendlyByteBuf;
 
-public class ServerboundEmptyResponsePacket extends SimpleMagnetosphereLoginPacket<Object> {
+public class ServerboundEmptyResponsePacket extends SimpleBorealibLoginPacket<Object> {
 
     public ServerboundEmptyResponsePacket() {
     }

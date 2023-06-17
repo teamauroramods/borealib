@@ -2,7 +2,7 @@ package com.teamaurora.borealib.core;
 
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
-import com.teamaurora.borealib.api.content_registries.v1.BlockContentRegistries;
+import com.teamaurora.borealib.api.content_registries.v1.StandardContentRegistries;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.EntityRendererRegistry;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionRegistry;
 import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
@@ -69,7 +69,7 @@ public class Borealib implements ModLoaderService {
         WoodSet.BOAT_TYPE_WRITER.register();
 
         // Init built-in stuff
-        BlockContentRegistries.init();
+        StandardContentRegistries.init();
         BlockContentRegistriesImpl.init();
         ContentRegistriesImpl.init();
         ResourceConditionRegistry.register(ConfigResourceCondition.NAME, new ConfigResourceCondition());

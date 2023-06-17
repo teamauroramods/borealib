@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.impl.network.context.fabric;
 
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
@@ -15,13 +15,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 @ApiStatus.Internal
-public abstract class FabricPacketContext implements MagnetospherePacket.Context {
+public abstract class FabricPacketContext implements BorealibPacket.Context {
 
     private final ServerLoginNetworking.LoginSynchronizer synchronizer;
-    private final MagnetospherePacket.Direction direction;
+    private final BorealibPacket.Direction direction;
     private final Connection connection;
 
-    protected FabricPacketContext(Connection connection, ServerLoginNetworking.LoginSynchronizer synchronizer, MagnetospherePacket.Direction direction) {
+    protected FabricPacketContext(Connection connection, ServerLoginNetworking.LoginSynchronizer synchronizer, BorealibPacket.Direction direction) {
         this.connection = connection;
         this.synchronizer = synchronizer;
         this.direction = direction;
@@ -38,7 +38,7 @@ public abstract class FabricPacketContext implements MagnetospherePacket.Context
     }
 
     @Override
-    public MagnetospherePacket.Direction getDirection() {
+    public BorealibPacket.Direction getDirection() {
         return this.direction;
     }
 

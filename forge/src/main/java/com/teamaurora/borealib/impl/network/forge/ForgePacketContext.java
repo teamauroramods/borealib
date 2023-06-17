@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.impl.network.forge;
 
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import com.teamaurora.borealib.core.extensions.forge.FMLHandshakeHandlerExtension;
 import io.netty.util.AttributeKey;
 import net.minecraft.network.Connection;
@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 import java.util.function.Supplier;
 
 @ApiStatus.Internal
-public class ForgePacketContext implements MagnetospherePacket.Context {
+public class ForgePacketContext implements BorealibPacket.Context {
 
     private final SimpleChannel channel;
     private final Supplier<NetworkEvent.Context> ctx;
@@ -42,7 +42,7 @@ public class ForgePacketContext implements MagnetospherePacket.Context {
     }
 
     @Override
-    public void reply(MagnetospherePacket<?> packet) {
+    public void reply(BorealibPacket<?> packet) {
         this.channel.reply(packet, this.ctx.get());
     }
 
@@ -75,12 +75,12 @@ public class ForgePacketContext implements MagnetospherePacket.Context {
     }
 
     @Override
-    public MagnetospherePacket.Direction getDirection() {
+    public BorealibPacket.Direction getDirection() {
         return switch (this.ctx.get().getDirection()) {
-            case PLAY_TO_SERVER -> MagnetospherePacket.Direction.PLAY_SERVERBOUND;
-            case PLAY_TO_CLIENT -> MagnetospherePacket.Direction.PLAY_CLIENTBOUND;
-            case LOGIN_TO_SERVER -> MagnetospherePacket.Direction.LOGIN_SERVERBOUND;
-            case LOGIN_TO_CLIENT -> MagnetospherePacket.Direction.LOGIN_CLIENTBOUND;
+            case PLAY_TO_SERVER -> BorealibPacket.Direction.PLAY_SERVERBOUND;
+            case PLAY_TO_CLIENT -> BorealibPacket.Direction.PLAY_CLIENTBOUND;
+            case LOGIN_TO_SERVER -> BorealibPacket.Direction.LOGIN_SERVERBOUND;
+            case LOGIN_TO_CLIENT -> BorealibPacket.Direction.LOGIN_CLIENTBOUND;
         };
     }
 

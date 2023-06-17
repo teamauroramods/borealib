@@ -1,9 +1,9 @@
 package com.teamaurora.borealib.impl.network.forge;
 
 import com.teamaurora.borealib.api.network.v1.LoginNetworkChannel;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import com.teamaurora.borealib.api.network.v1.message.PacketDecoder;
-import com.teamaurora.borealib.api.network.v1.message.login.MagnetosphereLoginPacket;
+import com.teamaurora.borealib.api.network.v1.message.login.BorealibLoginPacket;
 import com.teamaurora.borealib.impl.network.NetworkManagerImpl;
 import net.minecraft.network.protocol.Packet;
 import net.minecraftforge.network.HandshakeHandler;
@@ -25,7 +25,7 @@ public class ForgeLoginChannel extends NetworkChannelImpl implements LoginNetwor
     }
 
     @Override
-    public <MSG extends MagnetosphereLoginPacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> decoder) {
+    public <MSG extends BorealibLoginPacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> decoder) {
         this.channel.messageBuilder(clazz, this.nextId++, NetworkDirection.LOGIN_TO_SERVER)
                 .encoder((msg, buf) -> {
                     try {
@@ -46,20 +46,20 @@ public class ForgeLoginChannel extends NetworkChannelImpl implements LoginNetwor
                     NetworkManagerImpl.processMessage(msg, new ForgePacketContext(this.channel, ctx), ctx.get().getDirection().getReceptionSide().isClient() ? this.clientMessageHandler : this.serverMessageHandler);
                     ctx.get().setPacketHandled(true);
                 }))
-                .loginIndex(MagnetosphereLoginPacket::getAsInt, MagnetosphereLoginPacket::setLoginIndex)
+                .loginIndex(BorealibLoginPacket::getAsInt, BorealibLoginPacket::setLoginIndex)
                 .add();
     }
 
     @Override
-    public <MSG extends MagnetosphereLoginPacket<T>, T> void registerLogin(Class<MSG> clazz, PacketDecoder<MSG, T> decoder, Function<Boolean, List<Pair<String, MSG>>> loginPacketGenerators) {
-        this.getMessageBuilder(clazz, decoder, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND)
-                .loginIndex(MagnetosphereLoginPacket::getAsInt, MagnetosphereLoginPacket::setLoginIndex)
+    public <MSG extends BorealibLoginPacket<T>, T> void registerLogin(Class<MSG> clazz, PacketDecoder<MSG, T> decoder, Function<Boolean, List<Pair<String, MSG>>> loginPacketGenerators) {
+        this.getMessageBuilder(clazz, decoder, BorealibPacket.Direction.LOGIN_CLIENTBOUND)
+                .loginIndex(BorealibLoginPacket::getAsInt, BorealibLoginPacket::setLoginIndex)
                 .buildLoginPacketList(loginPacketGenerators)
                 .add();
     }
 
     @Override
-    public Packet<?> toVanillaPacket(MagnetospherePacket<?> packet, int transactionId, MagnetospherePacket.Direction direction) {
+    public Packet<?> toVanillaPacket(BorealibPacket<?> packet, int transactionId, BorealibPacket.Direction direction) {
         return this.channel.toVanillaPacket(packet, convert(direction));
     }
 }

@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public interface Platform {
 
     /**
-     * Used in the context of <code>@ExpectPlatform</code>. Use this as a placeholder for the return value
+     * Used in the context of <code>@ExpectPlatform</code> or in a static Mixin <code>@Accessor</code>. Use this as a placeholder for the return value
      */
     static <T> T expect() {
         throw new AssertionError();

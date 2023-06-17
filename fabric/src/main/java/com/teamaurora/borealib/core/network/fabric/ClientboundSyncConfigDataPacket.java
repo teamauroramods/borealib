@@ -1,11 +1,11 @@
 package com.teamaurora.borealib.core.network.fabric;
 
-import com.teamaurora.borealib.api.network.v1.message.login.SimpleMagnetosphereLoginPacket;
+import com.teamaurora.borealib.api.network.v1.message.login.SimpleBorealibLoginPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public class ClientboundSyncConfigDataPacket extends SimpleMagnetosphereLoginPacket<FabricClientLoginPacketHandler> {
+public class ClientboundSyncConfigDataPacket extends SimpleBorealibLoginPacket<FabricClientLoginPacketHandler> {
 
     private final String fileName;
     private final byte[] fileData;

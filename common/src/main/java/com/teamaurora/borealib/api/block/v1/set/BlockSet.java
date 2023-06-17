@@ -142,39 +142,6 @@ public abstract class BlockSet<T> {
         });
     }
 
-    public void commonPostInit(ModLoaderService.ParallelDispatcher dispatcher) {
-        this.blocksByVariant.forEach((v, reference) -> {
-            if (v.getCommonPostInit() != null)
-                v.getCommonPostInit().accept(dispatcher, this.getThis(), reference);
-        });
-        this.itemsByVariant.forEach((v, reference) -> {
-            if (v.getCommonPostInit() != null)
-                v.getCommonPostInit().accept(dispatcher, this.getThis(), reference);
-        });
-    }
-
-    public void serverInit() {
-        this.blocksByVariant.forEach((v, reference) -> {
-            if (v.getServerInit() != null)
-                v.getServerInit().get().accept(this.getThis(), reference);
-        });
-        this.itemsByVariant.forEach((v, reference) -> {
-            if (v.getServerInit() != null)
-                v.getServerInit().get().accept(this.getThis(), reference);
-        });
-    }
-
-    public void serverPostInit(ModLoaderService.ParallelDispatcher dispatcher) {
-        this.blocksByVariant.forEach((v, reference) -> {
-            if (v.getServerPostInit() != null)
-                v.getServerPostInit().get().accept(dispatcher, this.getThis(), reference);
-        });
-        this.itemsByVariant.forEach((v, reference) -> {
-            if (v.getServerPostInit() != null)
-                v.getServerPostInit().get().accept(dispatcher, this.getThis(), reference);
-        });
-    }
-
     protected void validateMutable() {
         if (this.registered)
             throw new IllegalStateException("Cannot change a block set after it has been registered");

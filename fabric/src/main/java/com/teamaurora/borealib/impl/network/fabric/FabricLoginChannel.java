@@ -1,9 +1,9 @@
 package com.teamaurora.borealib.impl.network.fabric;
 
 import com.teamaurora.borealib.api.network.v1.LoginNetworkChannel;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import com.teamaurora.borealib.api.network.v1.message.PacketDecoder;
-import com.teamaurora.borealib.api.network.v1.message.login.MagnetosphereLoginPacket;
+import com.teamaurora.borealib.api.network.v1.message.login.BorealibLoginPacket;
 import com.teamaurora.borealib.core.extensions.fabric.ServerLoginPacketListenerImplExtension;
 import com.teamaurora.borealib.core.mixin.fabric.ClientHandshakePacketListenerImplAccessor;
 import com.teamaurora.borealib.impl.network.NetworkManagerImpl;
@@ -59,7 +59,7 @@ public class FabricLoginChannel extends NetworkChannelImpl implements LoginNetwo
         }, responseSender));
 
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> this.loginPackets.stream().flatMap(function -> function.apply(((ServerLoginPacketListenerImplAccessor) handler).getConnection().isMemoryConnection()).stream()).forEach(pair -> {
-            Packet<?> packet = sender.createPacket(this.channelId, this.serialize((MagnetospherePacket<?>) pair.getValue(), MagnetospherePacket.Direction.LOGIN_CLIENTBOUND));
+            Packet<?> packet = sender.createPacket(this.channelId, this.serialize((BorealibPacket<?>) pair.getValue(), BorealibPacket.Direction.LOGIN_CLIENTBOUND));
             if (packet instanceof ClientboundCustomQueryPacket) {
                 ((ServerLoginPacketListenerImplExtension) handler).borealib$trackPacket((ClientboundCustomQueryPacket) packet);
             }
@@ -69,27 +69,27 @@ public class FabricLoginChannel extends NetworkChannelImpl implements LoginNetwo
 
     private CompletableFuture<@Nullable FriendlyByteBuf> processClient(Minecraft minecraft, ClientPacketListener listener, FriendlyByteBuf data, @Nullable Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
         CompletableFuture<FriendlyByteBuf> future = new CompletableFuture<>();
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND), new FabricLoginPacketContext(((ClientHandshakePacketListenerImplAccessor)listener).getConnection(), pkt -> {
+        NetworkManagerImpl.processMessage(this.deserialize(data, BorealibPacket.Direction.LOGIN_CLIENTBOUND), new FabricLoginPacketContext(((ClientHandshakePacketListenerImplAccessor)listener).getConnection(), pkt -> {
             try {
-                future.complete(this.serialize(pkt, MagnetospherePacket.Direction.LOGIN_SERVERBOUND));
+                future.complete(this.serialize(pkt, BorealibPacket.Direction.LOGIN_SERVERBOUND));
             } catch (Throwable t) {
                 t.printStackTrace();
                 future.completeExceptionally(t);
             }
-        }, __ -> {}, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND), this.clientMessageHandler);
+        }, __ -> {}, BorealibPacket.Direction.LOGIN_CLIENTBOUND), this.clientMessageHandler);
         return future;
     }
 
     private CompletableFuture<@Nullable FriendlyByteBuf> processClient(Minecraft minecraft, ClientHandshakePacketListenerImpl listener, FriendlyByteBuf data, @Nullable Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
         CompletableFuture<FriendlyByteBuf> future = new CompletableFuture<>();
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND), new FabricLoginPacketContext(((ClientHandshakePacketListenerImplAccessor)listener).getConnection(), pkt -> {
+        NetworkManagerImpl.processMessage(this.deserialize(data, BorealibPacket.Direction.LOGIN_CLIENTBOUND), new FabricLoginPacketContext(((ClientHandshakePacketListenerImplAccessor)listener).getConnection(), pkt -> {
             try {
-                future.complete(this.serialize(pkt, MagnetospherePacket.Direction.LOGIN_SERVERBOUND));
+                future.complete(this.serialize(pkt, BorealibPacket.Direction.LOGIN_SERVERBOUND));
             } catch (Throwable t) {
                 t.printStackTrace();
                 future.completeExceptionally(t);
             }
-        }, __ -> {}, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND), this.clientMessageHandler);
+        }, __ -> {}, BorealibPacket.Direction.LOGIN_CLIENTBOUND), this.clientMessageHandler);
         return future;
     }
 
@@ -101,27 +101,27 @@ public class FabricLoginChannel extends NetworkChannelImpl implements LoginNetwo
             return;
         }
 
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.LOGIN_SERVERBOUND), new FabricPacketContext(((ServerLoginPacketListenerImplAccessor) listener).getConnection(),synchronizer, MagnetospherePacket.Direction.LOGIN_SERVERBOUND) {
+        NetworkManagerImpl.processMessage(this.deserialize(data, BorealibPacket.Direction.LOGIN_SERVERBOUND), new FabricPacketContext(((ServerLoginPacketListenerImplAccessor) listener).getConnection(),synchronizer, BorealibPacket.Direction.LOGIN_SERVERBOUND) {
             @Override
-            public void reply(MagnetospherePacket<?> packet) {
+            public void reply(BorealibPacket<?> packet) {
                 throw new UnsupportedOperationException("The server is not allowed to reply during the login phase");
             }
         }, this.serverMessageHandler);
     }
 
     @Override
-    public <MSG extends MagnetosphereLoginPacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> deserializer) {
-        super.register(clazz, deserializer, MagnetospherePacket.Direction.LOGIN_SERVERBOUND);
+    public <MSG extends BorealibLoginPacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> deserializer) {
+        super.register(clazz, deserializer, BorealibPacket.Direction.LOGIN_SERVERBOUND);
     }
 
     @Override
-    public <MSG extends MagnetosphereLoginPacket<T>, T> void registerLogin(Class<MSG> clazz, PacketDecoder<MSG, T> deserializer, Function<Boolean, List<Pair<String, MSG>>> loginMessageGenerators) {
-        super.register(clazz, deserializer, MagnetospherePacket.Direction.LOGIN_CLIENTBOUND);
+    public <MSG extends BorealibLoginPacket<T>, T> void registerLogin(Class<MSG> clazz, PacketDecoder<MSG, T> deserializer, Function<Boolean, List<Pair<String, MSG>>> loginMessageGenerators) {
+        super.register(clazz, deserializer, BorealibPacket.Direction.LOGIN_CLIENTBOUND);
         this.loginPackets.add(loginMessageGenerators);
     }
 
     @Override
-    public Packet<?> toVanillaPacket(MagnetospherePacket<?> packet, int transactionId, MagnetospherePacket.Direction direction) {
+    public Packet<?> toVanillaPacket(BorealibPacket<?> packet, int transactionId, BorealibPacket.Direction direction) {
         return switch (direction) {
             case LOGIN_SERVERBOUND ->
                     new ServerboundCustomQueryPacket(transactionId, this.serialize(packet, direction));

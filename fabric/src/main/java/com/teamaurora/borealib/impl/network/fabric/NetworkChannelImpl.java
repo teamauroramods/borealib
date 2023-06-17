@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.impl.network.fabric;
 
 import com.google.common.base.Suppliers;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import com.teamaurora.borealib.api.network.v1.message.PacketDecoder;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
@@ -30,7 +30,7 @@ public abstract class NetworkChannelImpl {
         this.serverMessageHandler = Suppliers.memoize(serverFactory::get);
     }
 
-    protected FriendlyByteBuf serialize(MagnetospherePacket<?> packet, MagnetospherePacket.Direction expectedDirection) {
+    protected FriendlyByteBuf serialize(BorealibPacket<?> packet, BorealibPacket.Direction expectedDirection) {
         Optional<MessageFactory<?, ?>> factoryOptional = this.factories.stream().filter(factory -> factory.clazz == packet.getClass()).findFirst();
         if (factoryOptional.isEmpty())
             throw new IllegalStateException("Unregistered packet: " + packet.getClass() + " on channel: " + this.channelId);
@@ -49,7 +49,7 @@ public abstract class NetworkChannelImpl {
         return buf;
     }
 
-    protected MagnetospherePacket<?> deserialize(FriendlyByteBuf buf, MagnetospherePacket.Direction expectedDirection) {
+    protected BorealibPacket<?> deserialize(FriendlyByteBuf buf, BorealibPacket.Direction expectedDirection) {
         int id = buf.readVarInt();
         if (id < 0 || id >= this.factories.size())
             throw new IllegalStateException("Unknown packet with id: " + id);
@@ -65,12 +65,12 @@ public abstract class NetworkChannelImpl {
         }
     }
 
-    protected <MSG extends MagnetospherePacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> decoder, @Nullable MagnetospherePacket.Direction direction) {
+    protected <MSG extends BorealibPacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> decoder, @Nullable BorealibPacket.Direction direction) {
         this.factories.add(new MessageFactory<>(clazz, decoder, direction));
     }
 
-    private record MessageFactory<MSG extends MagnetospherePacket<T>, T>(Class<MSG> clazz,
-                                                                         PacketDecoder<MSG, T> decoder,
-                                                                         MagnetospherePacket.Direction direction) {
+    private record MessageFactory<MSG extends BorealibPacket<T>, T>(Class<MSG> clazz,
+                                                                    PacketDecoder<MSG, T> decoder,
+                                                                    BorealibPacket.Direction direction) {
     }
 }

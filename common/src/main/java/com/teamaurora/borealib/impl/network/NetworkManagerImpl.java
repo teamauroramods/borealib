@@ -3,7 +3,7 @@ package com.teamaurora.borealib.impl.network;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
 import com.teamaurora.borealib.api.network.v1.LoginNetworkChannel;
 import com.teamaurora.borealib.api.network.v1.PlayNetworkChannel;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PacketListener;
@@ -32,7 +32,7 @@ public final class NetworkManagerImpl {
     }
 
     @SuppressWarnings("unchecked")
-    public static <MSG extends MagnetospherePacket<T>, T> void processMessage(@NotNull MSG msg, MagnetospherePacket.Context context, Object handler) {
+    public static <MSG extends BorealibPacket<T>, T> void processMessage(@NotNull MSG msg, BorealibPacket.Context context, Object handler) {
         try {
             msg.read((T) handler, context);
         } catch (Exception e) {

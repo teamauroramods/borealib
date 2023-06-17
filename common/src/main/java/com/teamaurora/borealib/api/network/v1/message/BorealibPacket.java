@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-public interface MagnetospherePacket<T> {
+public interface BorealibPacket<T> {
 
     void write(FriendlyByteBuf buf) throws IOException;
 
@@ -24,7 +24,7 @@ public interface MagnetospherePacket<T> {
 
         void waitFor(Future<?> future);
 
-        void reply(MagnetospherePacket<?> packet);
+        void reply(BorealibPacket<?> packet);
 
         void disconnect(Component message);
 

@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.impl.network.fabric;
 
 import com.teamaurora.borealib.api.network.v1.PlayNetworkChannel;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import com.teamaurora.borealib.api.network.v1.message.PacketDecoder;
 import com.teamaurora.borealib.core.mixin.fabric.ServerGamePacketListenerImplAccessor;
 import com.teamaurora.borealib.impl.network.NetworkManagerImpl;
@@ -44,69 +44,69 @@ public class FabricPlayChannel extends NetworkChannelImpl implements PlayNetwork
     }
 
     private void processClientPlay(Minecraft client, ClientPacketListener listener, FriendlyByteBuf data, PacketSender responseSender) {
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.PLAY_CLIENTBOUND), new FabricPlayPacketContext(listener.getConnection(), msg -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(msg, MagnetospherePacket.Direction.PLAY_SERVERBOUND))), MagnetospherePacket.Direction.PLAY_CLIENTBOUND), this.clientMessageHandler);
+        NetworkManagerImpl.processMessage(this.deserialize(data, BorealibPacket.Direction.PLAY_CLIENTBOUND), new FabricPlayPacketContext(listener.getConnection(), msg -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(msg, BorealibPacket.Direction.PLAY_SERVERBOUND))), BorealibPacket.Direction.PLAY_CLIENTBOUND), this.clientMessageHandler);
     }
 
     private void processServerPlay(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, FriendlyByteBuf data, PacketSender responseSender) {
-        NetworkManagerImpl.processMessage(this.deserialize(data, MagnetospherePacket.Direction.PLAY_SERVERBOUND), new FabricPlayPacketContext(((ServerGamePacketListenerImplAccessor) listener).getConnection(), pkt -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(pkt, MagnetospherePacket.Direction.PLAY_CLIENTBOUND))), MagnetospherePacket.Direction.PLAY_SERVERBOUND), this.serverMessageHandler);
+        NetworkManagerImpl.processMessage(this.deserialize(data, BorealibPacket.Direction.PLAY_SERVERBOUND), new FabricPlayPacketContext(((ServerGamePacketListenerImplAccessor) listener).getConnection(), pkt -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(pkt, BorealibPacket.Direction.PLAY_CLIENTBOUND))), BorealibPacket.Direction.PLAY_SERVERBOUND), this.serverMessageHandler);
     }
 
     @Override
-    public void sendTo(ServerPlayer player, MagnetospherePacket<?> packet) {
-        ServerPlayNetworking.send(player, this.channelId, this.serialize(packet, MagnetospherePacket.Direction.PLAY_CLIENTBOUND));
+    public void sendTo(ServerPlayer player, BorealibPacket<?> packet) {
+        ServerPlayNetworking.send(player, this.channelId, this.serialize(packet, BorealibPacket.Direction.PLAY_CLIENTBOUND));
     }
 
     @Override
-    public void sendTo(ServerLevel level, MagnetospherePacket<?> packet) {
-        FriendlyByteBuf data = this.serialize(packet, MagnetospherePacket.Direction.PLAY_CLIENTBOUND);
+    public void sendTo(ServerLevel level, BorealibPacket<?> packet) {
+        FriendlyByteBuf data = this.serialize(packet, BorealibPacket.Direction.PLAY_CLIENTBOUND);
         for (ServerPlayer player : PlayerLookup.world(level)) {
             ServerPlayNetworking.send(player, this.channelId, data);
         }
     }
 
     @Override
-    public void sendToNear(ServerLevel level, double x, double y, double z, double radius, MagnetospherePacket<?> packet) {
-        FriendlyByteBuf data = this.serialize(packet, MagnetospherePacket.Direction.PLAY_CLIENTBOUND);
+    public void sendToNear(ServerLevel level, double x, double y, double z, double radius, BorealibPacket<?> packet) {
+        FriendlyByteBuf data = this.serialize(packet, BorealibPacket.Direction.PLAY_CLIENTBOUND);
         for (ServerPlayer player : PlayerLookup.around(level, new Vec3(x, y, z), radius)) {
             ServerPlayNetworking.send(player, this.channelId, data);
         }
     }
 
     @Override
-    public void sendToAll(MinecraftServer server, MagnetospherePacket<?> packet) {
-        FriendlyByteBuf data = this.serialize(packet, MagnetospherePacket.Direction.PLAY_CLIENTBOUND);
+    public void sendToAll(MinecraftServer server, BorealibPacket<?> packet) {
+        FriendlyByteBuf data = this.serialize(packet, BorealibPacket.Direction.PLAY_CLIENTBOUND);
         for (ServerPlayer player : PlayerLookup.all(server)) {
             ServerPlayNetworking.send(player, this.channelId, data);
         }
     }
 
     @Override
-    public void sendToTracking(Entity entity, MagnetospherePacket<?> packet) {
-        FriendlyByteBuf data = this.serialize(packet, MagnetospherePacket.Direction.PLAY_CLIENTBOUND);
+    public void sendToTracking(Entity entity, BorealibPacket<?> packet) {
+        FriendlyByteBuf data = this.serialize(packet, BorealibPacket.Direction.PLAY_CLIENTBOUND);
         for (ServerPlayer player : PlayerLookup.tracking(entity)) {
             ServerPlayNetworking.send(player, this.channelId, data);
         }
     }
 
     @Override
-    public void sendToTracking(ServerLevel level, BlockPos pos, MagnetospherePacket<?> packet) {
-        FriendlyByteBuf data = this.serialize(packet, MagnetospherePacket.Direction.PLAY_CLIENTBOUND);
+    public void sendToTracking(ServerLevel level, BlockPos pos, BorealibPacket<?> packet) {
+        FriendlyByteBuf data = this.serialize(packet, BorealibPacket.Direction.PLAY_CLIENTBOUND);
         for (ServerPlayer player : PlayerLookup.tracking(level, pos)) {
             ServerPlayNetworking.send(player, this.channelId, data);
         }
     }
 
     @Override
-    public void sendToTracking(ServerLevel level, ChunkPos pos, MagnetospherePacket<?> packet) {
-        FriendlyByteBuf data = this.serialize(packet, MagnetospherePacket.Direction.PLAY_CLIENTBOUND);
+    public void sendToTracking(ServerLevel level, ChunkPos pos, BorealibPacket<?> packet) {
+        FriendlyByteBuf data = this.serialize(packet, BorealibPacket.Direction.PLAY_CLIENTBOUND);
         for (ServerPlayer player : PlayerLookup.tracking(level, pos)) {
             ServerPlayNetworking.send(player, this.channelId, data);
         }
     }
 
     @Override
-    public void sendToTrackingAndSelf(Entity entity, MagnetospherePacket<?> packet) {
-        FriendlyByteBuf data = this.serialize(packet, MagnetospherePacket.Direction.PLAY_CLIENTBOUND);
+    public void sendToTrackingAndSelf(Entity entity, BorealibPacket<?> packet) {
+        FriendlyByteBuf data = this.serialize(packet, BorealibPacket.Direction.PLAY_CLIENTBOUND);
         if (entity instanceof ServerPlayer player) {
             ServerPlayNetworking.send(player, this.channelId, data);
         }
@@ -116,12 +116,12 @@ public class FabricPlayChannel extends NetworkChannelImpl implements PlayNetwork
     }
 
     @Override
-    public void sendToServer(MagnetospherePacket<?> packet) {
-        ClientPlayNetworking.send(this.channelId, this.serialize(packet, MagnetospherePacket.Direction.PLAY_SERVERBOUND));
+    public void sendToServer(BorealibPacket<?> packet) {
+        ClientPlayNetworking.send(this.channelId, this.serialize(packet, BorealibPacket.Direction.PLAY_SERVERBOUND));
     }
 
     @Override
-    public Packet<?> toVanillaPacket(MagnetospherePacket<?> packet, MagnetospherePacket.Direction direction) {
+    public Packet<?> toVanillaPacket(BorealibPacket<?> packet, BorealibPacket.Direction direction) {
         return switch (direction) {
             case PLAY_SERVERBOUND ->
                     new ServerboundCustomPayloadPacket(this.channelId, this.serialize(packet, direction));
@@ -132,7 +132,7 @@ public class FabricPlayChannel extends NetworkChannelImpl implements PlayNetwork
     }
 
     @Override
-    public <MSG extends MagnetospherePacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> deserializer, @Nullable MagnetospherePacket.Direction direction) {
+    public <MSG extends BorealibPacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> deserializer, @Nullable BorealibPacket.Direction direction) {
         super.register(clazz, deserializer, direction);
     }
 }

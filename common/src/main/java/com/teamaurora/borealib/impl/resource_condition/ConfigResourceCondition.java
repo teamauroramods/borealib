@@ -64,7 +64,7 @@ public class ConfigResourceCondition implements ResourceCondition {
         if (!value.isJsonPrimitive() || !value.getAsJsonPrimitive().isNumber())
             throw new JsonSyntaxException("Expected Number, got " + GsonHelper.getType(value));
         JsonPrimitive primitiveValue = value.getAsJsonPrimitive();
-        NumberComparator compareMode = json.has("comparator") ? NumberComparator.byName(GsonHelper.getAsString(json, "mode")) : NumberComparator.EQUAL;
+        NumberComparator compareMode = json.has("comparator") ? NumberComparator.CODEC.byName(GsonHelper.getAsString(json, "mode")) : NumberComparator.EQUAL;
         return compareMode.test(entry, primitiveValue.getAsNumber());
     }
 

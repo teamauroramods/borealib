@@ -1,6 +1,6 @@
 package com.teamaurora.borealib.api.network.v1.message.login;
 
-public abstract class SimpleMagnetosphereLoginPacket<T> implements MagnetosphereLoginPacket<T> {
+public abstract class SimpleBorealibLoginPacket<T> implements BorealibLoginPacket<T> {
 
     private int loginIndex;
 

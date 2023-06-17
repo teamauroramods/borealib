@@ -10,9 +10,12 @@ import java.lang.reflect.Proxy;
 import java.util.function.Function;
 
 /**
- * A simple listenable event.
+ * A simple listenable event. Based on Fabric's listenable event API.
  *
- * @param <T> The event type. This is intended to be a functional interface
+ * @param <T> The event type. This is intended to be a functional interface, but can be a class or record as well
+ * @see <a href=https://github.com/FabricMC/fabric/blob/1.16/fabric-api-base/src/main/java/net/fabricmc/fabric/impl/base/event/ArrayBackedEvent.java>ArrayBackedEvent</a>
+ * @author ebo2022
+ * @since 1.0
  */
 @ApiStatus.NonExtendable
 public abstract class Event<T> {

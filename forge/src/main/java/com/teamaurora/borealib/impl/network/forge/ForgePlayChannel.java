@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.impl.network.forge;
 
 import com.teamaurora.borealib.api.network.v1.PlayNetworkChannel;
-import com.teamaurora.borealib.api.network.v1.message.MagnetospherePacket;
+import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import com.teamaurora.borealib.api.network.v1.message.PacketDecoder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
@@ -27,58 +27,58 @@ public class ForgePlayChannel extends NetworkChannelImpl implements PlayNetworkC
     }
 
     @Override
-    public void sendTo(ServerPlayer player, MagnetospherePacket<?> message) {
+    public void sendTo(ServerPlayer player, BorealibPacket<?> message) {
         this.channel.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 
     @Override
-    public void sendTo(ServerLevel level, MagnetospherePacket<?> message) {
+    public void sendTo(ServerLevel level, BorealibPacket<?> message) {
         this.channel.send(PacketDistributor.DIMENSION.with(level::dimension), message);
     }
 
     @Override
-    public void sendToNear(ServerLevel level, double x, double y, double z, double radius, MagnetospherePacket<?> message) {
+    public void sendToNear(ServerLevel level, double x, double y, double z, double radius, BorealibPacket<?> message) {
         this.channel.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, radius * radius, level.dimension())), message);
     }
 
     @Override
-    public void sendToAll(MinecraftServer server, MagnetospherePacket<?> message) {
+    public void sendToAll(MinecraftServer server, BorealibPacket<?> message) {
         this.channel.send(PacketDistributor.ALL.noArg(), message);
     }
 
     @Override
-    public void sendToTracking(Entity entity, MagnetospherePacket<?> message) {
+    public void sendToTracking(Entity entity, BorealibPacket<?> message) {
         this.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
     }
 
     @Override
-    public void sendToTracking(ServerLevel level, BlockPos pos, MagnetospherePacket<?> message) {
+    public void sendToTracking(ServerLevel level, BlockPos pos, BorealibPacket<?> message) {
         this.channel.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), message);
     }
 
     @Override
-    public void sendToTracking(ServerLevel level, ChunkPos pos, MagnetospherePacket<?> message) {
+    public void sendToTracking(ServerLevel level, ChunkPos pos, BorealibPacket<?> message) {
         this.channel.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunk(pos.x, pos.z)), message);
     }
 
     @Override
-    public void sendToTrackingAndSelf(Entity entity, MagnetospherePacket<?> message) {
+    public void sendToTrackingAndSelf(Entity entity, BorealibPacket<?> message) {
         this.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void sendToServer(MagnetospherePacket<?> message) {
+    public void sendToServer(BorealibPacket<?> message) {
         this.channel.sendToServer(message);
     }
 
     @Override
-    public <MSG extends MagnetospherePacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> decoder, @Nullable MagnetospherePacket.Direction direction) {
+    public <MSG extends BorealibPacket<T>, T> void register(Class<MSG> clazz, PacketDecoder<MSG, T> decoder, @Nullable BorealibPacket.Direction direction) {
         this.getMessageBuilder(clazz, decoder, direction).add();
     }
 
     @Override
-    public Packet<?> toVanillaPacket(MagnetospherePacket<?> packet, MagnetospherePacket.Direction direction) {
+    public Packet<?> toVanillaPacket(BorealibPacket<?> packet, BorealibPacket.Direction direction) {
         return this.channel.toVanillaPacket(packet, convert(direction));
     }
 }

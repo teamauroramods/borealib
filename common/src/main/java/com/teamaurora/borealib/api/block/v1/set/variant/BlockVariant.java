@@ -23,19 +23,13 @@ public final class BlockVariant<T> {
     private final String prefix;
     private final String suffix;
     private final Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit;
-    private final Supplier<BiConsumer<T, RegistryReference<Block>>> serverInit;
-    private final TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> commonPostInit;
     private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit;
-    private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> serverPostInit;
     private final Consumer<Block> onRegister;
     private final BlockSet.ComponentFactory<Block, T> factory;
 
     private BlockVariant(boolean hasBlockItem, boolean automaticLang, String prefix, String suffix,
                          Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit,
-                         Supplier<BiConsumer<T, RegistryReference<Block>>> serverInit,
-                         TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> commonPostInit,
                          Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit,
-                         Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> serverPostInit,
                          Consumer<Block> onRegister,
                          BlockSet.ComponentFactory<Block, T> factory) {
         this.hasBlockItem = hasBlockItem;
@@ -43,10 +37,7 @@ public final class BlockVariant<T> {
         this.prefix = prefix;
         this.suffix = suffix;
         this.clientInit = clientInit;
-        this.serverInit = serverInit;
-        this.commonPostInit = commonPostInit;
         this.clientPostInit = clientPostInit;
-        this.serverPostInit = serverPostInit;
         this.onRegister = onRegister;
         this.factory = factory;
     }
@@ -83,20 +74,8 @@ public final class BlockVariant<T> {
         return this.clientInit;
     }
 
-    public Supplier<BiConsumer<T, RegistryReference<Block>>> getServerInit() {
-        return this.serverInit;
-    }
-
-    public TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> getCommonPostInit() {
-        return this.commonPostInit;
-    }
-
     public Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> getClientPostInit() {
         return this.clientPostInit;
-    }
-
-    public Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> getServerPostInit() {
-        return this.serverPostInit;
     }
 
     public Consumer<Block> getOnRegister() {
@@ -114,10 +93,7 @@ public final class BlockVariant<T> {
         private String prefix = "";
         private String suffix = "";
         private Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit;
-        private Supplier<BiConsumer<T, RegistryReference<Block>>> serverInit;
-        private TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> commonPostInit;
         private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit;
-        private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> serverPostInit;
         private Consumer<Block> onRegister;
         private final BlockSet.ComponentFactory<Block, T> factory;
 
@@ -150,23 +126,8 @@ public final class BlockVariant<T> {
             return this;
         }
 
-        public Builder<T> serverInit(Supplier<BiConsumer<T, RegistryReference<Block>>> serverInit) {
-            this.serverInit = serverInit;
-            return this;
-        }
-
-        public Builder<T> commonPostInit(TriConsumer<ParallelDispatcher, T, RegistryReference<Block>> commonPostInit) {
-            this.commonPostInit = commonPostInit;
-            return this;
-        }
-
         public Builder<T> clientPostInit(Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit) {
             this.clientPostInit = clientPostInit;
-            return this;
-        }
-
-        public Builder<T> serverPostInit(Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> serverPostInit) {
-            this.serverPostInit = serverPostInit;
             return this;
         }
 
@@ -181,13 +142,9 @@ public final class BlockVariant<T> {
                     this.prefix,
                     this.suffix,
                     this.clientInit,
-                    this.serverInit,
-                    this.commonPostInit,
                     this.clientPostInit,
-                    this.serverPostInit,
                     this.onRegister,
                     this.factory);
         }
-
     }
 }
