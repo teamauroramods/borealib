@@ -18,7 +18,15 @@ public interface BiomeModifierAction extends Consumer<BiomeInfo.Mutable> {
     Codec<BiomeModifierAction> CODEC = BorealibRegistries.BIOME_MODIFIER_ACTION_TYPES.byNameCodec().dispatch(BiomeModifierAction::type, Function.identity());
 
     /**
-     * @return A codec to serialize and deserialize instances of this action
+     * Applies the action to the given biome.
+     *
+     * @param info Context to modify the biome
+     */
+    @Override
+    void accept(BiomeInfo.Mutable info);
+
+    /**
+     * @return A codec to serialize and deserialize instances of this action. It should be registered to {@link BorealibRegistries#BIOME_MODIFIER_ACTION_TYPES}
      */
     Codec<? extends BiomeModifierAction> type();
 
