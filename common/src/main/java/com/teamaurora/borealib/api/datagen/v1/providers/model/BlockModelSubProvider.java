@@ -3,8 +3,10 @@ package com.teamaurora.borealib.api.datagen.v1.providers.model;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
+import com.teamaurora.borealib.api.base.v1.platform.Platform;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodVariants;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Direction;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -68,6 +70,12 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
                 .logWithHorizontal(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get())
                 .wood(set.variantOrThrow(WoodVariants.STRIPPED_WOOD).get());
         this.family(set.variantOrThrow(WoodVariants.PLANKS).get()).generateFor(set.getOrCreateBlockFamily());
+        generateCompatVariants(set, coloredLeaves);
+    }
+
+    @ExpectPlatform
+    private static void generateCompatVariants(WoodSet set, boolean coloredLeaves) {
+        Platform.expect();
     }
 
     public Map<Block, TexturedModel> getTexturedModels() {
