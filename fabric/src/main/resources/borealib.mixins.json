@@ -11,6 +11,7 @@
     "BiomeAccessor",
     "ClientHandshakePacketListenerImplAccessor",
     "DedicatedServerMixin",
+    "EnchantmentTableBlockMixin",
     "MinecraftServerMixin",
     "PlayerListMixin",
     "RegistryDataLoaderMixin",

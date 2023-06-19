@@ -18,5 +18,4 @@ public class BookshelfBlock extends Block {
     public float getEnchantPowerBonus(BlockState state, LevelReader level, BlockPos pos) {
         return 1.0F;
     }
-
 }
