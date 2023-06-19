@@ -70,12 +70,6 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
                 .logWithHorizontal(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get())
                 .wood(set.variantOrThrow(WoodVariants.STRIPPED_WOOD).get());
         this.family(set.variantOrThrow(WoodVariants.PLANKS).get()).generateFor(set.getOrCreateBlockFamily());
-        generateCompatVariants(set, coloredLeaves);
-    }
-
-    @ExpectPlatform
-    private static void generateCompatVariants(WoodSet set, boolean coloredLeaves) {
-        Platform.expect();
     }
 
     public Map<Block, TexturedModel> getTexturedModels() {

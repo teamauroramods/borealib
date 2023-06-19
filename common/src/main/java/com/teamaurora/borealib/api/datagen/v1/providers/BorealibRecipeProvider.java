@@ -3,9 +3,10 @@ package com.teamaurora.borealib.api.datagen.v1.providers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
+import com.teamaurora.borealib.api.base.v1.platform.Platform;
+import com.teamaurora.borealib.api.base.v1.util.Mods;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodVariants;
-import com.teamaurora.borealib.api.convention_tags.v1.PlatformItemTags;
 import com.teamaurora.borealib.api.datagen.v1.SimpleConditionalDataProvider;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -156,7 +157,10 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
     }
 
     protected static void chestBoat(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.TRANSPORTATION, itemLike).requires(PlatformItemTags.CHESTS_WOODEN).requires(itemLike2).group("chest_boat").unlockedBy("has_boat", has(ItemTags.BOATS)).save(consumer);
+        if (Platform.isForge())
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.TRANSPORTATION, itemLike).requires(Mods.FORGE.itemTag("chests/wooden")).requires(itemLike2).group("chest_boat").unlockedBy("has_boat", has(ItemTags.BOATS)).save(consumer);
+        else
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.TRANSPORTATION, itemLike).requires(Items.CHEST).requires(itemLike2).group("chest_boat").unlockedBy("has_boat", has(ItemTags.BOATS)).save(consumer);
     }
 
     private static RecipeBuilder buttonBuilder(ItemLike itemLike, Ingredient ingredient) {
@@ -168,11 +172,17 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
     }
 
     private static RecipeBuilder fenceBuilder(ItemLike itemLike, Ingredient ingredient) {
-        return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).define('W', ingredient).define('#', PlatformItemTags.RODS_WOODEN).pattern("W#W").pattern("W#W");
+        if (Platform.isForge())
+            return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).define('W', ingredient).define('#', Mods.FORGE.itemTag("rods/wooden")).pattern("W#W").pattern("W#W");
+        else
+            return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).define('W', ingredient).define('#', Items.STICK).pattern("W#W").pattern("W#W");
     }
 
     private static RecipeBuilder fenceGateBuilder(ItemLike itemLike, Ingredient ingredient) {
-        return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, itemLike).define('#', PlatformItemTags.RODS_WOODEN).define('W', ingredient).pattern("#W#").pattern("#W#");
+        if (Platform.isForge())
+            return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, itemLike).define('#', Mods.FORGE.itemTag("rods_wooden")).define('W', ingredient).pattern("#W#").pattern("#W#");
+        else
+            return ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, itemLike).define('#', Items.STICK).define('W', ingredient).pattern("#W#").pattern("#W#");
     }
 
     protected static void pressurePlate(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
@@ -200,7 +210,10 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
     }
 
     private static RecipeBuilder signBuilder(ItemLike itemLike, Ingredient ingredient) {
-        return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).group("sign").define('#', ingredient).define('X', PlatformItemTags.RODS_WOODEN).pattern("###").pattern("###").pattern(" X ");
+        if (Platform.isForge())
+            return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).group("sign").define('#', ingredient).define('X', Mods.FORGE.itemTag("rods/wooden")).pattern("###").pattern("###").pattern(" X ");
+        else
+            return ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike, 3).group("sign").define('#', ingredient).define('X', Items.STICK).pattern("###").pattern("###").pattern(" X ");
     }
 
     protected static void hangingSign(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
@@ -228,7 +241,10 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
     }
 
     protected static void banner(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike).define('#', itemLike2).define('|', PlatformItemTags.RODS_WOODEN).pattern("###").pattern("###").pattern(" | ").group("banner").unlockedBy(getHasName(itemLike2), has(itemLike2)).save(consumer);
+        if (Platform.isForge())
+            ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike).define('#', itemLike2).define('|', Mods.FORGE.itemTag("rods/wooden")).pattern("###").pattern("###").pattern(" | ").group("banner").unlockedBy(getHasName(itemLike2), has(itemLike2)).save(consumer);
+        else
+            ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, itemLike).define('#', itemLike2).define('|', Items.STICK).pattern("###").pattern("###").pattern(" | ").group("banner").unlockedBy(getHasName(itemLike2), has(itemLike2)).save(consumer);
     }
 
     protected static void stainedGlassFromGlassAndDye(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2) {
