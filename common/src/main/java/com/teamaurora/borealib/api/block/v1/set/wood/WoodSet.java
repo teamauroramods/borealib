@@ -35,6 +35,13 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+/**
+ * An "all-in-one" class for registering a set of wood-related blocks (e.g. Cherry blocks). Many Borealib data generator classes also have methods that auto-generate data for the entire woodset.
+ * <p>Most vanilla registration is automatically handled by this class.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public final class WoodSet extends BlockSet<WoodSet> {
 
     private final WoodType woodType;
@@ -49,8 +56,6 @@ public final class WoodSet extends BlockSet<WoodSet> {
 
     @ApiStatus.Internal
     public static final DeferredRegister<CustomBoatType> BOAT_TYPE_WRITER = DeferredRegister.customWriter(BorealibRegistries.BOAT_TYPES, Borealib.MOD_ID);
-    @ApiStatus.Internal
-    public static final DeferredRegister<ChestVariant> CHEST_VARIANT_WRITER = DeferredRegister.customWriter(BorealibRegistries.CHEST_VARIANTS, Borealib.MOD_ID);
 
     private WoodSet(String namespace, String baseName, WoodTypeProvider woodTypeProvider) {
         super(namespace, baseName);
@@ -83,8 +88,8 @@ public final class WoodSet extends BlockSet<WoodSet> {
         // Common Compat setup
         this.include(CommonCompatBlockVariants.WOODEN_CHEST)
                 .include(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST);
-        CHEST_VARIANT_WRITER.register(new ResourceLocation(this.getNamespace(), this.getBaseName()), () -> new ChestVariant(this.getNamespace(), this.getBaseName(), false));
-        CHEST_VARIANT_WRITER.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"), () -> new ChestVariant(this.getNamespace(), this.getBaseName(), true));
+        ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName()), false);
+        ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"),true);
         // Compat setup for variants that only exist on Forge
         includeCompatWoodVariants(this);
     }
@@ -94,29 +99,55 @@ public final class WoodSet extends BlockSet<WoodSet> {
         Platform.expect();
     }
 
+    /**
+     * Creates a wood set based on the specified parameters.
+     *
+     * @param namespace        The namespace of all blocks to be added to this wood set
+     * @param baseName         The "root" name to use for all block ids (think "oak" in "oak_log")
+     * @param woodTypeProvider A provider to create a {@link WoodType} wrapping this set. It also controls the sound of the wood blocks
+     * @return An unregistered {@link WoodSet} based on the provided properties
+     */
     public static WoodSet of(String namespace, String baseName, WoodTypeProvider woodTypeProvider) {
         return new WoodSet(namespace, baseName, woodTypeProvider);
     }
 
+    /**
+     * Creates a wood set based on the specified parameters with a <b>default</b> {@link WoodTypeProvider}, meaning the woodset will use the new 1.20 block sounds.
+     *
+     * @param namespace        The namespace of all blocks to be added to this wood set
+     * @param baseName         The "root" name to use for all block ids (think "oak" in "oak_log")
+     * @return An unregistered {@link WoodSet} based on the provided properties
+     */
     public static WoodSet of(String namespace, String baseName) {
         return of(namespace, baseName, WoodTypeProvider.DEFAULT);
     }
 
+    /**
+     * Sets the map appearance of the blocks in the wood set.
+     *
+     * @param barkColor The color of the outside of the log
+     * @param woodColor The base wood color (whatever {@link MapColor} most closely matches the plank color)
+     */
     public WoodSet color(MapColor barkColor, MapColor woodColor) {
         this.barkColor = barkColor;
         this.woodColor = woodColor;
         return this;
     }
 
-    public WoodSet includeLeaves() {
-        return this.include(WoodVariants.LEAVES);
-    }
-
-    public WoodSet includeSapling(Supplier<AbstractTreeGrower> treeGrower) {
+    /**
+     * Adds natural blocks like leaves and saplings to be registered.
+     *
+     * @param treeGrower A supplier for the {@link AbstractTreeGrower} for the sapling
+     * @param extended   Whether the leaves block should have extended decay distance (useful if tree canopies are bigger)
+     */
+    public WoodSet includeNaturalBlocks(Supplier<AbstractTreeGrower> treeGrower, boolean extended) {
         this.treeGrower = treeGrower;
-        return this.include(WoodVariants.SAPLING).include(WoodVariants.POTTED_SAPLING);
+        return this.include(WoodVariants.LEAVES).include(WoodVariants.SAPLING).include(WoodVariants.POTTED_SAPLING);
     }
 
+    /**
+     * Registers the blocks in this set to the creative menu. This method can be used as a listener for {@link CreativeTabEvents#MODIFY_ENTRIES_ALL}.
+     */
     public void registerCreativeTabs(ResourceKey<CreativeModeTab> tabKey, CreativeModeTab tab, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, CreativeTabEvents.Output output, boolean canUseGameMasterBlocks) {
         if (tabKey == CreativeModeTabs.BUILDING_BLOCKS) {
             output.acceptAllItemsAfter(Items.MANGROVE_BUTTON, List.of(
@@ -172,34 +203,58 @@ public final class WoodSet extends BlockSet<WoodSet> {
         return this.family;
     }
 
+    /**
+     * @return A supplier for unconfigured properties in this set
+     */
     public Supplier<BlockBehaviour.Properties> getBaseProperties() {
         return this.baseProperties;
     }
 
+    /**
+     * @return The tree grower for the sapling if it exists
+     */
     public Supplier<AbstractTreeGrower> getTreeGrower() {
         return this.treeGrower;
     }
 
+    /**
+     * @return The boat type for this wood set
+     */
     public CustomBoatType getBoatType() {
         return this.boatType.get();
     }
 
+    /**
+     * @return A vanilla {@link WoodType} wrapping this wood set
+     */
     public WoodType getWoodType() {
         return this.woodType;
     }
 
+    /**
+     * @return The outside log color to display on maps
+     */
     public MapColor getBarkColor() {
         return this.barkColor;
     }
 
+    /**
+     * @return The generic wood color (i.e planks)
+     */
     public MapColor getWoodColor() {
         return this.woodColor;
     }
 
+    /**
+     * @return A tag to fill with all log blocks in this wood set
+     */
     public TagKey<Block> getBlockLogTag() {
         return this.blockLogTag;
     }
 
+    /**
+     * @return A tag to fill with all log items in this wood set
+     */
     public TagKey<Item> getItemLogTag() {
         return this.itemLogTag;
     }
@@ -209,6 +264,23 @@ public final class WoodSet extends BlockSet<WoodSet> {
         return this;
     }
 
+    /**
+     * Provides sounds for blocks that belong to a wood set.
+     *
+     * @param soundType             The generic block sound type
+     * @param doorClose             The sound to play when a door closes
+     * @param doorOpen              The sound to play when a door opens
+     * @param trapdoorClose         The sound to play when a trapdoor closes
+     * @param trapdoorOpen          The sound to play when a trapdoor opens
+     * @param pressurePlateClickOff The sound to play when a player steps off a pressure plate
+     * @param pressurePlateClickOn  The sound to play when a player steps on a pressure plate
+     * @param buttonClickOff        The sound to play at the end of a button clicking
+     * @param buttonClickOn         The sound to play at the start of a button clicking
+     * @param hangingSignSoundType  A sound type to use for the hanging sign block
+     * @param fenceGateClose        A sound event to use for the fence gate opening
+     * @param fenceGateOpen         A sound event to use for the fence gate closing
+     * @since 1.0
+     */
     public record WoodTypeProvider(SoundType soundType,
                                    SoundEvent doorClose,
                                    SoundEvent doorOpen,

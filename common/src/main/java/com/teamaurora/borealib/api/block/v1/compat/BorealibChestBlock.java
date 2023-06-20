@@ -8,6 +8,12 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * A chest block used in Borealib wood sets. Based on Blueprint's chest system and ported to work on both platforms.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public class BorealibChestBlock extends ChestBlock implements ExtendedChestBlock {
 
     private final ResourceLocation type;

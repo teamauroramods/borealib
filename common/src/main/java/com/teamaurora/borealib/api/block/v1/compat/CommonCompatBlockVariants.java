@@ -16,6 +16,12 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 
+/**
+ * Default compatibility block variants for use with {@link WoodSet}s.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public final class CommonCompatBlockVariants {
 
     // For Carpenter, Woodworks, Quark

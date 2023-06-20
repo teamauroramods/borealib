@@ -7,6 +7,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.TrappedChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * A trapped chest block entity used in Borealib's trapped chest blocks. Based on Blueprint's chest system and ported to work on both platforms.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public class BorealibTrappedChestBlockEntity extends BorealibChestBlockEntity {
 
     public BorealibTrappedChestBlockEntity(BlockPos blockPos, BlockState blockState) {

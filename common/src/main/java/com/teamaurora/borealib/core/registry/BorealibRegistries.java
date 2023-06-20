@@ -16,12 +16,15 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.function.Supplier;
+
+@ApiStatus.Internal
 public final class BorealibRegistries {
 
     public static final SimpleCustomRegistry<CustomBoatType> BOAT_TYPES = SimpleCustomRegistry.create(Borealib.location("boat_type"));
     public static final SimpleCustomRegistry<Codec<? extends BiomeSelector>> BIOME_SELECTOR_TYPES = SimpleCustomRegistry.create(Borealib.location("biome_selector_type"));
     public static final SimpleCustomRegistry<Codec<? extends BiomeModifierAction>> BIOME_MODIFIER_ACTION_TYPES = SimpleCustomRegistry.create(Borealib.location("biome_modifier_action_type"));
-    public static final SimpleCustomRegistry<ChestVariant> CHEST_VARIANTS = SimpleCustomRegistry.create(Borealib.location("chest_variants"));
+    public static final SimpleCustomRegistry<Supplier<ChestVariant>> CHEST_VARIANTS = SimpleCustomRegistry.create(Borealib.location("chest_variants"));
     public static final ResourceKey<Registry<BiomeModifier>> BIOME_MODIFIERS = DynamicRegistryHooks.create(Borealib.location("biome_modifier"), BiomeModifier.DIRECT_CODEC);
 
     private BorealibRegistries() {

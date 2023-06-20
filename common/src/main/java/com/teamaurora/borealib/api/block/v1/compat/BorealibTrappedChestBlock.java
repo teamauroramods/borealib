@@ -1,6 +1,5 @@
 package com.teamaurora.borealib.api.block.v1.compat;
 
-import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibChestBlockEntity;
 import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibTrappedChestBlockEntity;
 import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -11,14 +10,16 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.TrappedChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.entity.TrappedChestBlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * A trapped chest block used in Borealib wood sets. Based on Blueprint's chest system and ported to work on both platforms.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public class BorealibTrappedChestBlock extends ChestBlock implements ExtendedChestBlock {
 
     private final ResourceLocation type;

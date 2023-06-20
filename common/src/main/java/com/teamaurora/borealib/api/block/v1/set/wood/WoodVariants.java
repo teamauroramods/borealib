@@ -18,6 +18,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * Default block variants used with {@link WoodSet}s.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public final class WoodVariants {
 
     public static final BlockVariant<WoodSet> STRIPPED_WOOD = BlockVariant.<WoodSet>builder(set ->

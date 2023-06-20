@@ -74,12 +74,6 @@ public class Borealib implements ModLoaderService {
     }
 
     @Override
-    public void onClientPostInit(ParallelDispatcher dispatcher) {
-        // Setup variants after registry load stage on Forge
-        BorealibRegistries.CHEST_VARIANTS.forEach(ChestVariant::setup);
-    }
-
-    @Override
     public String id() {
         return MOD_ID;
     }
@@ -93,7 +87,7 @@ public class Borealib implements ModLoaderService {
         BuiltInBiomeSelectors.WRITER.register();
         BuiltInBiomeModifierActions.WRITER.register();
         WoodSet.BOAT_TYPE_WRITER.register();
-        WoodSet.CHEST_VARIANT_WRITER.register();
+        ChestVariant.WRITER.register();
 
         // Init built-in stuff
         StandardContentRegistries.init();
