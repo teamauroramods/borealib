@@ -1,5 +1,6 @@
 package com.teamaurora.borealib.api.base.v1.modloading;
 
+import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
@@ -7,10 +8,12 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 
+import java.util.ServiceLoader;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * The primary class for initializing mods.
@@ -36,7 +39,9 @@ public interface ModLoaderService {
     }
 
     /**
-     * Ran if the current environment is a client. On Fabric this runs immediately and on Forge wraps <code>FMLClientSetupEvent</code>. Register non-threadsafe client content here.
+     * Ran if the current environment is a client.
+     * <p>On Fabric this runs in Borealib's mod entrypoint and on Forge wraps <code>FMLClientSetupEvent</code>. Register non-threadsafe server content here.
+     * <p>Registry contents of Borealib-dependent mods should be guaranteed to be registered at this point.
      *
      * @param dispatcher The parallel dispatcher to use for deferring non-threadsafe code
      */
@@ -50,7 +55,8 @@ public interface ModLoaderService {
     }
 
     /**
-     * Ran immediately on Fabric and wraps <code>FMLCommonSetupEvent</code> on Forge. Register non-threadsafe common content here.
+     * On Fabric this runs in Borealib's mod entrypoint and on Forge wraps <code>FMLCommonSetupEvent</code>. Register non-threadsafe server content here.
+     * <p>Registry contents of Borealib-dependent mods should be guaranteed to be registered at this point.
      *
      * @param dispatcher The parallel dispatcher to use for deferring non-threadsafe code
      */
@@ -64,7 +70,9 @@ public interface ModLoaderService {
     }
 
     /**
-     * Ran if the current environment is a server. On Fabric this runs immediately and on Forge wraps <code>FMLDedicatedServerSetupEvent</code>. Register non-threadsafe server content here.
+     * Ran if the current environment is a server.
+     * <p>On Fabric this runs in Borealib's mod entrypoint and on Forge wraps <code>FMLDedicatedServerSetupEvent</code>. Register non-threadsafe server content here.
+     * <p>Registry contents of Borealib-dependent mods should be guaranteed to be registered at this point.
      *
      * @param dispatcher The parallel dispatcher to use for deferring non-threadsafe code
      */
@@ -122,19 +130,49 @@ public interface ModLoaderService {
     interface DataGeneratorContext {
 
         /**
-         * A
-         *
-         * @param factory
-         * @param <T>
-         * @return
+         * @return Whether to include client data generators
          */
-        <T extends DataProvider> T addProvider(DataProvider.Factory<T> factory);
+        boolean includeClient();
 
-        <T extends DataProvider> T addProvider(BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory);
+        /**
+         * @return Whether to include server data generators
+         */
+        boolean includeServer();
+
+        /**
+         * Adds a data provider to be generated.
+         *
+         * @param factory The factory to generate the data provider
+         * @param <T>     The data provider type
+         * @return The registered data provider
+         */
+        <T extends DataProvider> T addProvider(boolean run, DataProvider.Factory<T> factory);
+
+        /**
+         * Adds a data provider to be generated.
+         *
+         * @param registryDependentFactory The factory to generate the data provider
+         * @param <T>                      The data provider type
+         * @return The registered data provider
+         */
+        <T extends DataProvider> T addProvider(boolean run, BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory);
 
         /**
          * @return The mod the generator is running for
          */
         ModContainer getContainer();
+    }
+
+    static ModLoaderService byId(String id) {
+        return ServiceLoader.load(ModLoaderService.class)
+                .stream()
+                .filter(p -> p.get().id().equals(id))
+                .findFirst()
+                .map(ServiceLoader.Provider::get)
+                .orElseThrow(() -> new IllegalStateException("Couldn't find mod service with the id" + id));
+    }
+
+    static Stream<ModLoaderService> getAll() {
+        return ServiceLoader.load(ModLoaderService.class).stream().map(ServiceLoader.Provider::get);
     }
 }

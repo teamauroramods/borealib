@@ -44,7 +44,7 @@ public final class ForgeModFactory {
      */
     public static void loadMod(String id) {
         IEventBus bus = ForgeHelper.getEventBus(id);
-        ModLoaderService s = Borealib.findMod(id);
+        ModLoaderService s = ModLoaderService.byId(id);
         bus.<FMLCommonSetupEvent>addListener(e -> s.onCommonPostInit(new ParallelDispatcherImpl(e)));
         bus.<FMLClientSetupEvent>addListener(e -> s.onClientPostInit(new ParallelDispatcherImpl(e)));
         bus.<FMLDedicatedServerSetupEvent>addListener(e -> s.onServerPostInit(new ParallelDispatcherImpl(e)));
@@ -53,13 +53,23 @@ public final class ForgeModFactory {
                 ModContainer container = new ModContainerImpl(e.getModContainer());
 
                 @Override
-                public <T extends DataProvider> T addProvider(DataProvider.Factory<T> factory) {
-                    return e.getGenerator().addProvider(true, factory);
+                public boolean includeClient() {
+                    return e.includeClient();
                 }
 
                 @Override
-                public <T extends DataProvider> T addProvider(BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory) {
-                    return e.getGenerator().<T>addProvider(true, output -> registryDependentFactory.apply(output, e.getLookupProvider()));
+                public boolean includeServer() {
+                    return e.includeServer();
+                }
+
+                @Override
+                public <T extends DataProvider> T addProvider(boolean run, DataProvider.Factory<T> factory) {
+                    return e.getGenerator().addProvider(run, factory);
+                }
+
+                @Override
+                public <T extends DataProvider> T addProvider(boolean run, BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory) {
+                    return e.getGenerator().<T>addProvider(run, output -> registryDependentFactory.apply(output, e.getLookupProvider()));
                 }
 
                 @Override

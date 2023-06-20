@@ -1,4 +1,4 @@
-package com.teamaurora.borealib.api.block.v1.compat;
+package com.teamaurora.borealib.api.block.v1.compat.forge;
 
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;

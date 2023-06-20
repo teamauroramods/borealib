@@ -86,18 +86,22 @@ public interface Platform {
         return PlatformImpl.isProduction();
     }
 
+    static Environment getEnvironment() {
+        return PlatformImpl.getEnvironment();
+    }
+
     /**
      * @return Whether the environment the game is running on is a client
      */
     static boolean isClient() {
-        return PlatformImpl.isClient();
+        return getEnvironment() == Environment.CLIENT;
     }
 
     /**
      * @return Whether the environment the game is running on is a client
      */
     static boolean isServer() {
-        return PlatformImpl.isServer();
+        return getEnvironment() == Environment.SERVER;
     }
 
     /**

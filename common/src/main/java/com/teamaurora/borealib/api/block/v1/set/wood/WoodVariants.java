@@ -1,10 +1,11 @@
 package com.teamaurora.borealib.api.block.v1.set.wood;
 
+import com.teamaurora.borealib.api.block.v1.BorealibStandingSignBlock;
+import com.teamaurora.borealib.api.block.v1.BorealibWallSignBlock;
 import com.teamaurora.borealib.api.block.v1.set.variant.BlockVariant;
 import com.teamaurora.borealib.api.block.v1.set.variant.ItemVariant;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.RenderTypeRegistry;
 import com.teamaurora.borealib.api.item.v1.CustomBoatItem;
-import com.teamaurora.borealib.core.extensions.BlockEntityTypeExtension;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -80,16 +81,14 @@ public final class WoodVariants {
             })
             .build();
     public static final BlockVariant<WoodSet> STANDING_SIGN = BlockVariant.<WoodSet>builder(set ->
-            () -> new StandingSignBlock(plankColors(set).strength(1F).noCollission(), set.getWoodType()))
+            () -> new BorealibStandingSignBlock(plankColors(set).strength(1F).noCollission(), set.getWoodType()))
             .noBlockItem()
             .suffix("sign")
-            .onRegister(block -> ((BlockEntityTypeExtension) BlockEntityType.SIGN).borealib$addAdditionalBlockTypes(block))
             .build();
     public static final BlockVariant<WoodSet> WALL_SIGN = BlockVariant.<WoodSet>builder(set ->
-                    () -> new WallSignBlock(plankColors(set).strength(1F).noCollission(), set.getWoodType()))
+                    () -> new BorealibWallSignBlock(plankColors(set).strength(1F).noCollission(), set.getWoodType()))
             .noBlockItem()
             .suffix("wall_sign")
-            .onRegister(block -> ((BlockEntityTypeExtension) BlockEntityType.SIGN).borealib$addAdditionalBlockTypes(block))
             .build();
     public static final ItemVariant<WoodSet> SIGN_ITEM = ItemVariant.<WoodSet>builder(set ->
                     () -> new SignItem(new Item.Properties().stacksTo(16), set.variantOrThrow(STANDING_SIGN).get(), set.variantOrThrow(WALL_SIGN).get()))

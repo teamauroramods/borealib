@@ -1,12 +1,17 @@
 package com.teamaurora.borealib.core;
 
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
+import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibSignBlockEntity;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
 import com.teamaurora.borealib.api.content_registries.v1.StandardContentRegistries;
+import com.teamaurora.borealib.api.content_registries.v1.client.render.BlockEntityRendererRegistry;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.EntityRendererRegistry;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionRegistry;
+import com.teamaurora.borealib.core.client.render.block.entity.BorealibChestRenderer;
+import com.teamaurora.borealib.core.client.render.block.entity.BorealibSignRenderer;
 import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.borealib.core.network.BorealibMessages;
+import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeModifierActions;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeSelectors;
@@ -15,6 +20,7 @@ import com.teamaurora.borealib.impl.content_registries.ContentRegistriesImpl;
 import com.teamaurora.borealib.impl.resource_condition.ConfigResourceCondition;
 import com.teamaurora.borealib.impl.resource_condition.RegistryKeyExistsResourceCondition;
 import com.teamaurora.borealib.impl.resource_condition.TestsEnabledResourceCondition;
+import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,14 +41,7 @@ public class Borealib implements ModLoaderService {
             LogManager.getLogger().info("Borealib testing mode enabled!");
     }
 
-    public static ModLoaderService findMod(String id) {
-        return ServiceLoader.load(ModLoaderService.class)
-                .stream()
-                .filter(p -> p.get().id().equals(id))
-                .findFirst()
-                .map(ServiceLoader.Provider::get)
-                .orElseThrow(() -> new IllegalStateException("Couldn't find mod service with the id" + id));
-    }
+
 
     public static ResourceLocation location(String path) {
         return new ResourceLocation(MOD_ID, path);
@@ -52,6 +51,9 @@ public class Borealib implements ModLoaderService {
     public void onClientInit() {
         EntityRendererRegistry.register(BorealibEntityTypes.CHEST_BOAT, ctx -> new CustomBoatRenderer<>(ctx, true));
         EntityRendererRegistry.register(BorealibEntityTypes.BOAT, ctx -> new CustomBoatRenderer<>(ctx, false));
+        BlockEntityRendererRegistry.register(BorealibBlockEntityTypes.CHEST, BorealibChestRenderer::new);
+        BlockEntityRendererRegistry.register(BorealibBlockEntityTypes.TRAPPED_CHEST, BorealibChestRenderer::new);
+        BlockEntityRendererRegistry.register(BorealibBlockEntityTypes.SIGN, BorealibSignRenderer::new);
     }
 
     @Override

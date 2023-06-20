@@ -1,5 +1,6 @@
 package com.teamaurora.borealib.core.fabric;
 
+import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.borealib.api.base.v1.modloading.fabric.DelegatedModInitializer;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
@@ -22,6 +23,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @ApiStatus.Internal
 @SuppressWarnings("UnstableApiUsage")

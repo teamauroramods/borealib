@@ -2,6 +2,7 @@ package com.teamaurora.borealib.impl.base.platform;
 
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
+import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.MinecraftServer;
@@ -50,12 +51,7 @@ public final class PlatformImpl {
     }
 
     @ExpectPlatform
-    public static boolean isClient() {
-        return Platform.expect();
-    }
-
-    @ExpectPlatform
-    public static boolean isServer() {
+    public static Environment getEnvironment() {
         return Platform.expect();
     }
 

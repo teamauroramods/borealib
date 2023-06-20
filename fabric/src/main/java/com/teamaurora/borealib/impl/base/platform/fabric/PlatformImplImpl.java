@@ -2,6 +2,7 @@ package com.teamaurora.borealib.impl.base.platform.fabric;
 
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
+import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import com.teamaurora.borealib.core.fabric.BorealibFabric;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -39,12 +40,8 @@ public class PlatformImplImpl {
         return !FabricLoader.getInstance().isDevelopmentEnvironment();
     }
 
-    public static boolean isClient() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
-    }
-
-    public static boolean isServer() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
+    public static Environment getEnvironment() {
+        return Environment.fromPlatform(FabricLoader.getInstance().getEnvironmentType());
     }
 
     public static boolean isOptifrickLoaded() {

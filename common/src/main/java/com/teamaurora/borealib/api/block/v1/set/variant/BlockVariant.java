@@ -31,7 +31,6 @@ public final class BlockVariant<T> {
     private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit;
     private final Supplier<BiConsumer<T, RegistryReference<Item>>> itemClientInit;
     private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> itemClientPostInit;
-    private final Consumer<Block> onRegister;
     private final BlockSet.ComponentFactory<Block, T> factory;
 
     private BlockVariant(BiFunction<T, Block, ? extends BlockItem> blockItemFactory, boolean automaticLang, String prefix, String suffix,
@@ -39,7 +38,6 @@ public final class BlockVariant<T> {
                          Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit,
                          Supplier<BiConsumer<T, RegistryReference<Item>>> itemClientInit,
                          Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> itemClientPostInit,
-                         Consumer<Block> onRegister,
                          BlockSet.ComponentFactory<Block, T> factory) {
         this.blockItemFactory = blockItemFactory;
         this.automaticLang = automaticLang;
@@ -49,7 +47,6 @@ public final class BlockVariant<T> {
         this.clientPostInit = clientPostInit;
         this.itemClientInit = itemClientInit;
         this.itemClientPostInit = itemClientPostInit;
-        this.onRegister = onRegister;
         this.factory = factory;
     }
 
@@ -143,13 +140,6 @@ public final class BlockVariant<T> {
     }
 
     /**
-     * @return Code to run immediately after an object of this variant is registered
-     */
-    public Consumer<Block> getOnRegister() {
-        return this.onRegister;
-    }
-
-    /**
      * @return A factory to construct an object of this variant
      */
     public BlockSet.ComponentFactory<Block, T> getFactory() {
@@ -171,7 +161,6 @@ public final class BlockVariant<T> {
         private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit;
         private Supplier<BiConsumer<T, RegistryReference<Item>>> itemClientInit;
         private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> itemClientPostInit;
-        private Consumer<Block> onRegister;
         private final BlockSet.ComponentFactory<Block, T> factory;
         private BiFunction<T, Block, ? extends BlockItem> blockItemFactory = (set, block) -> new BlockItem(block, new Item.Properties());
 
@@ -266,16 +255,6 @@ public final class BlockVariant<T> {
         }
 
         /**
-         * Adds code to run when a member of this variant is guaranteed to be registered.
-         *
-         * @param onRegister The code to run
-         */
-        public Builder<T> onRegister(Consumer<Block> onRegister) {
-            this.onRegister = onRegister;
-            return this;
-        }
-
-        /**
          * Builds the variant.
          *
          * @return A new block variant
@@ -289,7 +268,6 @@ public final class BlockVariant<T> {
                     this.clientPostInit,
                     this.itemClientInit,
                     this.itemClientPostInit,
-                    this.onRegister,
                     this.factory);
         }
     }

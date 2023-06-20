@@ -25,20 +25,17 @@ public final class ItemVariant<T> {
     private final String suffix;
     private final Supplier<BiConsumer<T, RegistryReference<Item>>> clientInit;
     private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> clientPostInit;
-    private final Consumer<Item> onRegister;
     private final BlockSet.ComponentFactory<Item, T> factory;
 
     private ItemVariant(boolean automaticLang, String prefix, String suffix,
                         Supplier<BiConsumer<T, RegistryReference<Item>>> clientInit,
                         Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> clientPostInit,
-                        Consumer<Item> onRegister,
                         BlockSet.ComponentFactory<Item, T> factory) {
         this.automaticLang = automaticLang;
         this.prefix = prefix;
         this.suffix = suffix;
         this.clientInit = clientInit;
         this.clientPostInit = clientPostInit;
-        this.onRegister = onRegister;
         this.factory = factory;
     }
 
@@ -104,13 +101,6 @@ public final class ItemVariant<T> {
     }
 
     /**
-     * @return Code to run immediately after an object of this variant is registered
-     */
-    public Consumer<Item> getOnRegister() {
-        return this.onRegister;
-    }
-
-    /**
      * @return A factory to construct an object of this variant
      */
     public BlockSet.ComponentFactory<Item, T> getFactory() {
@@ -130,7 +120,6 @@ public final class ItemVariant<T> {
         private String suffix = "";
         private Supplier<BiConsumer<T, RegistryReference<Item>>> clientInit;
         private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> clientPostInit;
-        private Consumer<Item> onRegister;
         private final BlockSet.ComponentFactory<Item, T> factory;
 
         private Builder(BlockSet.ComponentFactory<Item, T> factory) {
@@ -186,16 +175,6 @@ public final class ItemVariant<T> {
         }
 
         /**
-         * Adds code to run when a member of this variant is guaranteed to be registered.
-         *
-         * @param onRegister The code to run
-         */
-        public Builder<T> onRegister(Consumer<Item> onRegister) {
-            this.onRegister = onRegister;
-            return this;
-        }
-
-        /**
          * Builds this variant.
          *
          * @return A new item variant
@@ -207,7 +186,6 @@ public final class ItemVariant<T> {
                     this.suffix,
                     this.clientInit,
                     this.clientPostInit,
-                    this.onRegister,
                     this.factory);
         }
     }

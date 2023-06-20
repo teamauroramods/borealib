@@ -1,5 +1,6 @@
 package com.teamaurora.borealib.api.base.v1.modloading.fabric;
 
+import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.borealib.core.Borealib;
@@ -33,7 +34,7 @@ public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEn
 
     @Override
     default void onInitialize() {
-        ModLoaderService s = Borealib.findMod(this.id());
+        ModLoaderService s = ModLoaderService.byId(this.id());
         ModLoaderService.ParallelDispatcher dispatcher = new ModLoaderService.ParallelDispatcher() {
             @Override
             public CompletableFuture<Void> enqueueWork(Runnable work) {
@@ -59,17 +60,27 @@ public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEn
 
     @Override
     default void onInitializeDataGenerator(FabricDataGenerator generator) {
-        Borealib.findMod(this.id()).onDataInit(new ModLoaderService.DataGeneratorContext() {
+        ModLoaderService.byId(this.id()).onDataInit(new ModLoaderService.DataGeneratorContext() {
             ModContainer container = new ModContainerImpl(generator.getModContainer());
             FabricDataGenerator.Pack pack = generator.createPack();
 
             @Override
-            public <T extends DataProvider> T addProvider(DataProvider.Factory<T> factory) {
+            public boolean includeClient() {
+                return true;
+            }
+
+            @Override
+            public boolean includeServer() {
+                return true;
+            }
+
+            @Override
+            public <T extends DataProvider> T addProvider(boolean run, DataProvider.Factory<T> factory) {
                 return pack.addProvider(factory);
             }
 
             @Override
-            public <T extends DataProvider> T addProvider(BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory) {
+            public <T extends DataProvider> T addProvider(boolean run, BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory) {
                 return pack.addProvider(registryDependentFactory::apply);
             }
 
@@ -82,6 +93,6 @@ public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEn
 
     @Override
     default void buildRegistry(RegistrySetBuilder builder) {
-        Borealib.findMod(this.id()).buildRegistries(builder);
+        ModLoaderService.byId(this.id()).buildRegistries(builder);
     }
 }

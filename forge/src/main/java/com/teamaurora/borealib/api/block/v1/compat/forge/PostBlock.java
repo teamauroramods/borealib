@@ -1,4 +1,4 @@
-package com.teamaurora.borealib.api.block.v1.compat;
+package com.teamaurora.borealib.api.block.v1.compat.forge;
 
 import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;

@@ -1,6 +1,7 @@
 package com.teamaurora.borealib.impl.base.platform.forge;
 
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
+import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraftforge.common.util.LogicalSidedProvider;
@@ -39,12 +40,8 @@ public class PlatformImplImpl {
         return FMLLoader.isProduction();
     }
 
-    public static boolean isClient() {
-        return FMLLoader.getDist().isClient();
-    }
-
-    public static boolean isServer() {
-        return FMLLoader.getDist().isDedicatedServer();
+    public static Environment getEnvironment() {
+        return Environment.fromPlatform(FMLLoader.getDist());
     }
 
     public static boolean isOptifrickLoaded() {

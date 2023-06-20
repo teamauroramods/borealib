@@ -1,6 +1,8 @@
 package com.teamaurora.borealib.api.block.v1.set.wood;
 
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
+import com.teamaurora.borealib.api.block.v1.compat.ChestVariant;
+import com.teamaurora.borealib.api.block.v1.compat.CommonCompatBlockVariants;
 import com.teamaurora.borealib.api.block.v1.set.BlockSet;
 import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
 import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
@@ -44,9 +46,12 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private final TagKey<Block> blockLogTag;
     private final TagKey<Item> itemLogTag;
     private BlockFamily family;
+    private final boolean registerChestsAndBookshelves;
 
     @ApiStatus.Internal
     public static final DeferredRegister<CustomBoatType> BOAT_TYPE_WRITER = DeferredRegister.customWriter(BorealibRegistries.BOAT_TYPES, Borealib.MOD_ID);
+    @ApiStatus.Internal
+    public static final DeferredRegister<ChestVariant> CHEST_VARIANT_WRITER = DeferredRegister.customWriter(BorealibRegistries.CHEST_VARIANTS, Borealib.MOD_ID);
 
     private WoodSet(String namespace, String baseName, WoodTypeProvider woodTypeProvider) {
         super(namespace, baseName);
@@ -55,6 +60,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
         this.baseProperties = () -> BlockBehaviour.Properties.of().strength(2F, 3F).sound(this.woodType.soundType());
         this.blockLogTag = TagKey.create(Registries.BLOCK, new ResourceLocation(namespace, baseName + "_logs"));
         this.itemLogTag = TagKey.create(Registries.ITEM, new ResourceLocation(namespace, baseName + "_logs"));
+        this.registerChestsAndBookshelves = Platform.anyModsLoaded("quark", "woodworks", "carpenter");
         this.include(WoodVariants.STRIPPED_WOOD)
                 .include(WoodVariants.STRIPPED_LOG)
                 .include(WoodVariants.PLANKS)
@@ -73,6 +79,11 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 .includeItem(WoodVariants.SIGN_ITEM)
                 .includeItem(WoodVariants.BOAT)
                 .includeItem(WoodVariants.CHEST_BOAT);
+        if (this.registerChestsAndBookshelves) {
+            this.include(CommonCompatBlockVariants.WOODEN_CHEST).include(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST);
+            CHEST_VARIANT_WRITER.register(new ResourceLocation(this.getNamespace(), this.getBaseName()), () -> new ChestVariant(this.getNamespace(), this.getBaseName(), false));
+            CHEST_VARIANT_WRITER.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"), () -> new ChestVariant(this.getNamespace(), this.getBaseName(), true));
+        }
         includeCompatWoodVariants(this);
     }
 

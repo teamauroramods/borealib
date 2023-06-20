@@ -6,8 +6,6 @@
     "client.LayerDefinitionsMixin"
   ],
   "mixins": [
-    "BlockEntityTypeMixin",
-    "DispenserBlockAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

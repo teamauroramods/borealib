@@ -115,14 +115,10 @@ public abstract class BlockSet<T> {
                 this.blockItems.put(reference, itemReference);
             }
             this.blocksByVariant.put(variant, reference);
-            if (variant.getOnRegister() != null)
-                reference.listen(variant.getOnRegister());
         });
         this.itemVariants.forEach(variant -> {
             RegistryReference<Item> reference = register.getItemRegistry().register(variant.createName(this.namespace, this.baseName), variant.getFactory().create(this.getThis()));
             this.itemsByVariant.put(variant, reference);
-            if (variant.getOnRegister() != null)
-                reference.listen(variant.getOnRegister());
         });
         this.registered = true;
         return this.getThis();

@@ -5,6 +5,7 @@ import com.mojang.serialization.Lifecycle;
 import com.teamaurora.borealib.api.biome.v1.modifier.BiomeModifier;
 import com.teamaurora.borealib.api.biome.v1.modifier.BiomeModifierAction;
 import com.teamaurora.borealib.api.biome.v1.modifier.BiomeSelector;
+import com.teamaurora.borealib.api.block.v1.compat.ChestVariant;
 import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
 import com.teamaurora.borealib.api.registry.v1.DynamicRegistryHooks;
 import com.teamaurora.borealib.api.registry.v1.SimpleCustomRegistry;
@@ -20,6 +21,7 @@ public final class BorealibRegistries {
     public static final SimpleCustomRegistry<CustomBoatType> BOAT_TYPES = SimpleCustomRegistry.create(Borealib.location("boat_type"));
     public static final SimpleCustomRegistry<Codec<? extends BiomeSelector>> BIOME_SELECTOR_TYPES = SimpleCustomRegistry.create(Borealib.location("biome_selector_type"));
     public static final SimpleCustomRegistry<Codec<? extends BiomeModifierAction>> BIOME_MODIFIER_ACTION_TYPES = SimpleCustomRegistry.create(Borealib.location("biome_modifier_action_type"));
+    public static final SimpleCustomRegistry<ChestVariant> CHEST_VARIANTS = SimpleCustomRegistry.create(Borealib.location("chest_variants"));
     public static final ResourceKey<Registry<BiomeModifier>> BIOME_MODIFIERS = DynamicRegistryHooks.create(Borealib.location("biome_modifier"), BiomeModifier.DIRECT_CODEC);
 
     private BorealibRegistries() {

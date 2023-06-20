@@ -7,7 +7,7 @@
   "mixins": [
     "AxeItemMixin",
     "HandshakeHandlerMixin",
-    "SelfBookshelfBlockMixin",
+    "SelfBEWLRBlockItemMixin",
     "SimpleJsonResourceReloadListenerMixin"
   ],
   "injectors": {
