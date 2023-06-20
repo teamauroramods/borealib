@@ -31,7 +31,7 @@ public final class WoodVariants {
             .suffix("log")
             .build();
     public static final BlockVariant<WoodSet> PLANKS = BlockVariant.<WoodSet>builder(set ->
-                    () -> new RotatedPillarBlock(plankColors(set)))
+                    () -> new RotatedPillarBlock(plankColors(set).strength(2.0f, 3.0f)))
             .suffix("planks")
             .build();
     public static final BlockVariant<WoodSet> LOG = BlockVariant.<WoodSet>builder(set ->

@@ -46,7 +46,6 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private final TagKey<Block> blockLogTag;
     private final TagKey<Item> itemLogTag;
     private BlockFamily family;
-    private final boolean registerChestsAndBookshelves;
 
     @ApiStatus.Internal
     public static final DeferredRegister<CustomBoatType> BOAT_TYPE_WRITER = DeferredRegister.customWriter(BorealibRegistries.BOAT_TYPES, Borealib.MOD_ID);
@@ -60,7 +59,8 @@ public final class WoodSet extends BlockSet<WoodSet> {
         this.baseProperties = () -> BlockBehaviour.Properties.of().strength(2F, 3F).sound(this.woodType.soundType());
         this.blockLogTag = TagKey.create(Registries.BLOCK, new ResourceLocation(namespace, baseName + "_logs"));
         this.itemLogTag = TagKey.create(Registries.ITEM, new ResourceLocation(namespace, baseName + "_logs"));
-        this.registerChestsAndBookshelves = Platform.anyModsLoaded("quark", "woodworks", "carpenter");
+
+        // Vanilla setup
         this.include(WoodVariants.STRIPPED_WOOD)
                 .include(WoodVariants.STRIPPED_LOG)
                 .include(WoodVariants.PLANKS)
@@ -79,11 +79,13 @@ public final class WoodSet extends BlockSet<WoodSet> {
                 .includeItem(WoodVariants.SIGN_ITEM)
                 .includeItem(WoodVariants.BOAT)
                 .includeItem(WoodVariants.CHEST_BOAT);
-        if (this.registerChestsAndBookshelves) {
-            this.include(CommonCompatBlockVariants.WOODEN_CHEST).include(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST);
-            CHEST_VARIANT_WRITER.register(new ResourceLocation(this.getNamespace(), this.getBaseName()), () -> new ChestVariant(this.getNamespace(), this.getBaseName(), false));
-            CHEST_VARIANT_WRITER.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"), () -> new ChestVariant(this.getNamespace(), this.getBaseName(), true));
-        }
+
+        // Common Compat setup
+        this.include(CommonCompatBlockVariants.WOODEN_CHEST)
+                .include(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST);
+        CHEST_VARIANT_WRITER.register(new ResourceLocation(this.getNamespace(), this.getBaseName()), () -> new ChestVariant(this.getNamespace(), this.getBaseName(), false));
+        CHEST_VARIANT_WRITER.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"), () -> new ChestVariant(this.getNamespace(), this.getBaseName(), true));
+        // Compat setup for variants that only exist on Forge
         includeCompatWoodVariants(this);
     }
 

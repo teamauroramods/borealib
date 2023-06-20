@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
+import com.teamaurora.borealib.api.block.v1.compat.CommonCompatBlockVariants;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodVariants;
+import com.teamaurora.borealib.impl.datagen.providers.model.BorealibModelTemplates;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Direction;
 import net.minecraft.data.BlockFamily;
@@ -56,6 +58,9 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
     }
 
     protected void createWoodSet(WoodSet set, boolean coloredLeaves) {
+        Block planks = set.variantOrThrow(WoodVariants.PLANKS).get();
+        Block log = set.variantOrThrow(WoodVariants.LOG).get();
+        Block strippedLog = set.variantOrThrow(WoodVariants.STRIPPED_LOG).get();
         set.variant(WoodVariants.SAPLING).ifPresent(b -> this.createPlant(b.get(), set.variantOrThrow(WoodVariants.POTTED_SAPLING).get(), BlockModelGenerators.TintState.NOT_TINTED));
         set.variant(WoodVariants.LEAVES).ifPresent(b -> {
             if (coloredLeaves)
@@ -63,13 +68,16 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
             else
                 this.createTrivialCube(b.get());
         });
-        this.woodProvider(set.variantOrThrow(WoodVariants.LOG).get())
-                .logWithHorizontal(set.variantOrThrow(WoodVariants.LOG).get())
+        this.woodProvider(log)
+                .logWithHorizontal(log)
                 .wood(set.variantOrThrow(WoodVariants.WOOD).get());
-        this.woodProvider(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get())
-                .logWithHorizontal(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get())
+        this.woodProvider(strippedLog)
+                .logWithHorizontal(strippedLog)
                 .wood(set.variantOrThrow(WoodVariants.STRIPPED_WOOD).get());
-        this.family(set.variantOrThrow(WoodVariants.PLANKS).get()).generateFor(set.getOrCreateBlockFamily());
+        this.family(planks).generateFor(set.getOrCreateBlockFamily());
+        // Compat stuff guaranteed to be there
+        this.createChest(set.variantOrThrow(CommonCompatBlockVariants.WOODEN_CHEST).get(), planks);
+        this.createChest(set.variantOrThrow(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST).get(), planks);
     }
 
     public Map<Block, TexturedModel> getTexturedModels() {
@@ -164,6 +172,12 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
     protected void createRotatedVariantBlock(Block block) {
         ResourceLocation resourceLocation = TexturedModel.CUBE.create(block, this.modelOutput);
         this.blockStateOutput.accept(createRotatedVariant(block, resourceLocation));
+    }
+
+    protected void createChest(Block chest, Block planksBlock) {
+        ResourceLocation blockModelLocation = ModelTemplates.PARTICLE_ONLY.create(chest, TextureMapping.particle(planksBlock), this.modelOutput);
+        BorealibModelTemplates.CHEST_ITEM.create(ModelLocationUtils.getModelLocation(chest.asItem()), ModelGeneratorHelper.EMPTY_TEXTURE_MAPPING, this.modelOutput);
+        this.blockStateOutput.accept(createSimpleBlock(chest, blockModelLocation));
     }
 
     protected static BlockStateGenerator createCustomFence(Block block, ResourceLocation resourceLocation, ResourceLocation resourceLocation2, ResourceLocation resourceLocation3, ResourceLocation resourceLocation4, ResourceLocation resourceLocation5) {
@@ -333,6 +347,14 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
 
     protected static BlockStateGenerator createDoor(Block block, ResourceLocation resourceLocation, ResourceLocation resourceLocation2, ResourceLocation resourceLocation3, ResourceLocation resourceLocation4, ResourceLocation resourceLocation5, ResourceLocation resourceLocation6, ResourceLocation resourceLocation7, ResourceLocation resourceLocation8) {
         return MultiVariantGenerator.multiVariant(block).with(configureDoorHalf(configureDoorHalf(PropertyDispatch.properties(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.DOUBLE_BLOCK_HALF, BlockStateProperties.DOOR_HINGE, BlockStateProperties.OPEN), DoubleBlockHalf.LOWER, resourceLocation, resourceLocation2, resourceLocation3, resourceLocation4), DoubleBlockHalf.UPPER, resourceLocation5, resourceLocation6, resourceLocation7, resourceLocation8));
+    }
+
+    protected BlockEntityModelGenerator blockEntityModels(ResourceLocation resourceLocation, Block block) {
+        return new BlockEntityModelGenerator(resourceLocation, block);
+    }
+
+    protected BlockEntityModelGenerator blockEntityModels(Block block, Block block2) {
+        return new BlockEntityModelGenerator(ModelLocationUtils.getModelLocation(block), block2);
     }
 
     protected void createDoor(Block block) {
@@ -567,5 +589,49 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
     @FunctionalInterface
     private interface BlockStateGeneratorSupplier {
         BlockStateGenerator create(Block block, ResourceLocation resourceLocation, TextureMapping textureMapping, BiConsumer<ResourceLocation, Supplier<JsonElement>> biConsumer);
+    }
+
+    public class BlockEntityModelGenerator {
+        private final ResourceLocation baseModel;
+
+        public BlockEntityModelGenerator(ResourceLocation resourceLocation, Block block) {
+            this.baseModel = ModelTemplates.PARTICLE_ONLY.create(resourceLocation, TextureMapping.particle(block), BlockModelSubProvider.this.modelOutput);
+        }
+
+        public BlockEntityModelGenerator create(Block... blocks) {
+            Block[] var2 = blocks;
+            int var3 = blocks.length;
+
+            for(int var4 = 0; var4 < var3; ++var4) {
+                Block block = var2[var4];
+                BlockModelSubProvider.this.blockStateOutput.accept(createSimpleBlock(block, this.baseModel));
+            }
+
+            return this;
+        }
+
+        public BlockEntityModelGenerator createWithoutBlockItem(Block... blocks) {
+            Block[] var2 = blocks;
+            int var3 = blocks.length;
+
+            for(int var4 = 0; var4 < var3; ++var4) {
+                Block block = var2[var4];
+                BlockModelSubProvider.this.skipAutoItemBlock(block);
+            }
+
+            return this.create(blocks);
+        }
+
+        public BlockEntityModelGenerator createWithCustomBlockItemModel(ModelTemplate modelTemplate, Block... blocks) {
+            Block[] var3 = blocks;
+            int var4 = blocks.length;
+
+            for(int var5 = 0; var5 < var4; ++var5) {
+                Block block = var3[var5];
+                modelTemplate.create(ModelLocationUtils.getModelLocation(block.asItem()), TextureMapping.particle(block), BlockModelSubProvider.this.modelOutput);
+            }
+
+            return this.create(blocks);
+        }
     }
 }

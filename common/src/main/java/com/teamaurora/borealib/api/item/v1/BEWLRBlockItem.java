@@ -23,6 +23,10 @@ public class BEWLRBlockItem extends BlockItem {
 		this.bewlr = lazyBEWLR == null ? null : () -> lazyBEWLR;
 	}
 
+	public Supplier<LazyBEWLR> getBewlr() {
+		return this.bewlr;
+	}
+
 	public static final class LazyBEWLR {
 		private final BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> cacheFunction;
 		public BlockEntityWithoutLevelRenderer value;
