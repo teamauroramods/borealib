@@ -77,13 +77,26 @@ public class ContentRegistryImpl<T, R> implements ContentRegistry<T, R> {
     }
 
     @Override
-    public void forEach(BiConsumer<T, R> consumer) {
-        this.keySet().forEach(object -> consumer.accept(object, this.get(object)));
+    public Set<Entry<T, R>> fullEntrySet() {
+        return this.registry.stream().map(object -> {
+            R val = this.get(object);
+            return val != null ? new Entry<>(object, val) : null;
+        }).filter(Objects::nonNull).collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public Set<Entry<T, R>> directEntrySet() {
+        return this.byValue.entrySet().stream().map(entry -> new Entry<>(entry.getKey(), entry.getValue())).collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public Set<TagEntry<T, R>> tagEntrySet() {
+        return this.byTag.entrySet().stream().map(entry -> new TagEntry<>(entry.getKey(), entry.getValue())).collect(Collectors.toUnmodifiableSet());
     }
 
     @Override
     public Set<T> keySet() {
-        return this.registry.stream().filter(object -> Objects.nonNull(object) && this.get(object) != null).collect(Collectors.toUnmodifiableSet());
+        return this.registry.stream().filter(object -> this.get(object) != null).collect(Collectors.toUnmodifiableSet());
     }
 
     @Override

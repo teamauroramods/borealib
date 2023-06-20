@@ -6,6 +6,7 @@
   ],
   "mixins": [
     "AxeItemMixin",
+    "ForgeHooksMixin",
     "HandshakeHandlerMixin",
     "SelfBEWLRBlockItemMixin",
     "SelfBorealibChestBlockEntityMixin",

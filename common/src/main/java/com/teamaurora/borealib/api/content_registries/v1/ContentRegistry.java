@@ -68,11 +68,19 @@ public interface ContentRegistry<T, R> {
     }
 
     /**
-     * Performs the action for each registry element.
-     *
-     * @param consumer The action to run
+     * @return A set of all associated registry entries and values
      */
-    void forEach(BiConsumer<T, R> consumer);
+    Set<Entry<T, R>> fullEntrySet();
+
+    /**
+     * @return A set of all associated registry entries and values NOT defined via a tag
+     */
+    Set<Entry<T, R>> directEntrySet();
+
+    /**
+     * @return A set of all associated registry tags and values
+     */
+    Set<TagEntry<T, R>> tagEntrySet();
 
     /**
      * @return A set of all registered entries
@@ -88,4 +96,8 @@ public interface ContentRegistry<T, R> {
      * @return A codec to serialize and deserialize values
      */
     Codec<R> elementCodec();
+
+    record Entry<T, R>(T object, R value) {}
+
+    record TagEntry<T, R>(TagKey<T> object, R value) {}
 }
