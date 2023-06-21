@@ -48,6 +48,16 @@ public enum Mods {
     MORE_RESPAWN_ANCHORS("morerespawnanchors"),
     TOTALLY_WILD,
 
+    // Moonflower
+    CARPENTER,
+    TOLERABLE_CREEPERS("tolerablecreepers"),
+    POLLEN,
+    VANITY,
+    ANCHOR,
+    ETCHED,
+    LOCKSMITH,
+    MANNEQUINS,
+
     // Other
     CREATE,
     CRUMBS,

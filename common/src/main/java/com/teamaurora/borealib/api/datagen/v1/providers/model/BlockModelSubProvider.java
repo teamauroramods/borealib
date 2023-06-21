@@ -78,6 +78,7 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         // Compat stuff guaranteed to be there
         this.createChest(set.variantOrThrow(CommonCompatBlockVariants.WOODEN_CHEST).get(), planks);
         this.createChest(set.variantOrThrow(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST).get(), planks);
+        this.createBookshelf(set.variantOrThrow(CommonCompatBlockVariants.BOOKSHELF).get(), planks);
     }
 
     public Map<Block, TexturedModel> getTexturedModels() {
@@ -174,10 +175,16 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         this.blockStateOutput.accept(createRotatedVariant(block, resourceLocation));
     }
 
-    protected void createChest(Block chest, Block planksBlock) {
-        ResourceLocation blockModelLocation = ModelTemplates.PARTICLE_ONLY.create(chest, TextureMapping.particle(planksBlock), this.modelOutput);
+    protected void createChest(Block chest, Block planks) {
+        ResourceLocation blockModelLocation = ModelTemplates.PARTICLE_ONLY.create(chest, TextureMapping.particle(planks), this.modelOutput);
         BorealibModelTemplates.CHEST_ITEM.create(ModelLocationUtils.getModelLocation(chest.asItem()), ModelGeneratorHelper.EMPTY_TEXTURE_MAPPING, this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(chest, blockModelLocation));
+    }
+
+    protected void createBookshelf(Block bookshelf, Block planks) {
+        TextureMapping textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(bookshelf), TextureMapping.getBlockTexture(planks));
+        ResourceLocation resourceLocation = ModelTemplates.CUBE_COLUMN.create(bookshelf, textureMapping, this.getModelOutput());
+        this.blockStateOutput.accept(createSimpleBlock(bookshelf, resourceLocation));
     }
 
     protected static BlockStateGenerator createCustomFence(Block block, ResourceLocation resourceLocation, ResourceLocation resourceLocation2, ResourceLocation resourceLocation3, ResourceLocation resourceLocation4, ResourceLocation resourceLocation5) {

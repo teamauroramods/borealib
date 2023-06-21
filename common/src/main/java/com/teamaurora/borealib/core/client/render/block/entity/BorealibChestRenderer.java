@@ -112,7 +112,7 @@ public class BorealibChestRenderer<T extends BlockEntity & LidBlockEntity> imple
 		} else {
 			Block inventoryBlock = itemBlock;
 			if (inventoryBlock == null) inventoryBlock = t.getBlockState().getBlock();
-			ChestVariant variant = BorealibRegistries.CHEST_VARIANTS.get(((ExtendedChestBlock) inventoryBlock).chestType()).get();
+			ChestVariant variant = ChestVariant.get(((ExtendedChestBlock) inventoryBlock).chestType());
 			return switch (type) {
 				case SINGLE -> variant != null ? variant.single() : Sheets.CHEST_LOCATION;
 				case LEFT -> variant != null ? variant.left() : Sheets.CHEST_LOCATION_LEFT;

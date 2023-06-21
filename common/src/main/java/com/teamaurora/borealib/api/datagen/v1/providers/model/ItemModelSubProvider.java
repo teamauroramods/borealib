@@ -1,6 +1,8 @@
 package com.teamaurora.borealib.api.datagen.v1.providers.model;
 
 import com.google.gson.JsonElement;
+import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
+import com.teamaurora.borealib.api.block.v1.set.wood.WoodVariants;
 import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.ModelTemplates;
@@ -19,6 +21,12 @@ public abstract class ItemModelSubProvider implements ModelSubProvider {
 
     public ItemModelSubProvider(BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput) {
         this.modelOutput = modelOutput;
+    }
+
+    protected void createWoodSet(WoodSet woodSet) {
+        this.generateFlatItem(woodSet.itemVariantOrThrow(WoodVariants.BOAT).get(), ModelTemplates.FLAT_ITEM);
+        this.generateFlatItem(woodSet.itemVariantOrThrow(WoodVariants.CHEST_BOAT).get(), ModelTemplates.FLAT_ITEM);
+        this.generateFlatItem(woodSet.itemVariantOrThrow(WoodVariants.SIGN_ITEM).get(), ModelTemplates.FLAT_ITEM);
     }
 
     public BiConsumer<ResourceLocation, Supplier<JsonElement>> getModelOutput() {

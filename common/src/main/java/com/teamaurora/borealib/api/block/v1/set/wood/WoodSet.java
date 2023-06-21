@@ -4,6 +4,8 @@ import com.teamaurora.borealib.api.base.v1.platform.Platform;
 import com.teamaurora.borealib.api.block.v1.compat.ChestVariant;
 import com.teamaurora.borealib.api.block.v1.compat.CommonCompatBlockVariants;
 import com.teamaurora.borealib.api.block.v1.set.BlockSet;
+import com.teamaurora.borealib.api.block.v1.set.variant.BlockVariant;
+import com.teamaurora.borealib.api.block.v1.set.variant.ItemVariant;
 import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
 import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -53,6 +56,28 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private final TagKey<Block> blockLogTag;
     private final TagKey<Item> itemLogTag;
     private BlockFamily family;
+    public static final List<BlockVariant<WoodSet>> DEFAULT_VARIANTS = List.of(
+            WoodVariants.STRIPPED_WOOD,
+            WoodVariants.STRIPPED_LOG,
+            WoodVariants.PLANKS,
+            WoodVariants.LOG,
+            WoodVariants.WOOD,
+            WoodVariants.SLAB,
+            WoodVariants.STAIRS,
+            WoodVariants.FENCE,
+            WoodVariants.FENCE_GATE,
+            WoodVariants.PRESSURE_PLATE,
+            WoodVariants.BUTTON,
+            WoodVariants.TRAPDOOR,
+            WoodVariants.DOOR,
+            WoodVariants.STANDING_SIGN,
+            WoodVariants.WALL_SIGN
+    );
+    public static final List<ItemVariant<WoodSet>> DEFAULT_ITEM_VARIANTS = List.of(
+            WoodVariants.SIGN_ITEM,
+            WoodVariants.BOAT,
+            WoodVariants.CHEST_BOAT
+    );
 
     @ApiStatus.Internal
     public static final DeferredRegister<CustomBoatType> BOAT_TYPE_WRITER = DeferredRegister.customWriter(BorealibRegistries.BOAT_TYPES, Borealib.MOD_ID);
@@ -61,33 +86,16 @@ public final class WoodSet extends BlockSet<WoodSet> {
         super(namespace, baseName);
         this.woodType = woodTypeProvider.apply(namespace, baseName);
         this.boatType = BOAT_TYPE_WRITER.register(new ResourceLocation(namespace, baseName), () -> new CustomBoatType(new ResourceLocation(namespace, "textures/entity/boat/" + baseName + ".png"), new ResourceLocation(namespace, "textures/entity/chest_boat/" + baseName + ".png")));
-        this.baseProperties = () -> BlockBehaviour.Properties.of().strength(2F, 3F).sound(this.woodType.soundType());
+        this.baseProperties = () -> BlockBehaviour.Properties.of().strength(2F, 3F).sound(this.woodType.soundType()).ignitedByLava().instrument(NoteBlockInstrument.BASS);
         this.blockLogTag = TagKey.create(Registries.BLOCK, new ResourceLocation(namespace, baseName + "_logs"));
         this.itemLogTag = TagKey.create(Registries.ITEM, new ResourceLocation(namespace, baseName + "_logs"));
-
-        // Vanilla setup
-        this.include(WoodVariants.STRIPPED_WOOD)
-                .include(WoodVariants.STRIPPED_LOG)
-                .include(WoodVariants.PLANKS)
-                .include(WoodVariants.LOG)
-                .include(WoodVariants.WOOD)
-                .include(WoodVariants.SLAB)
-                .include(WoodVariants.STAIRS)
-                .include(WoodVariants.FENCE)
-                .include(WoodVariants.FENCE_GATE)
-                .include(WoodVariants.PRESSURE_PLATE)
-                .include(WoodVariants.BUTTON)
-                .include(WoodVariants.TRAPDOOR)
-                .include(WoodVariants.DOOR)
-                .include(WoodVariants.STANDING_SIGN)
-                .include(WoodVariants.WALL_SIGN)
-                .includeItem(WoodVariants.SIGN_ITEM)
-                .includeItem(WoodVariants.BOAT)
-                .includeItem(WoodVariants.CHEST_BOAT);
+        DEFAULT_VARIANTS.forEach(this::include);
+        DEFAULT_ITEM_VARIANTS.forEach(this::includeItem);
 
         // Common Compat setup
         this.include(CommonCompatBlockVariants.WOODEN_CHEST)
-                .include(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST);
+                .include(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST)
+                .include(CommonCompatBlockVariants.BOOKSHELF);
         ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName()), false);
         ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"),true);
         // Compat setup for variants that only exist on Forge

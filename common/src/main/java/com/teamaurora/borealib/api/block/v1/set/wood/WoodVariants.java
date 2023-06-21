@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 
 /**
  * Default block variants used with {@link WoodSet}s.
@@ -73,26 +74,26 @@ public final class WoodVariants {
             .suffix("button")
             .build();
     public static final BlockVariant<WoodSet> TRAPDOOR = BlockVariant.<WoodSet>builder(set ->
-                    () -> new TrapDoorBlock(plankColors(set).strength(3F).noOcclusion(), set.getWoodType().setType()))
+                    () -> new TrapDoorBlock(plankColors(set).strength(3F).noOcclusion().isValidSpawn(WoodVariants::never), set.getWoodType().setType()))
             .suffix("trapdoor")
             .clientPostInit(() -> (d, s, o) -> {
                 d.enqueueWork(() -> RenderTypeRegistry.register(RenderType.cutout(), o.get()));
             })
             .build();
     public static final BlockVariant<WoodSet> DOOR = BlockVariant.<WoodSet>builder(set ->
-                    () -> new DoorBlock(plankColors(set).strength(3F).noOcclusion(), set.getWoodType().setType()))
+                    () -> new DoorBlock(plankColors(set).strength(3F).noOcclusion().pushReaction(PushReaction.DESTROY), set.getWoodType().setType()))
             .suffix("door")
             .clientPostInit(() -> (d, s, o) -> {
                 d.enqueueWork(() -> RenderTypeRegistry.register(RenderType.cutout(), o.get()));
             })
             .build();
     public static final BlockVariant<WoodSet> STANDING_SIGN = BlockVariant.<WoodSet>builder(set ->
-            () -> new BorealibStandingSignBlock(plankColors(set).strength(1F).noCollission(), set.getWoodType()))
+            () -> new BorealibStandingSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn(), set.getWoodType()))
             .noBlockItem()
             .suffix("sign")
             .build();
     public static final BlockVariant<WoodSet> WALL_SIGN = BlockVariant.<WoodSet>builder(set ->
-                    () -> new BorealibWallSignBlock(plankColors(set).strength(1F).noCollission(), set.getWoodType()))
+                    () -> new BorealibWallSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn(), set.getWoodType()))
             .noBlockItem()
             .suffix("wall_sign")
             .build();
@@ -101,18 +102,18 @@ public final class WoodVariants {
             .suffix("sign")
             .build();
     public static final BlockVariant<WoodSet> LEAVES = BlockVariant.<WoodSet>builder(set ->
-                    () -> new LeavesBlock(BlockBehaviour.Properties.of().strength(0.2F).randomTicks().sound(SoundType.AZALEA_LEAVES).noOcclusion().isValidSpawn(WoodVariants::ocelotOrParrot).isSuffocating(WoodVariants::never).isViewBlocking(WoodVariants::never)))
+                    () -> new LeavesBlock(BlockBehaviour.Properties.of().strength(0.2F).randomTicks().sound(SoundType.AZALEA_LEAVES).noOcclusion().isValidSpawn(WoodVariants::ocelotOrParrot).isSuffocating(WoodVariants::never).isViewBlocking(WoodVariants::never).pushReaction(PushReaction.DESTROY).isRedstoneConductor(WoodVariants::never)))
             .suffix("leaves")
             .build();
     public static final BlockVariant<WoodSet> SAPLING = BlockVariant.<WoodSet>builder(set ->
-                    () -> new SaplingBlock(set.getTreeGrower().get(), BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.CHERRY_SAPLING)))
+                    () -> new SaplingBlock(set.getTreeGrower().get(), BlockBehaviour.Properties.of().noCollission().randomTicks().instabreak().sound(SoundType.CHERRY_SAPLING).pushReaction(PushReaction.DESTROY)))
             .suffix("sapling")
             .clientPostInit(() -> (d, s, o) -> {
                 d.enqueueWork(() -> RenderTypeRegistry.register(RenderType.cutout(), o.get()));
             })
             .build();
     public static final BlockVariant<WoodSet> POTTED_SAPLING = BlockVariant.<WoodSet>builder(set ->
-                    () -> new FlowerPotBlock(set.variantOrThrow(SAPLING).get(), BlockBehaviour.Properties.of().instabreak().noOcclusion()))
+                    () -> new FlowerPotBlock(set.variantOrThrow(SAPLING).get(), BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(PushReaction.DESTROY)))
             .noBlockItem()
             .prefix("potted")
             .suffix("sapling")
@@ -132,11 +133,11 @@ public final class WoodVariants {
     private WoodVariants() {
     }
 
-    private static BlockBehaviour.Properties axisDependentColors(WoodSet set) {
+    public static BlockBehaviour.Properties axisDependentColors(WoodSet set) {
         return set.getBaseProperties().get().mapColor(blockState -> blockState.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? set.getWoodColor() : set.getBarkColor());
     }
 
-    private static BlockBehaviour.Properties plankColors(WoodSet set) {
+    public static BlockBehaviour.Properties plankColors(WoodSet set) {
         return set.getBaseProperties().get().mapColor(set.getWoodColor());
     }
 

@@ -87,7 +87,6 @@ public class Borealib implements ModLoaderService {
         BuiltInBiomeSelectors.WRITER.register();
         BuiltInBiomeModifierActions.WRITER.register();
         WoodSet.BOAT_TYPE_WRITER.register();
-        ChestVariant.WRITER.register();
 
         // Init built-in stuff
         StandardContentRegistries.init();
