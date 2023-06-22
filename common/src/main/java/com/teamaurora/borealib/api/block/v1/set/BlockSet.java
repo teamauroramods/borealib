@@ -96,6 +96,14 @@ public abstract class BlockSet<T> {
         return this.itemVariant(variant).orElseThrow();
     }
 
+    public Map<BlockVariant<T>, RegistryReference<Block>> getBlocksByVariant() {
+        return Collections.unmodifiableMap(this.blocksByVariant);
+    }
+
+    public Map<ItemVariant<T>, RegistryReference<Item>> getItemsByVariant() {
+        return Collections.unmodifiableMap(this.itemsByVariant);
+    }
+
     public String getNamespace() {
         return this.namespace;
     }

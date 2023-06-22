@@ -16,6 +16,11 @@ public class ResourceConditionRegistryImpl {
     }
 
     @ExpectPlatform
+    public static ResourceCondition getCondition(JsonObject json) {
+        return Platform.expect();
+    }
+
+    @ExpectPlatform
     public static boolean test(JsonObject json) {
         return Platform.expect();
     }

@@ -6,6 +6,7 @@
     "client.LayerDefinitionsMixin"
   ],
   "mixins": [
+    "ItemTagsProviderAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

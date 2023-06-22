@@ -1,6 +1,7 @@
 package com.teamaurora.borealib.impl.resource_condition.forge;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceCondition;
 import com.teamaurora.borealib.core.Borealib;
 import net.minecraft.core.registries.Registries;
@@ -45,5 +46,17 @@ public class ResourceConditionRegistryImplImpl {
 
     public static String getConditionsKey() {
         return CONDITIONS_KEY;
+    }
+
+    public static ResourceCondition getCondition(JsonObject json) {
+        return new ForgeWrapper(CraftingHelper.getCondition(json));
+    }
+
+    private record ForgeWrapper(ICondition condition) implements ResourceCondition {
+
+        @Override
+        public boolean test(JsonObject json) throws JsonParseException {
+            return this.condition.test(ICondition.IContext.EMPTY);
+        }
     }
 }

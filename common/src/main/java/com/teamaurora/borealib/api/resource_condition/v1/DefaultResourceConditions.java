@@ -62,4 +62,11 @@ public interface DefaultResourceConditions {
         return DefaultResourceConditionsImpl.config(modId, type, key, value, comparator);
     }
 
+    static ResourceConditionProvider quarkFlag(String flag) {
+        return DefaultResourceConditionsImpl.quarkFlag(flag);
+    }
+
+    static ResourceConditionProvider woodworksFlag(String value) {
+        return DefaultResourceConditionsImpl.woodworksFlag(value);
+    }
 }

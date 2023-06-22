@@ -8,7 +8,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public enum Mods {
 
@@ -65,6 +67,7 @@ public enum Mods {
     INFERNAL_EXPANSION("infernalexp");
 
     private final String id;
+    private final Map<ResourceKey<Registry<?>>, Map<String, TagKey<?>>> tags = new HashMap<>();
 
     Mods() {
         this.id = this.name().toLowerCase(Locale.ROOT);
@@ -75,8 +78,10 @@ public enum Mods {
     }
 
 
+    @SuppressWarnings("unchecked")
+    // Avoid creating new tag keys unless necessary
     public <T> TagKey<T> tag(ResourceKey<? extends Registry<T>> resourceKey, String path) {
-        return TagKey.create(resourceKey, new ResourceLocation(this.id, path));
+        return (TagKey<T>) this.tags.computeIfAbsent((ResourceKey<Registry<?>>) resourceKey, __ -> new HashMap<>()).computeIfAbsent(path, p -> TagKey.create(resourceKey, new ResourceLocation(this.id, p)));
     }
 
     public TagKey<Block> blockTag(String path) {

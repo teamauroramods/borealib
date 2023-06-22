@@ -5,9 +5,13 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
 import com.teamaurora.borealib.api.base.v1.util.Mods;
+import com.teamaurora.borealib.api.block.v1.compat.CommonCompatBlockVariants;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodVariants;
 import com.teamaurora.borealib.api.datagen.v1.SimpleConditionalDataProvider;
+import com.teamaurora.borealib.api.registry.v1.RegistryReference;
+import com.teamaurora.borealib.api.resource_condition.v1.DefaultResourceConditions;
+import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionProvider;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
@@ -97,6 +101,15 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
     }
 
     protected abstract void buildRecipes(Consumer<FinishedRecipe> consumer);
+
+    protected void saveWithConditions(Consumer<FinishedRecipe> consumer, ResourceLocation saveName, RecipeBuilder builder, ResourceConditionProvider... conditions) {
+        this.addConditions(saveName, conditions);
+        builder.save(consumer, saveName);
+    }
+
+    protected void saveWithConditions(Consumer<FinishedRecipe> consumer, RecipeBuilder builder, ResourceConditionProvider... conditions) {
+        this.saveWithConditions(consumer, RecipeBuilder.getDefaultRecipeId(builder.getResult()), builder, conditions);
+    }
 
     protected static void oneToOneConversionRecipe(Consumer<FinishedRecipe> consumer, ItemLike itemLike, ItemLike itemLike2, @Nullable String string) {
         oneToOneConversionRecipe(consumer, itemLike, itemLike2, string, 1);
@@ -374,7 +387,7 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
         });
     }
 
-    protected static void generateWoodSetRecipes(Consumer<FinishedRecipe> consumer, WoodSet woodSet) {
+    protected void generateWoodSetRecipes(Consumer<FinishedRecipe> consumer, WoodSet woodSet) {
         generateRecipes(consumer, woodSet.getOrCreateBlockFamily());
         Block planks = woodSet.variantOrThrow(WoodVariants.PLANKS).get();
         Item boat = woodSet.itemVariantOrThrow(WoodVariants.BOAT).get();
@@ -383,6 +396,23 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
         woodFromLogs(consumer, woodSet.variantOrThrow(WoodVariants.STRIPPED_WOOD).get(), woodSet.variantOrThrow(WoodVariants.STRIPPED_LOG).get());
         woodenBoat(consumer, planks, boat);
         chestBoat(consumer, boat, woodSet.itemVariantOrThrow(WoodVariants.CHEST_BOAT).get());
+        hangingSign(consumer, woodSet.itemVariantOrThrow(WoodVariants.HANGING_SIGN_ITEM).get(), woodSet.variantOrThrow(WoodVariants.STRIPPED_LOG).get());
+
+        RecipeBuilder chestRecipe = ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_CHEST).get()).define('#', planks).pattern("###").pattern("# #").pattern("###").unlockedBy("has_lots_of_items", new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.atLeast(10), MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[0]));
+        RecipeBuilder trappedChestRecipe = ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST).get()).requires(Blocks.CHEST).requires(Blocks.TRIPWIRE_HOOK).unlockedBy("has_tripwire_hook", has(Blocks.TRIPWIRE_HOOK));
+        RecipeBuilder bookshelfRecipe = ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Blocks.BOOKSHELF).define('#', ItemTags.PLANKS).define('X', Items.BOOK).pattern("###").pattern("XXX").pattern("###").unlockedBy("has_book", has(Items.BOOK));
+        ResourceConditionProvider carpenterLoaded = DefaultResourceConditions.allModsLoaded("carpenter");
+
+        if (Platform.isFabric()) {
+            this.saveWithConditions(consumer, chestRecipe, carpenterLoaded);
+            this.saveWithConditions(consumer, trappedChestRecipe, carpenterLoaded);
+            this.saveWithConditions(consumer, bookshelfRecipe, carpenterLoaded);
+        } else if (Platform.isForge()) {
+            ResourceConditionProvider chestsEnabled = DefaultResourceConditions.or(carpenterLoaded, DefaultResourceConditions.quarkFlag("variant_chests"), DefaultResourceConditions.woodworksFlag("wooden_chests"));
+            this.saveWithConditions(consumer, chestRecipe, chestsEnabled);
+            this.saveWithConditions(consumer, trappedChestRecipe, chestsEnabled);
+            this.saveWithConditions(consumer, bookshelfRecipe, DefaultResourceConditions.or(carpenterLoaded, DefaultResourceConditions.quarkFlag("variant_bookshelves"), DefaultResourceConditions.woodworksFlag("wooden_bookshelves")));
+        }
     }
 
     private static Block getBaseBlock(BlockFamily blockFamily, BlockFamily.Variant variant) {

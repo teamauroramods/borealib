@@ -10,6 +10,10 @@ public interface ResourceConditionRegistry {
         ResourceConditionRegistryImpl.register(id, condition);
     }
 
+    static ResourceCondition getCondition(JsonObject json) {
+        return ResourceConditionRegistryImpl.getCondition(json);
+    }
+
     static boolean test(JsonObject json) {
         return ResourceConditionRegistryImpl.test(json);
     }

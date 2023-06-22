@@ -17,6 +17,7 @@ public interface ConfigRegistry {
     static <T> T register(String modId, ModConfig.Type type, String fileName, Function<ConfigBuilder, T> consumer) {
         return ConfigRegistryImpl.register(modId, type, fileName, consumer);
     }
+
     static Optional<ModConfig> get(String modId, ModConfig.Type type) {
         return ConfigRegistryImpl.get(modId, type);
     }

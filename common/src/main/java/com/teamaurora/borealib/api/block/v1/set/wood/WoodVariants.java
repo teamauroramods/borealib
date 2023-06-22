@@ -1,6 +1,8 @@
 package com.teamaurora.borealib.api.block.v1.set.wood;
 
+import com.teamaurora.borealib.api.block.v1.BorealibCeilingHangingSignBlock;
 import com.teamaurora.borealib.api.block.v1.BorealibStandingSignBlock;
+import com.teamaurora.borealib.api.block.v1.BorealibWallHangingSignBlock;
 import com.teamaurora.borealib.api.block.v1.BorealibWallSignBlock;
 import com.teamaurora.borealib.api.block.v1.set.variant.BlockVariant;
 import com.teamaurora.borealib.api.block.v1.set.variant.ItemVariant;
@@ -10,6 +12,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.BlockGetter;
@@ -93,9 +96,23 @@ public final class WoodVariants {
             .suffix("sign")
             .build();
     public static final BlockVariant<WoodSet> WALL_SIGN = BlockVariant.<WoodSet>builder(set ->
-                    () -> new BorealibWallSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn(), set.getWoodType()))
+                    () -> new BorealibWallSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn().dropsLike(set.variantOrThrow(STANDING_SIGN).get()), set.getWoodType()))
             .noBlockItem()
             .suffix("wall_sign")
+            .build();
+    public static final BlockVariant<WoodSet> HANGING_SIGN = BlockVariant.<WoodSet>builder(set ->
+                    () -> new BorealibCeilingHangingSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn(), set.getWoodType()))
+            .noBlockItem()
+            .suffix("hanging_sign")
+            .build();
+    public static final BlockVariant<WoodSet> WALL_HANGING_SIGN = BlockVariant.<WoodSet>builder(set ->
+                    () -> new BorealibWallHangingSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn().dropsLike(set.variantOrThrow(HANGING_SIGN).get()), set.getWoodType()))
+            .noBlockItem()
+            .suffix("wall_hanging_sign")
+            .build();
+    public static final ItemVariant<WoodSet> HANGING_SIGN_ITEM = ItemVariant.<WoodSet>builder(set ->
+                    () -> new HangingSignItem(set.variantOrThrow(HANGING_SIGN).get(), set.variantOrThrow(WALL_HANGING_SIGN).get(), new Item.Properties().stacksTo(16)))
+            .suffix("hanging_sign")
             .build();
     public static final ItemVariant<WoodSet> SIGN_ITEM = ItemVariant.<WoodSet>builder(set ->
                     () -> new SignItem(new Item.Properties().stacksTo(16), set.variantOrThrow(STANDING_SIGN).get(), set.variantOrThrow(WALL_SIGN).get()))

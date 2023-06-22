@@ -11,6 +11,7 @@ import com.teamaurora.borealib.impl.config.fabric.ConfigLoadingHelper;
 import com.teamaurora.borealib.impl.config.fabric.ConfigTracker;
 import com.teamaurora.borealib.impl.event.creativetabs.CreativeTabEventsImpl;
 import com.teamaurora.borealib.impl.event.entity.fabric.VillagerTradeManager;
+import com.teamaurora.borealib.impl.resource_condition.fabric.DefaultResourceConditionsImplImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -43,6 +44,7 @@ public class BorealibFabric implements DelegatedModInitializer {
     @Override
     public void onInitialize() {
         DelegatedModInitializer.super.onInitialize();
+        DefaultResourceConditionsImplImpl.init();
         ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
             ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.CLIENT, FabricLoader.getInstance().getConfigDir());

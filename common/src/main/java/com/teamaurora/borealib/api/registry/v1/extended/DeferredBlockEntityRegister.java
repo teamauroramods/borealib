@@ -90,7 +90,7 @@ public final class DeferredBlockEntityRegister extends ExtendedDeferredRegister<
      * @param <T>     The block entity type
      * @return A reference to the registered block entity
      */
-    public <T extends BlockEntity> RegistryReference<BlockEntityType<T>> registerDynamic(String name, BlockEntityType.BlockEntitySupplier<? extends T> factory, Class<?> clazz) {
+    public <T extends BlockEntity> RegistryReference<BlockEntityType<T>> registerDynamic(String name, BlockEntityType.BlockEntitySupplier<? extends T> factory, Class<? extends Block> clazz) {
         return this.registerDynamic(name, factory, collectBlocks(clazz));
     }
 }

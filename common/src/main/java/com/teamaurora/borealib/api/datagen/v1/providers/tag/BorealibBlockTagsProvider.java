@@ -45,6 +45,8 @@ public abstract class BorealibBlockTagsProvider extends IntrinsicHolderTagsProvi
         woodSet.variant(WoodVariants.SAPLING).ifPresent(block -> this.tag(BlockTags.SAPLINGS).add(block.get()));
         this.tag(BlockTags.STANDING_SIGNS).add(woodSet.variantOrThrow(WoodVariants.STANDING_SIGN).get());
         this.tag(BlockTags.WALL_SIGNS).add(woodSet.variantOrThrow(WoodVariants.WALL_SIGN).get());
+        this.tag(BlockTags.CEILING_HANGING_SIGNS).add(woodSet.variantOrThrow(WoodVariants.HANGING_SIGN).get());
+        this.tag(BlockTags.WALL_HANGING_SIGNS).add(woodSet.variantOrThrow(WoodVariants.WALL_HANGING_SIGN).get());
         this.tag(BlockTags.WOODEN_BUTTONS).add(woodSet.variantOrThrow(WoodVariants.BUTTON).get());
         this.tag(BlockTags.WOODEN_DOORS).add(woodSet.variantOrThrow(WoodVariants.DOOR).get());
         this.tag(BlockTags.WOODEN_FENCES).add(woodSet.variantOrThrow(WoodVariants.FENCE).get());

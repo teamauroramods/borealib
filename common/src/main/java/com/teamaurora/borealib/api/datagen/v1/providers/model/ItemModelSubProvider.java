@@ -27,6 +27,7 @@ public abstract class ItemModelSubProvider implements ModelSubProvider {
         this.generateFlatItem(woodSet.itemVariantOrThrow(WoodVariants.BOAT).get(), ModelTemplates.FLAT_ITEM);
         this.generateFlatItem(woodSet.itemVariantOrThrow(WoodVariants.CHEST_BOAT).get(), ModelTemplates.FLAT_ITEM);
         this.generateFlatItem(woodSet.itemVariantOrThrow(WoodVariants.SIGN_ITEM).get(), ModelTemplates.FLAT_ITEM);
+        this.generateFlatItem(woodSet.itemVariantOrThrow(WoodVariants.HANGING_SIGN_ITEM).get(), ModelTemplates.FLAT_ITEM);
     }
 
     public BiConsumer<ResourceLocation, Supplier<JsonElement>> getModelOutput() {

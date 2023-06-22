@@ -71,10 +71,13 @@ public final class WoodSet extends BlockSet<WoodSet> {
             WoodVariants.TRAPDOOR,
             WoodVariants.DOOR,
             WoodVariants.STANDING_SIGN,
-            WoodVariants.WALL_SIGN
+            WoodVariants.WALL_SIGN,
+            WoodVariants.HANGING_SIGN,
+            WoodVariants.WALL_HANGING_SIGN
     );
     public static final List<ItemVariant<WoodSet>> DEFAULT_ITEM_VARIANTS = List.of(
             WoodVariants.SIGN_ITEM,
+            WoodVariants.HANGING_SIGN_ITEM,
             WoodVariants.BOAT,
             WoodVariants.CHEST_BOAT
     );

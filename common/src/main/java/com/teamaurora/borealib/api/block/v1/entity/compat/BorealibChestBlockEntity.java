@@ -2,9 +2,13 @@ package com.teamaurora.borealib.api.block.v1.entity.compat;
 
 import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A chest block entity used for Borealib's chest blocks. Based on Blueprint's chest system and ported to work on both platforms.

@@ -79,6 +79,16 @@ public abstract class BlockModelSubProvider implements ModelSubProvider {
         this.createChest(set.variantOrThrow(CommonCompatBlockVariants.WOODEN_CHEST).get(), planks);
         this.createChest(set.variantOrThrow(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST).get(), planks);
         this.createBookshelf(set.variantOrThrow(CommonCompatBlockVariants.BOOKSHELF).get(), planks);
+        this.createHangingSign(set.variantOrThrow(WoodVariants.STRIPPED_LOG).get(), set.variantOrThrow(WoodVariants.HANGING_SIGN).get(), set.variantOrThrow(WoodVariants.WALL_HANGING_SIGN).get());
+    }
+
+    public void createHangingSign(Block block, Block block2, Block block3) {
+        TextureMapping textureMapping = TextureMapping.particle(block);
+        ResourceLocation resourceLocation = ModelTemplates.PARTICLE_ONLY.create(block2, textureMapping, this.modelOutput);
+        this.blockStateOutput.accept(createSimpleBlock(block2, resourceLocation));
+        this.blockStateOutput.accept(createSimpleBlock(block3, resourceLocation));
+        this.createSimpleFlatItemModel(block2.asItem());
+        this.skipAutoItemBlock(block3);
     }
 
     public Map<Block, TexturedModel> getTexturedModels() {
