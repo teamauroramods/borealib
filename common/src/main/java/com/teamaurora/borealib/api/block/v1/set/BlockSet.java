@@ -14,9 +14,9 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
- * A group of blocks and items that share common properties (e.g. the Oak woodset or the Deepslate stone set).
+ * A group of interconnected blocks and items; these could be any sort of blocks, such as a stone palette or a new tree type.
  *
- * @param <T> The type of block set (should extend {@link BlockSet})
+ * @param <T> The type of block set (should extend {@link BlockSet} to allow for use of chain methods)
  * @author ebo2022
  * @since 1.0.0
  */
@@ -41,7 +41,7 @@ public abstract class BlockSet<T> {
     }
 
     /**
-     * Add a block variant to be registered.
+     * Adds a block variant to be registered.
      *
      * @param variant The variant to add
      */
@@ -53,16 +53,10 @@ public abstract class BlockSet<T> {
     }
 
     /**
-     * Add a block variant to be registered if the specified condition is true.
+     * Adds an item variant to be registered.
      *
-     * @param condition The condition to check
-     * @param variant   The variant to add
+     * @param variant The variant to add
      */
-    public T includeIf(boolean condition, BlockVariant<T> variant) {
-        if (condition) this.include(variant);
-        return this.getThis();
-    }
-
     public T includeItem(ItemVariant<T> variant) {
         this.validateMutable();
         if (!this.itemVariants.add(variant))
@@ -70,48 +64,80 @@ public abstract class BlockSet<T> {
         return this.getThis();
     }
 
-    public T includeItem(List<ItemVariant<T>> variants) {
-        variants.forEach(this::includeItem);
-        return this.getThis();
-    }
-
-    @SafeVarargs
-    public final T includeItem(ItemVariant<T>... variants) {
-        return this.includeItem(Arrays.asList(variants));
-    }
-
+    /**
+     * Gets a block for the given variant if the set includes it.
+     *
+     * @param variant The variant to get the block for
+     * @return The corresponding block if it exists, otherwise {@link Optional#empty()}
+     */
     public Optional<RegistryReference<Block>> variant(BlockVariant<T> variant) {
         return Optional.ofNullable(this.blocksByVariant.get(variant));
     }
 
+    /**
+     * Gets a block for the given variant or throws an exception if it doesn't exist.
+     *
+     * @param variant The variant to get the block for
+     * @return The corresponding block which is guaranteed to exist
+     */
     public RegistryReference<Block> variantOrThrow(BlockVariant<T> variant) {
         return this.variant(variant).orElseThrow();
     }
 
+    /**
+     * Gets an item for the given variant if the set includes it.
+     *
+     * @param variant The variant to get the item for
+     * @return The corresponding item if it exists, otherwise {@link Optional#empty()}
+     */
     public Optional<RegistryReference<Item>> itemVariant(ItemVariant<T> variant) {
         return Optional.ofNullable(this.itemsByVariant.get(variant));
     }
 
+    /**
+     * Gets an item for the given variant or throws an exception if it doesn't exist.
+     *
+     * @param variant The variant to get the item for
+     * @return The corresponding item which is guaranteed to exist
+     */
     public RegistryReference<Item> itemVariantOrThrow(ItemVariant<T> variant) {
         return this.itemVariant(variant).orElseThrow();
     }
 
+    /**
+     * @return An unmodifiable view of corresponding variants and blocks
+     */
     public Map<BlockVariant<T>, RegistryReference<Block>> getBlocksByVariant() {
         return Collections.unmodifiableMap(this.blocksByVariant);
     }
 
+    /**
+     * @return An unmodifiable view of corresponding variants and items
+     */
     public Map<ItemVariant<T>, RegistryReference<Item>> getItemsByVariant() {
         return Collections.unmodifiableMap(this.itemsByVariant);
     }
 
+    /**
+     * @return The shared namespace of all blocks in this set
+     */
     public String getNamespace() {
         return this.namespace;
     }
 
+    /**
+     * @return The "root" name of all blocks (e.g. "deepslate" shared between "deepslate_tiles" and "deepslate_stairs")
+     */
     public String getBaseName() {
         return this.baseName;
     }
 
+    /**
+     * Registers the block set, runs the appropriate setup code, and finalizes it.
+     * <p>New variants can no longer be added once this method is called; it is assumed the set is in its final state.
+     *
+     * @param register The {@link DeferredBlockRegister} to handle registration of blocks
+     */
     public T registerTo(DeferredBlockRegister register) {
         this.validateMutable();
         this.blockVariants.forEach(variant -> {
@@ -132,6 +158,9 @@ public abstract class BlockSet<T> {
         return this.getThis();
     }
 
+    /**
+     * Runs client init code for any variants that have it.
+     */
     public void clientInit() {
         this.blocksByVariant.forEach((v, reference) -> {
             if (v.getClientInit() != null)
@@ -145,6 +174,9 @@ public abstract class BlockSet<T> {
         });
     }
 
+    /**
+     * Runs client post-init code for any variants that have it.
+     */
     public void clientPostInit(ModLoaderService.ParallelDispatcher dispatcher) {
         this.blocksByVariant.forEach((v, reference) -> {
             if (v.getClientPostInit() != null)
@@ -158,15 +190,34 @@ public abstract class BlockSet<T> {
         });
     }
 
+    /**
+     * Asserts that the block set is unregistered before continuing with any mutability operations.
+     */
     protected void validateMutable() {
         if (this.registered)
             throw new IllegalStateException("Cannot change a block set after it has been registered");
     }
 
+    /**
+     * @return This block set (as its subtype)
+     */
     protected abstract T getThis();
 
+    /**
+     * Generates a principal object in a block or item variant.
+     *
+     * @param <T> The block set type
+     * @param <R> The object type
+     */
     @FunctionalInterface
     public interface ComponentFactory<T, R> {
+
+        /**
+         * Creates a factory for an object as part of the given block set.
+         *
+         * @param set The block set to generate the factory for
+         * @return A factory to generate the object
+         */
         Supplier<T> create(R set);
     }
 }

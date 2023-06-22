@@ -22,10 +22,16 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
+/**
+ * A core class for Borealib-provided loot sub-providers.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public class BorealibLootProvider implements DataProvider {
 
     private final PackOutput.PathProvider pathProvider;
-    private final List<LootTableProvider.SubProviderEntry> subProviders;
+    private final List<SubProviderEntry> subProviders;
     private static final List<SubProviderEntry> VANILLA_PROVIDERS = ImmutableList.of(
             new SubProviderEntry(VanillaFishingLoot::new, LootContextParamSets.FISHING),
             new SubProviderEntry(VanillaChestLoot::new, LootContextParamSets.CHEST),
@@ -39,11 +45,16 @@ public class BorealibLootProvider implements DataProvider {
         this.subProviders = new ArrayList<>();
     }
 
+    /**
+     * Adds a loot sub-provider to be generated.
+     *
+     * @param subProvider The sub-provider to add
+     * @param paramSet    The parameter set to use
+     */
     public BorealibLootProvider add(Supplier<LootTableSubProvider> subProvider, LootContextParamSet paramSet) {
-        this.subProviders.add(new LootTableProvider.SubProviderEntry(subProvider, paramSet));
+        this.subProviders.add(new SubProviderEntry(subProvider, paramSet));
         return this;
     }
-
 
     @Override
     public CompletableFuture<?> run(CachedOutput cachedOutput) {

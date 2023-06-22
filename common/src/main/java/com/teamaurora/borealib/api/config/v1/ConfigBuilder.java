@@ -12,6 +12,12 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+/**
+ * Used to define values that should be handled by a config file. Based on Forge's config system.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public interface ConfigBuilder {
 
     Splitter DOT_SPLITTER = Splitter.on(".");

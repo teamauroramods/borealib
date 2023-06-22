@@ -14,6 +14,12 @@ import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Optional;
 
+/**
+ * Represents the data for a config file. Based on Forge's config system.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public interface ModConfig {
 
     Codec<ModConfig> CODEC = ResourceLocation.CODEC.comapFlatMap(location -> {

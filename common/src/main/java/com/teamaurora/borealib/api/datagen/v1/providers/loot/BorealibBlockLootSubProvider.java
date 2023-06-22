@@ -15,6 +15,12 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 import java.util.Set;
 
+/**
+ * A {@link BlockLootSubProvider} extension for extra functionality.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public abstract class BorealibBlockLootSubProvider extends BlockLootSubProvider {
 
     protected BorealibBlockLootSubProvider(Set<Item> explosionResistant, FeatureFlagSet featureFlags) {
@@ -25,6 +31,11 @@ public abstract class BorealibBlockLootSubProvider extends BlockLootSubProvider 
         this(explosionResistant, FeatureFlags.REGISTRY.allFlags());
     }
 
+    /**
+     * Generates block loot for the specified {@link WoodSet}.
+     *
+     * @param woodSet The block set to generate loot tables for
+     */
     protected void createWoodSetTables(WoodSet woodSet) {
         this.dropSelf(woodSet.variantOrThrow(WoodVariants.PLANKS).get());
         this.dropSelf(woodSet.variantOrThrow(WoodVariants.LOG).get());
