@@ -78,10 +78,10 @@ public enum Mods {
     }
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     // Avoid creating new tag keys unless necessary
     public <T> TagKey<T> tag(ResourceKey<? extends Registry<T>> resourceKey, String path) {
-        return (TagKey<T>) this.tags.computeIfAbsent((ResourceKey<Registry<?>>) resourceKey, __ -> new HashMap<>()).computeIfAbsent(path, p -> TagKey.create(resourceKey, new ResourceLocation(this.id, p)));
+        return (TagKey<T>) this.tags.computeIfAbsent((ResourceKey) resourceKey, __ -> new HashMap<>()).computeIfAbsent(path, p -> TagKey.create(resourceKey, new ResourceLocation(this.id, path)));
     }
 
     public TagKey<Block> blockTag(String path) {

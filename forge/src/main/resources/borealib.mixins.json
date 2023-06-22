@@ -8,6 +8,7 @@
     "AxeItemMixin",
     "ForgeHooksMixin",
     "HandshakeHandlerMixin",
+    "ItemBlockRenderTypesMixin",
     "SelfBEWLRBlockItemMixin",
     "SelfBorealibChestBlockEntityMixin",
     "SimpleJsonResourceReloadListenerMixin"

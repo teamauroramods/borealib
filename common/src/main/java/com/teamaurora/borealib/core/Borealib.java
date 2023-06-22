@@ -40,8 +40,6 @@ public class Borealib implements ModLoaderService {
             LogManager.getLogger().info("Borealib testing mode enabled!");
     }
 
-
-
     public static ResourceLocation location(String path) {
         return new ResourceLocation(MOD_ID, path);
     }

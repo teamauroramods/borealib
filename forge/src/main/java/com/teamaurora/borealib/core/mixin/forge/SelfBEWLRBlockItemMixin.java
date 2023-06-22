@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 @Mixin(BEWLRBlockItem.class)
 public class SelfBEWLRBlockItemMixin extends BlockItem {
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private Supplier<BEWLRBlockItem.LazyBEWLR> bewlr;
 

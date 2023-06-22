@@ -15,7 +15,7 @@ import java.util.Map;
 @Mixin(FuelRegistryImpl.class)
 public class FuelRegistryImplMixin {
 
-    @ModifyReturnValue(method = "getFuelTimes", at = @At("RETURN"))
+    @ModifyReturnValue(method = "getFuelTimes", at = @At("RETURN"), remap = false)
     private Map<Item, Integer> getFuelTimes(Map<Item, Integer> original) {
         StandardContentRegistries.ITEM_BURN_TIMES.fullEntrySet().forEach(entry -> original.put(entry.object(), entry.value()));
         return original;
