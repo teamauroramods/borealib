@@ -2,6 +2,7 @@ package com.teamaurora.borealib.api.base.v1.modloading;
 
 import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
+import com.teamaurora.borealib.api.datagen.v1.BorealibDataGenerator;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
@@ -82,9 +83,9 @@ public interface ModLoaderService {
     /**
      * Used during data generation to add data providers. If this is used, make sure the fabric initializer is set as a data generator entrypoint in <code>fabric.mod.json</code>.
      *
-     * @param context Context for setting up data generators
+     * @param generator The data "generator" to add providers to
      */
-    default void onDataInit(DataGeneratorContext context) {
+    default void onDataInit(BorealibDataGenerator generator) {
     }
 
     /**
@@ -119,48 +120,6 @@ public interface ModLoaderService {
          * @return A future for when the work is done
          */
         <T> CompletableFuture<T> enqueueWork(Supplier<T> work);
-    }
-
-
-    /**
-     * Used as context for initializing data generators.
-     *
-     * @since 1.0
-     */
-    interface DataGeneratorContext {
-
-        /**
-         * @return Whether to include client data generators
-         */
-        boolean includeClient();
-
-        /**
-         * @return Whether to include server data generators
-         */
-        boolean includeServer();
-
-        /**
-         * Adds a data provider to be generated.
-         *
-         * @param factory The factory to generate the data provider
-         * @param <T>     The data provider type
-         * @return The registered data provider
-         */
-        <T extends DataProvider> T addProvider(boolean run, DataProvider.Factory<T> factory);
-
-        /**
-         * Adds a data provider to be generated.
-         *
-         * @param registryDependentFactory The factory to generate the data provider
-         * @param <T>                      The data provider type
-         * @return The registered data provider
-         */
-        <T extends DataProvider> T addProvider(boolean run, BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory);
-
-        /**
-         * @return The mod the generator is running for
-         */
-        ModContainer getContainer();
     }
 
     static ModLoaderService byId(String id) {

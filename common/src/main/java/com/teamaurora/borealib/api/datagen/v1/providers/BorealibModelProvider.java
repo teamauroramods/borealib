@@ -1,11 +1,17 @@
-package com.teamaurora.borealib.api.datagen.v1.providers.model;
+package com.teamaurora.borealib.api.datagen.v1.providers;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
-import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
+import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.ModelProvider;
 import net.minecraft.data.models.blockstates.BlockStateGenerator;
 import net.minecraft.data.models.model.DelegatedModel;
 import net.minecraft.data.models.model.ModelLocationUtils;
@@ -21,75 +27,89 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class MagnetosphereModelProvider implements DataProvider {
+/**
+ * @author ebo2022
+ * @since 1.0
+ */
+public abstract class BorealibModelProvider implements DataProvider {
 
+    private final String domain;
     private final PackOutput.PathProvider blockStatePathProvider;
     private final PackOutput.PathProvider modelPathProvider;
-    private final Set<ModelGeneratorFactory> factories;
-    private final String domain;
 
-    public MagnetosphereModelProvider(PackOutput output, ModContainer container) {
+    protected BorealibModelProvider(BorealibPackOutput output) {
+        this.domain = output.getModId();
         this.blockStatePathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "blockstates");
         this.modelPathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "models");
-        this.factories = new HashSet<>();
-        this.domain = container.getId();
     }
 
+    /**
+     * Registers all block states and models to be generated.
+     *
+     * @param generators The generators to add block models to
+     */
+    public abstract void generateBlockModels(BlockModelGenerators generators);
+
+    /**
+     * Registers all item models to be generated.
+     *
+     * @param generators The generators to add item models to
+     */
+    public abstract void generateItemModels(ItemModelGenerators generators);
+
     @Override
-    public CompletableFuture<?> run(CachedOutput cache) {
+    public CompletableFuture<?> run(CachedOutput cachedOutput) {
         Map<Block, BlockStateGenerator> blockStates = new HashMap<>();
+
         Consumer<BlockStateGenerator> blockStateOutput = (blockStateGenerator) -> {
             Block block = blockStateGenerator.getBlock();
             BlockStateGenerator blockState = blockStates.put(block, blockStateGenerator);
-            if (blockState != null) {
+            if (blockState != null)
                 throw new IllegalStateException("Duplicate blockstate definition for " + block);
-            }
         };
+
         Map<ResourceLocation, Supplier<JsonElement>> models = new HashMap<>();
         Set<Item> skippedAutoModels = new HashSet<>();
+
         BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput = (resourceLocation, supplier) -> {
             Supplier<JsonElement> model = models.put(resourceLocation, supplier);
-            if (model != null) {
+            if (model != null)
                 throw new IllegalStateException("Duplicate model definition for " + resourceLocation);
-            }
         };
+
         Consumer<Item> skippedAutoModelsOutput = skippedAutoModels::add;
-        this.factories.stream().map(factory -> factory.create(blockStateOutput, modelOutput, skippedAutoModelsOutput)).forEach(ModelSubProvider::run);
+        this.generateBlockModels(new BlockModelGenerators(blockStateOutput, modelOutput, skippedAutoModelsOutput));
+        this.generateItemModels(new ItemModelGenerators(modelOutput));
+
         RegistryView.BLOCK.forEach((block) -> {
-            if (!this.domain.equals(Objects.requireNonNull(RegistryView.BLOCK.getKey(block)).getNamespace()))
+            if (!this.domain.equals(RegistryView.BLOCK.getKey(block).getNamespace()))
                 return;
 
             Item item = Item.BY_BLOCK.get(block);
             if (item != null) {
                 if (skippedAutoModels.contains(item))
                     return;
-                ResourceLocation itemLocation = ModelLocationUtils.getModelLocation(item);
-                if (!models.containsKey(itemLocation))
-                    models.put(itemLocation, new DelegatedModel(ModelLocationUtils.getModelLocation(block)));
+                ResourceLocation modelLocation = ModelLocationUtils.getModelLocation(item);
+                if (!models.containsKey(modelLocation))
+                    models.put(modelLocation, new DelegatedModel(ModelLocationUtils.getModelLocation(block)));
             }
         });
-        CompletableFuture<?>[] futures = new CompletableFuture<?>[]{
-                this.saveCollection(cache, blockStates, (block) -> this.blockStatePathProvider.json(block.builtInRegistryHolder().key().location())),
-                this.saveCollection(cache, models, this.modelPathProvider::json)
-        };
-        return CompletableFuture.allOf(futures);
+        return CompletableFuture.allOf(
+                this.saveCollection(cachedOutput, blockStates, block -> this.blockStatePathProvider.json(block.builtInRegistryHolder().key().location())),
+                this.saveCollection(cachedOutput, models, this.modelPathProvider::json)
+        );
+    }
+
+    private <T> CompletableFuture<?> saveCollection(CachedOutput cachedOutput, Map<T, ? extends Supplier<JsonElement>> map, Function<T, Path> function) {
+        return CompletableFuture.allOf(map.entrySet().stream().map((entry) -> {
+            Path path = function.apply(entry.getKey());
+            JsonElement jsonElement = entry.getValue().get();
+            return DataProvider.saveStable(cachedOutput, jsonElement, path);
+        }).toArray(CompletableFuture[]::new));
     }
 
     @Override
     public String getName() {
-        return "Block State Definitions";
-    }
-
-    private <T> CompletableFuture<?> saveCollection(CachedOutput cache, Map<T, ? extends Supplier<JsonElement>> objectToJsonMap, Function<T, Path> function) {
-        return CompletableFuture.allOf(objectToJsonMap.entrySet().stream().map((entry) -> {
-            Path path = function.apply(entry.getKey());
-            JsonElement jsonElement = entry.getValue().get();
-            return DataProvider.saveStable(cache, jsonElement, path);
-        }).toArray(CompletableFuture[]::new));
-    }
-
-    @FunctionalInterface
-    public interface ModelGeneratorFactory {
-        ModelSubProvider create(Consumer<BlockStateGenerator> blockStateOutput, BiConsumer<ResourceLocation, Supplier<JsonElement>> modelOutput, Consumer<Item> skippedAutoModelsOutput);
+        return "Model Definitions";
     }
 }

@@ -3,6 +3,8 @@ package com.teamaurora.borealib.api.base.v1.modloading.forge;
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.util.forge.ForgeHelper;
+import com.teamaurora.borealib.api.datagen.v1.BorealibDataGenerator;
+import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.impl.base.modloading.forge.ParallelDispatcherImpl;
 import com.teamaurora.borealib.impl.base.platform.forge.ModContainerImpl;
@@ -49,8 +51,9 @@ public final class ForgeModFactory {
         bus.<FMLClientSetupEvent>addListener(e -> s.onClientPostInit(new ParallelDispatcherImpl(e)));
         bus.<FMLDedicatedServerSetupEvent>addListener(e -> s.onServerPostInit(new ParallelDispatcherImpl(e)));
         bus.<GatherDataEvent>addListener(e -> {
-            s.onDataInit(new ModLoaderService.DataGeneratorContext() {
+            s.onDataInit(new BorealibDataGenerator() {
                 ModContainer container = new ModContainerImpl(e.getModContainer());
+                private BorealibPackOutput borealibOutput;
 
                 @Override
                 public boolean includeClient() {
@@ -63,18 +66,28 @@ public final class ForgeModFactory {
                 }
 
                 @Override
-                public <T extends DataProvider> T addProvider(boolean run, DataProvider.Factory<T> factory) {
-                    return e.getGenerator().addProvider(run, factory);
+                public boolean includeDev() {
+                    return false;
                 }
 
                 @Override
-                public <T extends DataProvider> T addProvider(boolean run, BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory) {
-                    return e.getGenerator().<T>addProvider(run, output -> registryDependentFactory.apply(output, e.getLookupProvider()));
+                public boolean includeReports() {
+                    return false;
                 }
 
                 @Override
-                public ModContainer getContainer() {
-                    return container;
+                public <T extends DataProvider> T addProvider(boolean run, BorealibDataGenerator.Factory<T> factory) {
+                    return e.getGenerator().<T>addProvider(run, output -> factory.create(this.getOrCreatePackOutput(output)));
+                }
+
+                @Override
+                public <T extends DataProvider> T addProvider(boolean run, BorealibDataGenerator.RegistryDependentFactory<T> factory) {
+                    return e.getGenerator().<T>addProvider(run, output -> factory.create(this.getOrCreatePackOutput(output), e.getLookupProvider()));
+                }
+
+                private BorealibPackOutput getOrCreatePackOutput(PackOutput vanilla) {
+                    if (borealibOutput == null) borealibOutput = new BorealibPackOutput(container, vanilla);
+                    return borealibOutput;
                 }
             });
             RegistrySetBuilder builder = new RegistrySetBuilder();

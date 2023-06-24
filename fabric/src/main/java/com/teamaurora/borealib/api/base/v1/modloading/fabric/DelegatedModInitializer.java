@@ -3,12 +3,15 @@ package com.teamaurora.borealib.api.base.v1.modloading.fabric;
 import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
+import com.teamaurora.borealib.api.datagen.v1.BorealibDataGenerator;
+import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.impl.base.platform.fabric.ModContainerImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
@@ -60,9 +63,10 @@ public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEn
 
     @Override
     default void onInitializeDataGenerator(FabricDataGenerator generator) {
-        ModLoaderService.byId(this.id()).onDataInit(new ModLoaderService.DataGeneratorContext() {
+        ModLoaderService.byId(this.id()).onDataInit(new BorealibDataGenerator() {
             ModContainer container = new ModContainerImpl(generator.getModContainer());
             FabricDataGenerator.Pack pack = generator.createPack();
+            private BorealibPackOutput borealibOutput;
 
             @Override
             public boolean includeClient() {
@@ -75,18 +79,28 @@ public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEn
             }
 
             @Override
-            public <T extends DataProvider> T addProvider(boolean run, DataProvider.Factory<T> factory) {
-                return pack.addProvider(factory);
+            public boolean includeDev() {
+                return true;
             }
 
             @Override
-            public <T extends DataProvider> T addProvider(boolean run, BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> registryDependentFactory) {
-                return pack.addProvider(registryDependentFactory::apply);
+            public boolean includeReports() {
+                return true;
             }
 
             @Override
-            public ModContainer getContainer() {
-                return container;
+            public <T extends DataProvider> T addProvider(boolean run, BorealibDataGenerator.Factory<T> factory) {
+                return pack.addProvider((FabricDataGenerator.Pack.Factory<T>) output -> factory.create(this.getOrCreatePackOutput(output)));
+            }
+
+            @Override
+            public <T extends DataProvider> T addProvider(boolean run, BorealibDataGenerator.RegistryDependentFactory<T> factory) {
+                return pack.addProvider((output, registriesFuture) -> factory.create(this.getOrCreatePackOutput(output), registriesFuture));
+            }
+
+            private BorealibPackOutput getOrCreatePackOutput(FabricDataOutput fabric) {
+                if (borealibOutput == null) borealibOutput = new BorealibPackOutput(new ModContainerImpl(fabric.getModContainer()), fabric);
+                return borealibOutput;
             }
         });
     }

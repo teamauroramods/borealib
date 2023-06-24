@@ -1,6 +1,6 @@
-package com.teamaurora.borealib.impl.datagen.providers.model;
+package com.teamaurora.borealib.impl.datagen;
 
-import com.teamaurora.borealib.api.datagen.v1.providers.model.ModelGeneratorHelper;
+import com.teamaurora.borealib.api.datagen.v1.util.ModelGeneratorHelper;
 import com.teamaurora.borealib.core.Borealib;
 import net.minecraft.data.models.model.ModelTemplate;
 import org.jetbrains.annotations.ApiStatus;

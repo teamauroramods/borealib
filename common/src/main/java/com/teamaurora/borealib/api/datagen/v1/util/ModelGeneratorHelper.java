@@ -1,4 +1,4 @@
-package com.teamaurora.borealib.api.datagen.v1.providers.model;
+package com.teamaurora.borealib.api.datagen.v1.util;
 
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.TextureMapping;

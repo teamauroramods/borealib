@@ -6,6 +6,12 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
+/**
+ * A basic implementation of {@link ConditionalDataProvider}.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public abstract class SimpleConditionalDataProvider implements ConditionalDataProvider {
 
     private final Map<ResourceLocation, List<ResourceConditionProvider>> providers;

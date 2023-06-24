@@ -1,110 +1,37 @@
 package com.teamaurora.borealib.api.datagen.v1.providers.loot;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
-import net.minecraft.data.CachedOutput;
+import com.google.common.base.Preconditions;
+import com.teamaurora.borealib.api.datagen.v1.ConditionalDataProvider;
+import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionProvider;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
-import net.minecraft.data.loot.packs.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.storage.loot.*;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.storage.loot.LootTable;
+import org.jetbrains.annotations.ApiStatus;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
+import java.util.function.BiConsumer;
 
 /**
- * A core class for Borealib-provided loot sub-providers.
+ * A shared interface inherited by all Borealib-based loot generators which allows them to function as independent {@link DataProvider}s.
  *
  * @author ebo2022
  * @since 1.0
  */
-public class BorealibLootProvider implements DataProvider {
-
-    private final PackOutput.PathProvider pathProvider;
-    private final List<SubProviderEntry> subProviders;
-    private static final List<SubProviderEntry> VANILLA_PROVIDERS = ImmutableList.of(
-            new SubProviderEntry(VanillaFishingLoot::new, LootContextParamSets.FISHING),
-            new SubProviderEntry(VanillaChestLoot::new, LootContextParamSets.CHEST),
-            new SubProviderEntry(VanillaEntityLoot::new, LootContextParamSets.ENTITY),
-            new SubProviderEntry(VanillaBlockLoot::new, LootContextParamSets.BLOCK),
-            new SubProviderEntry(VanillaPiglinBarterLoot::new, LootContextParamSets.PIGLIN_BARTER),
-            new SubProviderEntry(VanillaGiftLoot::new, LootContextParamSets.GIFT));
-
-    public BorealibLootProvider(PackOutput packOutput) {
-        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "loot_tables");
-        this.subProviders = new ArrayList<>();
-    }
+@ApiStatus.NonExtendable
+public interface BorealibLootProvider extends LootTableSubProvider, ConditionalDataProvider {
 
     /**
-     * Adds a loot sub-provider to be generated.
+     * Creates an exporter that adds the specified conditions to every loot table registered by it.
      *
-     * @param subProvider The sub-provider to add
-     * @param paramSet    The parameter set to use
+     * @param exporter   The original exporter
+     * @param conditions The conditions to add
+     * @return An exporter adding the conditions to each loot table registered by it
      */
-    public BorealibLootProvider add(Supplier<LootTableSubProvider> subProvider, LootContextParamSet paramSet) {
-        this.subProviders.add(new SubProviderEntry(subProvider, paramSet));
-        return this;
-    }
-
-    @Override
-    public CompletableFuture<?> run(CachedOutput cachedOutput) {
-        Map<ResourceLocation, LootTable> lootTables = new HashMap<>();
-        this.subProviders.forEach((subProviderEntry) -> {
-            subProviderEntry.provider().get().generate((resourceLocation, builder) -> {
-                if (lootTables.put(resourceLocation, builder.setParamSet(subProviderEntry.paramSet()).build()) != null) {
-                    throw new IllegalStateException("Duplicate loot table " + resourceLocation);
-                }
-            });
-        });
-
-        Map<ResourceLocation, LootTable> registry = new HashMap<>(lootTables);
-        try {
-            VANILLA_PROVIDERS.forEach(provider -> provider.provider.get().generate((name, builder) -> {
-                if (registry.put(name, builder.build()) != null) {
-                    throw new IllegalStateException("Duplicate loot table " + name);
-                }
-            }));
-        } catch (Throwable ignored) {
-        }
-
-        ValidationContext validationContext = new ValidationContext(LootContextParamSets.ALL_PARAMS, new LootDataResolver() {
-            @Nullable
-            public <T> T getElement(LootDataId<T> lootDataId) {
-                return lootDataId.type() == LootDataType.TABLE ? (T) lootTables.get(lootDataId.location()) : null;
-            }
-        });
-        lootTables.forEach((resourceLocationx, lootTable) -> {
-            lootTable.validate(validationContext.setParams(lootTable.getParamSet()).enterElement("{" + resourceLocationx + "}", new LootDataId<>(LootDataType.TABLE, resourceLocationx)));
-        });
-        Multimap<String, String> problems = validationContext.getProblems();
-        if (!problems.isEmpty()) {
-            problems.forEach((string, string2) -> LOGGER.warn("Found validation problem in {}: {}", string, string2));
-            throw new IllegalStateException("Failed to validate loot tables, see logs");
-        } else {
-            return CompletableFuture.allOf(lootTables.entrySet().stream().map((entry) -> {
-                ResourceLocation resourceLocation = entry.getKey();
-                LootTable lootTable = entry.getValue();
-                Path path = this.pathProvider.json(resourceLocation);
-                return DataProvider.saveStable(cachedOutput, LootDataType.TABLE.parser().toJsonTree(lootTable), path);
-            }).toArray(CompletableFuture[]::new));
-        }
-    }
-
-    @Override
-    public String getName() {
-        return "Loot Tables";
-    }
-
-    public record SubProviderEntry(Supplier<LootTableSubProvider> provider, LootContextParamSet paramSet) {
+    default BiConsumer<ResourceLocation, LootTable.Builder> withConditions(BiConsumer<ResourceLocation, LootTable.Builder> exporter, ResourceConditionProvider... conditions) {
+        Preconditions.checkArgument(conditions.length > 0, "At least one resource condition is required");
+        return (id, table) -> {
+            this.addConditions(id, conditions);
+            exporter.accept(id, table);
+        };
     }
 }
