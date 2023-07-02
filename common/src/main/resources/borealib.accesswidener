@@ -18,6 +18,10 @@ transitive-accessible class net/minecraft/world/item/CreativeModeTab$Output
 transitive-accessible class net/minecraft/world/item/CreativeModeTab$TabVisibility
 transitive-accessible class net/minecraft/data/tags/TagsProvider$TagAppender
 accessible method net/minecraft/data/models/model/TextureSlot <init> (Ljava/lang/String;Lnet/minecraft/data/models/model/TextureSlot;)V
+extendable	method	net/minecraft/tags/TagEntry	<init>	(Lnet/minecraft/resources/ResourceLocation;ZZ)V
+accessible	field	net/minecraft/tags/TagEntry	id	Lnet/minecraft/resources/ResourceLocation;
+accessible	field	net/minecraft/tags/TagEntry	tag	Z
+accessible	field	net/minecraft/tags/TagEntry	required	Z
 transitive-accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
 accessible field net/minecraft/client/renderer/BlockEntityWithoutLevelRenderer blockEntityRenderDispatcher Lnet/minecraft/client/renderer/blockentity/BlockEntityRenderDispatcher;
 accessible method net/minecraft/world/level/block/state/properties/BlockSetType register (Lnet/minecraft/world/level/block/state/properties/BlockSetType;)Lnet/minecraft/world/level/block/state/properties/BlockSetType;
@@ -170,6 +174,8 @@ accessible field net/minecraft/world/level/biome/BiomeGenerationSettings$PlainBu
 accessible method net/minecraft/core/RegistrySynchronization$NetworkedRegistryData <init> (Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Codec;)V
 transitive-accessible method	net/minecraft/data/BlockFamilies	familyBuilder	(Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
 transitive-accessible field	net/minecraft/data/models/BlockModelGenerators	blockStateOutput	Ljava/util/function/Consumer;
+transitive-accessible field net/minecraft/data/loot/BlockLootSubProvider NORMAL_LEAVES_STICK_CHANCES [F
+accessible field net/minecraft/data/loot/BlockLootSubProvider NORMAL_LEAVES_SAPLING_CHANCES [F
 transitive-accessible field	net/minecraft/data/models/BlockModelGenerators	modelOutput	Ljava/util/function/BiConsumer;
 transitive-accessible field	net/minecraft/data/models/ItemModelGenerators	output	Ljava/util/function/BiConsumer;
 transitive-accessible method	net/minecraft/data/models/model/TextureSlot	create	(Ljava/lang/String;)Lnet/minecraft/data/models/model/TextureSlot;
@@ -436,3 +442,9 @@ transitive-extendable	method	net/minecraft/data/loot/LootTableProvider	getName	(
 transitive-extendable	method	net/minecraft/data/recipes/RecipeProvider	getName	()Ljava/lang/String;
 transitive-extendable	method	net/minecraft/data/tags/TagsProvider	getName	()Ljava/lang/String;
 accessible	field	net/minecraft/data/loot/BlockLootSubProvider	map	Ljava/util/Map;
+accessible	field	net/minecraft/data/recipes/RecipeProvider	recipePathProvider	Lnet/minecraft/data/PackOutput$PathProvider;
+accessible	field	net/minecraft/data/recipes/RecipeProvider	advancementPathProvider	Lnet/minecraft/data/PackOutput$PathProvider;
+accessible	field	net/minecraft/data/tags/TagsProvider$TagAppender	builder	Lnet/minecraft/tags/TagBuilder;
+extendable	method	net/minecraft/data/tags/TagsProvider$TagAppender	add	(Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/data/tags/TagsProvider$TagAppender;
+extendable	method	net/minecraft/data/tags/TagsProvider$TagAppender	add	([Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/data/tags/TagsProvider$TagAppender;
+accessible	field	net/minecraft/data/tags/TagsProvider	builders	Ljava/util/Map;

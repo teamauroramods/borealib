@@ -7,6 +7,7 @@ import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.api.registry.v1.extended.DeferredBlockRegister;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,6 +103,37 @@ public abstract class BlockSet<T> {
      */
     public RegistryReference<Item> itemVariantOrThrow(ItemVariant<T> variant) {
         return this.itemVariant(variant).orElseThrow();
+    }
+
+    /**
+     * Directly gets the block for the specified variant and throws an exception if it doesn't exist.
+     *
+     * @param variant The variant to get a block for
+     * @return The block for the given variant
+     */
+    public Block getBlock(BlockVariant<T> variant) {
+        return this.variantOrThrow(variant).get();
+    }
+
+    /**
+     * Directly gets the item for the specified variant and throws an exception if it doesn't exist.
+     *
+     * @param variant The variant to get an item for
+     * @return The item for the given variant
+     */
+    public Item getItem(ItemVariant<T> variant) {
+        return this.itemVariantOrThrow(variant).get();
+    }
+
+    /**
+     * Directly gets the item for the specified variant and throws an exception if it doesn't exist.
+     *
+     * @param variant The variant to get an item for
+     * @return The item for the given variant
+     */
+    public Item getItem(BlockVariant<T> variant) {
+        if (!variant.hasBlockItem()) throw new UnsupportedOperationException("Cannot get item for a block without once specified");
+        return this.getBlock(variant).asItem();
     }
 
     /**

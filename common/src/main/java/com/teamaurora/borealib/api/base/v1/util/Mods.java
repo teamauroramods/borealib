@@ -1,94 +1,59 @@
 package com.teamaurora.borealib.api.base.v1.util;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
+public interface Mods {
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+    // Core
+    String MINECRAFT = "minecraft";
+    String FORGE = "forge";
+    String FABRIC = "fabric";
+    String FABRIC_CONVENTION_TAGS = "c";
 
-public enum Mods {
+    // Vazkii
+    String AUTOREGLIB = "autoreglib";
+    String QUARK = "quark";
 
-    MINECRAFT,
-    FORGE,
-    FABRIC,
-    FABRIC_TAGS("c"),
-
-    AUTOREGLIB,
-    QUARK,
-
-    ABNORMALS_DELIGHT,
-    ALLUREMENT,
-    ATMOSPHERIC,
-    AUTUMNITY,
-    BAMBOO_BLOCKS,
-    BERRY_GOOD,
-    BLUEPRINT,
-    BUZZIER_BEES,
-    CAVERNS_AND_CHASMS,
-    CLAYWORKS,
-    ENDERGETIC_EXPANSION("endergetic"),
-    ENVIRONMENTAL,
-    BOATLOAD,
-    NEAPOLITAN,
-    NETHER_EXTENSION,
-    PERSONALITY,
-    SAVAGE_AND_RAVAGE("savageandravage"),
-    UPGRADE_AQUATIC,
-    WOODWORKS,
-
-    // Eltrut & Co.
-    ADDENDUM,
-    DIFFERENTIATE,
-    FLAMBOYANT,
-    LEPTON,
-    MORE_RESPAWN_ANCHORS("morerespawnanchors"),
-    TOTALLY_WILD,
+    // Abnormals
+    String ABNORMALS_DELIGHT = "abnormals_delight";
+    String ALLUREMENT = "allurement";
+    String ATMOSPHERIC = "atmospheric";
+    String AUTUMNITY = "autumnity";
+    String BAMBOO_BLOCKS = "bamboo_blocks";
+    String BERRY_GOOD = "berry_good";
+    String BLUEPRINT = "blueprint";
+    String BOATLOAD = "boatload";
+    String BUZZIER_BEES = "buzzier_bees";
+    String CAVERNS_AND_CHASMS = "caverns_and_chasms";
+    String CLAYWORKS = "clayworks";
+    String ENDERGETIC_EXPANSION = "endergetic";
+    String ENVIRONMENTAL = "environmental";
+    String NEAPOLITAN = "neapolitan";
+    String NETHER_EXTENSION = "nether_extension";
+    String PERSONALITY = "personality";
+    String PET_CEMETERY = "pet_cemetery";
+    String SAVAGE_AND_RAVAGE = "savageandravage";
+    String UPGRADE_AQUATIC = "upgrade_aquatic";
+    String WOODWORKS = "woodworks";
 
     // Moonflower
-    CARPENTER,
-    TOLERABLE_CREEPERS("tolerablecreepers"),
-    POLLEN,
-    VANITY,
-    ANCHOR,
-    ETCHED,
-    LOCKSMITH,
-    MANNEQUINS,
+    String ANCHOR = "anchor";
+    String CARPENTER = "carpenter";
+    String ETCHED = "etched";
+    String LOCKSMITH = "locksmith";
+    String MANNEQUINS = "mannequins";
+    String POLLEN = "pollen";
+    String TOLERABLE_CREEPERS = "tolerablecreepers";
+    String VANITY = "vanity";
+
+    // Eltrut & Co.
+    String ADDENDUM = "addendum";
+    String DIFFERENTIATE = "differentiate";
+    String FLAMBOYANT = "flamboyant";
+    String LEPTON = "lepton";
+    String MORE_RESPAWN_ANCHORS = "morerespawnanchors";
+    String TOTALLY_WILD = "totally_wild";
 
     // Other
-    CREATE,
-    CRUMBS,
-    FARMERS_DELIGHT("farmersdelight"),
-    INFERNAL_EXPANSION("infernalexp");
-
-    private final String id;
-    private final Map<ResourceKey<Registry<?>>, Map<String, TagKey<?>>> tags = new HashMap<>();
-
-    Mods() {
-        this.id = this.name().toLowerCase(Locale.ROOT);
-    }
-
-    Mods(String id) {
-        this.id = id;
-    }
-
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    // Avoid creating new tag keys unless necessary
-    public <T> TagKey<T> tag(ResourceKey<? extends Registry<T>> resourceKey, String path) {
-        return (TagKey<T>) this.tags.computeIfAbsent((ResourceKey) resourceKey, __ -> new HashMap<>()).computeIfAbsent(path, p -> TagKey.create(resourceKey, new ResourceLocation(this.id, path)));
-    }
-
-    public TagKey<Block> blockTag(String path) {
-        return this.tag(Registries.BLOCK, path);
-    }
-
-    public TagKey<Item> itemTag(String path) {
-        return this.tag(Registries.ITEM, path);
-    }
+    String CREATE = "create";
+    String FARMERS_DELIGHT = "farmersdelight";
+    String INFERNAL_EXPANSION = "infernalexp";
 }

@@ -39,7 +39,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
- * An "all-in-one" class for registering a set of wood-related blocks (e.g. Cherry blocks). Many Borealib data generator classes also have methods that auto-generate data for the entire woodset.
+ * An "all-in-one" class for registering a set of wood-related blocks (e.g. Cherry blocks) that generate in the overworld.
  * <p>Most vanilla registration is automatically handled by this class.
  *
  * @author ebo2022
@@ -52,10 +52,11 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private final Supplier<CustomBoatType> boatType;
     private MapColor barkColor = MapColor.WOOD;
     private MapColor woodColor = MapColor.PODZOL;
-    private Supplier<AbstractTreeGrower> treeGrower;
+    private Supplier<? extends AbstractTreeGrower> treeGrower;
     private final TagKey<Block> blockLogTag;
     private final TagKey<Item> itemLogTag;
     private BlockFamily family;
+    private boolean colorLeaves;
     public static final List<BlockVariant<WoodSet>> DEFAULT_VARIANTS = List.of(
             WoodVariants.STRIPPED_WOOD,
             WoodVariants.STRIPPED_LOG,
@@ -73,7 +74,10 @@ public final class WoodSet extends BlockSet<WoodSet> {
             WoodVariants.STANDING_SIGN,
             WoodVariants.WALL_SIGN,
             WoodVariants.HANGING_SIGN,
-            WoodVariants.WALL_HANGING_SIGN
+            WoodVariants.WALL_HANGING_SIGN,
+            CommonCompatBlockVariants.WOODEN_CHEST,
+            CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST,
+            CommonCompatBlockVariants.BOOKSHELF
     );
     public static final List<ItemVariant<WoodSet>> DEFAULT_ITEM_VARIANTS = List.of(
             WoodVariants.SIGN_ITEM,
@@ -94,20 +98,9 @@ public final class WoodSet extends BlockSet<WoodSet> {
         this.itemLogTag = TagKey.create(Registries.ITEM, new ResourceLocation(namespace, baseName + "_logs"));
         DEFAULT_VARIANTS.forEach(this::include);
         DEFAULT_ITEM_VARIANTS.forEach(this::includeItem);
-
-        // Common Compat setup
-        this.include(CommonCompatBlockVariants.WOODEN_CHEST)
-                .include(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST)
-                .include(CommonCompatBlockVariants.BOOKSHELF);
         ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName()), false);
-        ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"),true);
+        ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"), true);
         // Compat setup for variants that only exist on Forge
-        includeCompatWoodVariants(this);
-    }
-
-    @ExpectPlatform
-    private static void includeCompatWoodVariants(WoodSet set) {
-        Platform.expect();
     }
 
     /**
@@ -148,11 +141,12 @@ public final class WoodSet extends BlockSet<WoodSet> {
     /**
      * Adds natural blocks like leaves and saplings to be registered.
      *
-     * @param treeGrower A supplier for the {@link AbstractTreeGrower} for the sapling
-     * @param extended   Whether the leaves block should have extended decay distance (useful if tree canopies are bigger)
+     * @param treeGrower  A supplier for the {@link AbstractTreeGrower} for the sapling
+     * @param colorLeaves Whether the leaves have a changing biome-dependent foliage color
      */
-    public WoodSet includeNaturalBlocks(Supplier<AbstractTreeGrower> treeGrower, boolean extended) {
+    public WoodSet includeNaturalBlocks(Supplier<? extends AbstractTreeGrower> treeGrower, boolean colorLeaves) {
         this.treeGrower = treeGrower;
+        this.colorLeaves = colorLeaves;
         return this.include(WoodVariants.LEAVES).include(WoodVariants.SAPLING).include(WoodVariants.POTTED_SAPLING);
     }
 
@@ -224,7 +218,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
     /**
      * @return The tree grower for the sapling if it exists
      */
-    public Supplier<AbstractTreeGrower> getTreeGrower() {
+    public Supplier<? extends AbstractTreeGrower> getTreeGrower() {
         return this.treeGrower;
     }
 
@@ -268,6 +262,13 @@ public final class WoodSet extends BlockSet<WoodSet> {
      */
     public TagKey<Item> getItemLogTag() {
         return this.itemLogTag;
+    }
+
+    /**
+     * @return Whether the leaves have a changing foliage color (if they exist)
+     */
+    public boolean colorLeaves() {
+        return this.colorLeaves;
     }
 
     @Override

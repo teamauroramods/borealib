@@ -74,23 +74,6 @@ public abstract class BorealibLanguageProvider implements DataProvider {
     public abstract void generateLanguage(TranslationRegistry registry);
 
     /**
-     * Generates translation keys for block set members that should receive them.
-     *
-     * @param registry The translation registry
-     * @param blockSet The block set to translate
-     */
-    protected static void generateBlockSet(TranslationRegistry registry, BlockSet<?> blockSet) {
-        blockSet.getBlocksByVariant().forEach((variant, block) -> {
-            if (variant.shouldGenerateAutoLanguage())
-                registry.add(block.get(), format(block));
-        });
-        blockSet.getItemsByVariant().forEach((variant, item) -> {
-            if (variant.shouldGenerateAutoLanguage())
-                registry.add(item.get(), format(item));
-        });
-    }
-
-    /**
      * Automatically gets a formatted English translation key for the specified objects, trying to properly capitalize where possible.
      *
      * @param object The registry object to translate

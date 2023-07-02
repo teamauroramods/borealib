@@ -57,7 +57,7 @@ public final class WoodVariants {
             .suffix("slab")
             .build();
     public static final BlockVariant<WoodSet> STAIRS = BlockVariant.<WoodSet>builder(set ->
-                    () -> new StairBlock(set.variantOrThrow(PLANKS).get().defaultBlockState(), plankColors(set)))
+                    () -> new StairBlock(set.getBlock(PLANKS).defaultBlockState(), plankColors(set)))
             .suffix("stairs")
             .build();
     public static final BlockVariant<WoodSet> FENCE = BlockVariant.<WoodSet>builder(set ->
@@ -96,7 +96,7 @@ public final class WoodVariants {
             .suffix("sign")
             .build();
     public static final BlockVariant<WoodSet> WALL_SIGN = BlockVariant.<WoodSet>builder(set ->
-                    () -> new BorealibWallSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn().dropsLike(set.variantOrThrow(STANDING_SIGN).get()), set.getWoodType()))
+                    () -> new BorealibWallSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn().dropsLike(set.getBlock(STANDING_SIGN)), set.getWoodType()))
             .noBlockItem()
             .suffix("wall_sign")
             .build();
@@ -106,7 +106,7 @@ public final class WoodVariants {
             .suffix("hanging_sign")
             .build();
     public static final BlockVariant<WoodSet> WALL_HANGING_SIGN = BlockVariant.<WoodSet>builder(set ->
-                    () -> new BorealibWallHangingSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn().dropsLike(set.variantOrThrow(HANGING_SIGN).get()), set.getWoodType()))
+                    () -> new BorealibWallHangingSignBlock(plankColors(set).strength(1F).noCollission().forceSolidOn().dropsLike(set.getBlock(HANGING_SIGN)), set.getWoodType()))
             .noBlockItem()
             .suffix("wall_hanging_sign")
             .build();
