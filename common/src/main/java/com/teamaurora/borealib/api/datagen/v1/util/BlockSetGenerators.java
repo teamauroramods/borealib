@@ -6,6 +6,9 @@ import com.teamaurora.borealib.impl.datagen.util.BlockSetGeneratorsImpl;
 
 /**
  * Contains methods for generating generic data for {@link BlockSet}s.
+ *
+ * @author ebo2022
+ * @since 1.0
  */
 public interface BlockSetGenerators {
 
