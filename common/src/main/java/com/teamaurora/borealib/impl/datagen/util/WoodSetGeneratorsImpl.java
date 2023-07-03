@@ -133,6 +133,7 @@ public class WoodSetGeneratorsImpl {
         BorealibTagAppender<Item> hangingSigns = provider.tag(ItemTags.HANGING_SIGNS);
 
         for (WoodSet woodSet : woodSets) {
+            provider.copy(woodSet.getBlockLogTag(), woodSet.getItemLogTag());
             boats.add(woodSet.getItem(WoodVariants.BOAT));
             chestBoats.add(woodSet.getItem(WoodVariants.CHEST_BOAT));
             signs.add(woodSet.getItem(WoodVariants.SIGN_ITEM));
@@ -162,9 +163,9 @@ public class WoodSetGeneratorsImpl {
             generators.woodProvider(log).logWithHorizontal(log).wood(woodSet.getBlock(WoodVariants.WOOD));
             generators.woodProvider(strippedLog).logWithHorizontal(strippedLog).wood(woodSet.getBlock(WoodVariants.STRIPPED_WOOD));
             generators.family(planks).generateFor(woodSet.getOrCreateBlockFamily());
-            createChest(generators, woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_CHEST).get(), planks);
-            createChest(generators, woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST).get(), planks);
-            createBookshelf(generators, woodSet.variantOrThrow(CommonCompatBlockVariants.BOOKSHELF).get(), planks);
+            createChest(generators, woodSet.getBlock(CommonCompatBlockVariants.WOODEN_CHEST), planks);
+            createChest(generators, woodSet.getBlock(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST), planks);
+            createBookshelf(generators, woodSet.getBlock(CommonCompatBlockVariants.BOOKSHELF), planks);
             generators.createHangingSign(strippedLog, woodSet.getBlock(WoodVariants.HANGING_SIGN), woodSet.getBlock(WoodVariants.WALL_HANGING_SIGN));
         }
     }
