@@ -1,6 +1,5 @@
 package com.teamaurora.borealib.api.block.v1.compat.forge;
 
-import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -29,7 +28,7 @@ import java.util.function.Supplier;
 /**
  * wooden post compatibility for Quark.
  */
-public class PostBlock extends Block implements SimpleWaterloggedBlock {
+public class BorealibPostBlock extends Block implements SimpleWaterloggedBlock {
     private static final VoxelShape SHAPE_X = box(0.0D, 6.0D, 6.0D, 16.0D, 10.0D, 10.0D);
     private static final VoxelShape SHAPE_Y = box(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D);
     private static final VoxelShape SHAPE_Z = box(6.0D, 6.0D, 0.0D, 10.0D, 10.0D, 16.0D);
@@ -48,7 +47,7 @@ public class PostBlock extends Block implements SimpleWaterloggedBlock {
 
     private final Supplier<Block> stripped;
 
-    public PostBlock(Supplier<Block> stripped, Properties properties) {
+    public BorealibPostBlock(Supplier<Block> stripped, Properties properties) {
         super(properties);
         this.stripped = stripped;
         BlockState defaultState = stateDefinition.any().setValue(WATERLOGGED, false).setValue(AXIS, Direction.Axis.Y);
@@ -59,7 +58,7 @@ public class PostBlock extends Block implements SimpleWaterloggedBlock {
         this.registerDefaultState(defaultState);
     }
 
-    public PostBlock(Properties properties) {
+    public BorealibPostBlock(Properties properties) {
         this(null, properties);
     }
 

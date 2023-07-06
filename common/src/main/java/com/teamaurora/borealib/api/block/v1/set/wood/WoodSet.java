@@ -1,5 +1,6 @@
 package com.teamaurora.borealib.api.block.v1.set.wood;
 
+import com.google.common.collect.ImmutableList;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
 import com.teamaurora.borealib.api.block.v1.compat.ChestVariant;
 import com.teamaurora.borealib.api.block.v1.compat.CommonCompatBlockVariants;
@@ -11,7 +12,9 @@ import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
 import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
+import com.teamaurora.borealib.impl.block.set.wood.WoodSetImpl;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.ResourceKey;
@@ -57,34 +60,40 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private final TagKey<Item> itemLogTag;
     private BlockFamily family;
     private boolean colorLeaves;
-    public static final List<BlockVariant<WoodSet>> DEFAULT_VARIANTS = List.of(
-            WoodVariants.STRIPPED_WOOD,
-            WoodVariants.STRIPPED_LOG,
-            WoodVariants.PLANKS,
-            WoodVariants.LOG,
-            WoodVariants.WOOD,
-            WoodVariants.SLAB,
-            WoodVariants.STAIRS,
-            WoodVariants.FENCE,
-            WoodVariants.FENCE_GATE,
-            WoodVariants.PRESSURE_PLATE,
-            WoodVariants.BUTTON,
-            WoodVariants.TRAPDOOR,
-            WoodVariants.DOOR,
-            WoodVariants.STANDING_SIGN,
-            WoodVariants.WALL_SIGN,
-            WoodVariants.HANGING_SIGN,
-            WoodVariants.WALL_HANGING_SIGN,
-            CommonCompatBlockVariants.WOODEN_CHEST,
-            CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST,
-            CommonCompatBlockVariants.BOOKSHELF
-    );
-    public static final List<ItemVariant<WoodSet>> DEFAULT_ITEM_VARIANTS = List.of(
-            WoodVariants.SIGN_ITEM,
-            WoodVariants.HANGING_SIGN_ITEM,
-            WoodVariants.BOAT,
-            WoodVariants.CHEST_BOAT
-    );
+    public static final List<BlockVariant<WoodSet>> DEFAULT_VARIANTS = Util.make(() -> {
+        ImmutableList.Builder<BlockVariant<WoodSet>> builder = ImmutableList.builder();
+        builder.add(WoodVariants.STRIPPED_WOOD)
+                .add(WoodVariants.STRIPPED_LOG)
+                .add(WoodVariants.PLANKS)
+                .add(WoodVariants.LOG)
+                .add(WoodVariants.WOOD)
+                .add(WoodVariants.SLAB)
+                .add(WoodVariants.STAIRS)
+                .add(WoodVariants.FENCE)
+                .add(WoodVariants.FENCE_GATE)
+                .add(WoodVariants.PRESSURE_PLATE)
+                .add(WoodVariants.BUTTON)
+                .add(WoodVariants.TRAPDOOR)
+                .add(WoodVariants.DOOR)
+                .add(WoodVariants.STANDING_SIGN)
+                .add(WoodVariants.WALL_SIGN)
+                .add(WoodVariants.HANGING_SIGN)
+                .add(WoodVariants.WALL_HANGING_SIGN)
+                .add(CommonCompatBlockVariants.WOODEN_CHEST)
+                .add(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST)
+                .add(CommonCompatBlockVariants.BOOKSHELF);
+        WoodSetImpl.addPlatformBlockVariants(builder);
+        return builder.build();
+    });
+    public static final List<ItemVariant<WoodSet>> DEFAULT_ITEM_VARIANTS = Util.make(() -> {
+        ImmutableList.Builder<ItemVariant<WoodSet>> builder = ImmutableList.builder();
+        builder.add(WoodVariants.SIGN_ITEM)
+                .add(WoodVariants.HANGING_SIGN_ITEM)
+                .add(WoodVariants.BOAT)
+                .add(WoodVariants.CHEST_BOAT);
+        WoodSetImpl.addPlatformItemVariants(builder);
+        return builder.build();
+    });
 
     @ApiStatus.Internal
     public static final DeferredRegister<CustomBoatType> BOAT_TYPE_WRITER = DeferredRegister.customWriter(BorealibRegistries.BOAT_TYPES, Borealib.MOD_ID);
@@ -151,36 +160,38 @@ public final class WoodSet extends BlockSet<WoodSet> {
     }
 
     /**
-     * Registers the blocks in this set to the creative menu. This method can be used as a listener for {@link CreativeTabEvents#MODIFY_ENTRIES_ALL}.
+     * Registers the blocks in the specified sets to the creative menu. This method can be used as a listener for {@link CreativeTabEvents#MODIFY_ENTRIES_ALL}.
      */
-    public void registerCreativeTabs(ResourceKey<CreativeModeTab> tabKey, CreativeModeTab tab, FeatureFlagSet flags, CreativeModeTab.ItemDisplayParameters parameters, CreativeTabEvents.Output output, boolean canUseGameMasterBlocks) {
-        if (tabKey == CreativeModeTabs.BUILDING_BLOCKS) {
-            output.acceptAllItemsAfter(Items.MANGROVE_BUTTON, List.of(
-                    this.variantOrThrow(WoodVariants.LOG).get(),
-                    this.variantOrThrow(WoodVariants.WOOD).get(),
-                    this.variantOrThrow(WoodVariants.STRIPPED_LOG).get(),
-                    this.variantOrThrow(WoodVariants.STRIPPED_WOOD).get(),
-                    this.variantOrThrow(WoodVariants.PLANKS).get(),
-                    this.variantOrThrow(WoodVariants.STAIRS).get(),
-                    this.variantOrThrow(WoodVariants.SLAB).get(),
-                    this.variantOrThrow(WoodVariants.FENCE).get(),
-                    this.variantOrThrow(WoodVariants.FENCE_GATE).get(),
-                    this.variantOrThrow(WoodVariants.DOOR).get(),
-                    this.variantOrThrow(WoodVariants.TRAPDOOR).get(),
-                    this.variantOrThrow(WoodVariants.PRESSURE_PLATE).get(),
-                    this.variantOrThrow(WoodVariants.BUTTON).get()
-            ));
-        } else if (tabKey == CreativeModeTabs.NATURAL_BLOCKS) {
-            output.acceptAfter(Items.MANGROVE_LOG, this.variantOrThrow(WoodVariants.LOG).get());
-            this.variant(WoodVariants.LEAVES).ifPresent(r -> output.acceptAfter(Items.FLOWERING_AZALEA_LEAVES, r.get()));
-            this.variant(WoodVariants.SAPLING).ifPresent(r -> output.acceptAfter(Items.DARK_OAK_SAPLING, r.get()));
-        } else if (tabKey == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            output.acceptAfter(Items.MANGROVE_SIGN, this.itemVariantOrThrow(WoodVariants.SIGN_ITEM).get());
-        } else if (tabKey == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            output.acceptAllItemsAfter(Items.MANGROVE_CHEST_BOAT, List.of(
-                    this.itemVariantOrThrow(WoodVariants.BOAT).get(),
-                    this.itemVariantOrThrow(WoodVariants.CHEST_BOAT).get()
-            ));
+    public static void registerCreativeTabs(ResourceKey<CreativeModeTab> tabKey, CreativeTabEvents.Output output, WoodSet... woodSets) {
+        for (WoodSet woodSet : woodSets) {
+            if (tabKey == CreativeModeTabs.BUILDING_BLOCKS) {
+                output.acceptAllItemsAfter(Items.MANGROVE_BUTTON, List.of(
+                        woodSet.getBlock(WoodVariants.LOG),
+                        woodSet.getBlock(WoodVariants.WOOD),
+                        woodSet.getBlock(WoodVariants.STRIPPED_LOG),
+                        woodSet.getBlock(WoodVariants.STRIPPED_WOOD),
+                        woodSet.getBlock(WoodVariants.PLANKS),
+                        woodSet.getBlock(WoodVariants.STAIRS),
+                        woodSet.getBlock(WoodVariants.SLAB),
+                        woodSet.getBlock(WoodVariants.FENCE),
+                        woodSet.getBlock(WoodVariants.FENCE_GATE),
+                        woodSet.getBlock(WoodVariants.DOOR),
+                        woodSet.getBlock(WoodVariants.TRAPDOOR),
+                        woodSet.getBlock(WoodVariants.PRESSURE_PLATE),
+                        woodSet.getBlock(WoodVariants.BUTTON)
+                ));
+            } else if (tabKey == CreativeModeTabs.NATURAL_BLOCKS) {
+                output.acceptAfter(Items.MANGROVE_LOG, woodSet.getBlock(WoodVariants.LOG));
+                woodSet.variant(WoodVariants.LEAVES).ifPresent(r -> output.acceptAfter(Items.FLOWERING_AZALEA_LEAVES, r.get()));
+                woodSet.variant(WoodVariants.SAPLING).ifPresent(r -> output.acceptAfter(Items.DARK_OAK_SAPLING, r.get()));
+            } else if (tabKey == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+                output.acceptAfter(Items.MANGROVE_SIGN, woodSet.getItem(WoodVariants.SIGN_ITEM));
+            } else if (tabKey == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+                output.acceptAllItemsAfter(Items.MANGROVE_CHEST_BOAT, List.of(
+                        woodSet.getItem(WoodVariants.BOAT),
+                        woodSet.getItem(WoodVariants.CHEST_BOAT)
+                ));
+            }
         }
     }
 

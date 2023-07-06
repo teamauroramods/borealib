@@ -12,7 +12,7 @@ import com.teamaurora.borealib.api.datagen.v1.providers.loot.BorealibBlockLootPr
 import com.teamaurora.borealib.api.datagen.v1.util.CompatBlockTags;
 import com.teamaurora.borealib.api.datagen.v1.util.CompatItemTags;
 import com.teamaurora.borealib.api.datagen.v1.util.ModelGeneratorHelper;
-import com.teamaurora.borealib.impl.datagen.BorealibModelTemplates;
+import com.teamaurora.borealib.api.datagen.v1.util.BorealibModelTemplates;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
@@ -168,6 +168,12 @@ public class WoodSetGeneratorsImpl {
             createBookshelf(generators, woodSet.getBlock(CommonCompatBlockVariants.BOOKSHELF), planks);
             generators.createHangingSign(strippedLog, woodSet.getBlock(WoodVariants.HANGING_SIGN), woodSet.getBlock(WoodVariants.WALL_HANGING_SIGN));
         }
+        addPlatformBlockModels(generators, woodSets);
+    }
+
+    @ExpectPlatform
+    public static void addPlatformBlockModels(BlockModelGenerators generators, WoodSet... woodSets) {
+        Platform.expect();
     }
 
     private static void createChest(BlockModelGenerators generators, Block chest, Block planks) {
@@ -184,7 +190,6 @@ public class WoodSetGeneratorsImpl {
 
     public static void createItemModels(ItemModelGenerators generators, WoodSet... woodSets) {
         Preconditions.checkArgument(woodSets.length > 0, "Must generate data for at least 1 wood set");
-
         for (WoodSet woodSet : woodSets) {
             generators.generateFlatItem(woodSet.getItem(WoodVariants.BOAT), ModelTemplates.FLAT_ITEM);
             generators.generateFlatItem(woodSet.getItem(WoodVariants.CHEST_BOAT), ModelTemplates.FLAT_ITEM);
@@ -195,7 +200,6 @@ public class WoodSetGeneratorsImpl {
 
     public static void createBlockLoot(BorealibBlockLootProvider provider, WoodSet... woodSets) {
         Preconditions.checkArgument(woodSets.length > 0, "Must generate data for at least 1 wood set");
-
         for (WoodSet woodSet : woodSets) {
             provider.dropSelf(woodSet.getBlock(WoodVariants.PLANKS));
             provider.dropSelf(woodSet.getBlock(WoodVariants.LOG));
@@ -219,11 +223,16 @@ public class WoodSetGeneratorsImpl {
             provider.add(woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_CHEST).get(), provider::createNameableBlockEntityTable);
             provider.add(woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST).get(), provider::createNameableBlockEntityTable);
         }
+        addPlatformBlockLoot(provider, woodSets);
+    }
+
+    @ExpectPlatform
+    public static void addPlatformBlockLoot(BorealibBlockLootProvider provider, WoodSet... woodSets) {
+        Platform.expect();
     }
 
     public static void createRecipes(BorealibRecipeProvider provider, Consumer<FinishedRecipe> consumer, WoodSet... woodSets) {
         Preconditions.checkArgument(woodSets.length > 0, "Must generate data for at least 1 wood set");
-
         for (WoodSet woodSet : woodSets) {
             BorealibRecipeProvider.generateRecipes(consumer, woodSet.getOrCreateBlockFamily());
             Block planks = woodSet.getBlock(WoodVariants.PLANKS);

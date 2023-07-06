@@ -8,6 +8,7 @@ import com.teamaurora.borealib.api.block.v1.set.wood.WoodVariants;
 import com.teamaurora.borealib.api.datagen.v1.providers.BorealibRecipeProvider;
 import com.teamaurora.borealib.api.datagen.v1.providers.BorealibTagsProvider;
 import com.teamaurora.borealib.api.datagen.v1.providers.BorealibTagsProvider.BorealibTagAppender;
+import com.teamaurora.borealib.api.datagen.v1.providers.loot.BorealibBlockLootProvider;
 import com.teamaurora.borealib.api.resource_condition.v1.DefaultResourceConditions;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
@@ -16,6 +17,7 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -52,5 +54,11 @@ public class WoodSetGeneratorsImplImpl {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST).get()).requires(woodSet.getBlock(CommonCompatBlockVariants.WOODEN_CHEST)).requires(Blocks.TRIPWIRE_HOOK).unlockedBy("has_tripwire_hook", BorealibRecipeProvider.has(Blocks.TRIPWIRE_HOOK)).save(exporter);
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Blocks.BOOKSHELF).define('#', planks).define('X', Items.BOOK).pattern("###").pattern("XXX").pattern("###").unlockedBy("has_book", BorealibRecipeProvider.has(Items.BOOK)).save(exporter);
         }
+    }
+
+    public static void addPlatformBlockModels(BlockModelGenerators generators, WoodSet... woodSets) {
+    }
+
+    public static void addPlatformBlockLoot(BorealibBlockLootProvider provider, WoodSet... woodSets) {
     }
 }

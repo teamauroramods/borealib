@@ -12,10 +12,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 /**
  * leaf carpet compatibility for Quark.
  */
-public class LeafCarpetBlock extends Block {
+public class BorealibLeafCarpetBlock extends Block {
     private static final VoxelShape AABB = box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
 
-    public LeafCarpetBlock(Block.Properties properties) {
+    public BorealibLeafCarpetBlock(Block.Properties properties) {
         super(properties);
     }
 
