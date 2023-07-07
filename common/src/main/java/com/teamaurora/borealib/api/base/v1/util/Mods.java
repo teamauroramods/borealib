@@ -56,4 +56,5 @@ public interface Mods {
     String CREATE = "create";
     String FARMERS_DELIGHT = "farmersdelight";
     String INFERNAL_EXPANSION = "infernalexp";
+    String WINDSWEPT = "windswept";
 }

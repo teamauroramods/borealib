@@ -2,6 +2,7 @@ package com.teamaurora.borealib.api.block.v1.compat.forge;
 
 import com.google.common.collect.ImmutableList;
 import com.teamaurora.borealib.api.base.v1.util.Mods;
+import com.teamaurora.borealib.api.datagen.v1.util.CompatBlockTags;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -23,8 +24,8 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 
 public class BorealibHedgeBlock extends FenceBlock {
-	private static final BooleanProperty EXTEND = BooleanProperty.create("extend");
-	private static final TagKey<Block> HEDGES_TAG = Mods.QUARK.blockTag("hedges");
+	public static final BooleanProperty EXTEND = BooleanProperty.create("extend");
+	private static final TagKey<Block> HEDGES_TAG = CompatBlockTags.HEDGES;
 
 	private static final VoxelShape WOOD_SHAPE = box(6.0F, 0.0F, 6.0F, 10.0F, 15.0F, 10.0F);
 	private static final VoxelShape HEDGE_CENTER_SHAPE = box(2.0F, 1.0F, 2.0F, 14.0F, 16.0F, 14.0F);

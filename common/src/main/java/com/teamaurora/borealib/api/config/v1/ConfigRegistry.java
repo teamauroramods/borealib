@@ -24,7 +24,7 @@ public interface ConfigRegistry {
      * @return The config object constructed using the config builder
      */
     static <T> T register(String modId, ModConfig.Type type, Function<ConfigBuilder, T> consumer) {
-        return register(modId, type, String.format("%s-%s.toml", modId, type.name().toLowerCase(Locale.ROOT)), consumer);
+        return register(modId, type, String.format("%s-%s.toml", modId, type.getSerializedName()), consumer);
     }
 
     /**
