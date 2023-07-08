@@ -17,4 +17,5 @@ public class BorealibForgeModelTemplates {
     public static final ModelTemplate HEDGE_POST = ModelGeneratorHelper.template(Borealib.location("block/hedge_post"), "_post", LEAF_SLOT, LOG_SLOT);
     public static final ModelTemplate HEDGE_EXTEND = ModelGeneratorHelper.template(Borealib.location("block/hedge_extend"), "_extend", LEAF_SLOT);
     public static final ModelTemplate HEDGE_SIDE = ModelGeneratorHelper.template(Borealib.location("block/hedge_side"), "_side",  LEAF_SLOT);
+    public static final ModelTemplate LADDER = ModelGeneratorHelper.template(Borealib.location("block/template_ladder"), TextureSlot.TEXTURE);
 }
