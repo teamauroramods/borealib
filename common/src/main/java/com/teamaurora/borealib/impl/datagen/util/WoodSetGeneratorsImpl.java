@@ -69,19 +69,12 @@ public class WoodSetGeneratorsImpl {
         for (WoodSet woodSet : woodSets) {
             TagKey<Block> logs = woodSet.getBlockLogTag();
             provider.tag(logs).add(woodSet.getBlock(WoodVariants.LOG), woodSet.getBlock(WoodVariants.WOOD), woodSet.getBlock(WoodVariants.STRIPPED_LOG), woodSet.getBlock(WoodVariants.STRIPPED_WOOD));
-            mineableWithAxe.add(WoodSet.DEFAULT_VARIANTS.stream().map(woodSet::getBlock).toArray(Block[]::new));
-            woodSet.variant(WoodVariants.LEAVES).ifPresent(block -> {
-                Block block1 = block.get();
-                mineableWithHoe.add(block1);
-                leaves.add(block1);
-            });
+            mineableWithAxe.add(woodSet.getBlock(CommonCompatBlockVariants.BOOKSHELF), woodSet.getBlock(CommonCompatBlockVariants.WOODEN_CHEST), woodSet.getBlock(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST));
 
             overworldNaturalLogs.add(woodSet.getBlock(WoodVariants.LOG));
             fenceGates.add(woodSet.getBlock(WoodVariants.FENCE_GATE));
-            woodSet.variant(WoodVariants.POTTED_SAPLING).ifPresent(block -> flowerPots.add(block.get()));
             logsThatBurn.addTag(logs);
             planks.add(woodSet.getBlock(WoodVariants.PLANKS));
-            woodSet.variant(WoodVariants.SAPLING).ifPresent(block -> saplings.add(block.get()));
             standingSigns.add(woodSet.getBlock(WoodVariants.STANDING_SIGN));
             wallSigns.add(woodSet.getBlock(WoodVariants.WALL_SIGN));
             ceilingHangingSigns.add(woodSet.getBlock(WoodVariants.HANGING_SIGN));
@@ -93,6 +86,14 @@ public class WoodSetGeneratorsImpl {
             woodenSlabs.add(woodSet.getBlock(WoodVariants.SLAB));
             woodenStairs.add(woodSet.getBlock(WoodVariants.STAIRS));
             woodenTrapdoors.add(woodSet.getBlock(WoodVariants.TRAPDOOR));
+
+            if (woodSet.isFull()) {
+                saplings.add(woodSet.getBlock(WoodVariants.SAPLING));
+                flowerPots.add(woodSet.getBlock(WoodVariants.POTTED_SAPLING));
+                Block leavesBlock = woodSet.getBlock(WoodVariants.LEAVES);
+                leaves.add(leavesBlock);
+                mineableWithHoe.add(leavesBlock);
+            }
 
             // carpenter/chests in general
             carpenterChests.add(woodSet.getBlock(CommonCompatBlockVariants.WOODEN_CHEST));
@@ -153,13 +154,13 @@ public class WoodSetGeneratorsImpl {
             Block planks = woodSet.getBlock(WoodVariants.PLANKS);
             Block log = woodSet.getBlock(WoodVariants.LOG);
             Block strippedLog = woodSet.getBlock(WoodVariants.STRIPPED_LOG);
-            woodSet.variant(WoodVariants.SAPLING).ifPresent(b -> generators.createPlant(b.get(), woodSet.getBlock(WoodVariants.POTTED_SAPLING), BlockModelGenerators.TintState.NOT_TINTED));
-            woodSet.variant(WoodVariants.LEAVES).ifPresent(b -> {
+            if (woodSet.isFull()) {
+                generators.createPlant(woodSet.getBlock(WoodVariants.SAPLING), woodSet.getBlock(WoodVariants.POTTED_SAPLING), BlockModelGenerators.TintState.NOT_TINTED);
                 if (woodSet.colorLeaves())
-                    generators.createTrivialBlock(b.get(), TexturedModel.LEAVES);
+                    generators.createTrivialBlock(woodSet.getBlock(WoodVariants.LEAVES), TexturedModel.LEAVES);
                 else
-                    generators.createTrivialCube(b.get());
-            });
+                    generators.createTrivialCube(woodSet.getBlock(WoodVariants.LEAVES));
+            }
             generators.woodProvider(log).logWithHorizontal(log).wood(woodSet.getBlock(WoodVariants.WOOD));
             generators.woodProvider(strippedLog).logWithHorizontal(strippedLog).wood(woodSet.getBlock(WoodVariants.STRIPPED_WOOD));
             generators.family(planks).generateFor(woodSet.getOrCreateBlockFamily());
@@ -206,8 +207,8 @@ public class WoodSetGeneratorsImpl {
             provider.dropSelf(woodSet.getBlock(WoodVariants.WOOD));
             provider.dropSelf(woodSet.getBlock(WoodVariants.STRIPPED_LOG));
             provider.dropSelf(woodSet.getBlock(WoodVariants.STRIPPED_WOOD));
-            woodSet.variant(WoodVariants.SAPLING).ifPresent(b -> provider.dropSelf(b.get()));
-            woodSet.variant(WoodVariants.POTTED_SAPLING).ifPresent(b -> provider.dropPottedContents(b.get()));
+            provider.dropSelf(woodSet.getBlock(WoodVariants.SAPLING));
+            provider.dropPottedContents(woodSet.getBlock(WoodVariants.POTTED_SAPLING));
             provider.dropSelf(woodSet.getBlock(WoodVariants.STANDING_SIGN));
             provider.dropSelf(woodSet.getBlock(WoodVariants.HANGING_SIGN));
             provider.dropSelf(woodSet.getBlock(WoodVariants.PRESSURE_PLATE));
@@ -218,7 +219,7 @@ public class WoodSetGeneratorsImpl {
             provider.dropSelf(woodSet.getBlock(WoodVariants.STAIRS));
             provider.add(woodSet.getBlock(WoodVariants.SLAB), provider::createSlabItemTable);
             provider.add(woodSet.getBlock(WoodVariants.DOOR), provider::createDoorTable);
-            woodSet.variant(WoodVariants.LEAVES).ifPresent(b -> provider.add(b.get(), b1 -> provider.createLeavesDrops(b1, woodSet.variantOrThrow(WoodVariants.SAPLING).get(), BorealibBlockLootProvider.NORMAL_LEAVES_SAPLING_CHANCES)));
+            provider.add(woodSet.getBlock(WoodVariants.LEAVES), b1 -> provider.createLeavesDrops(b1, woodSet.variantOrThrow(WoodVariants.SAPLING).get(), BorealibBlockLootProvider.NORMAL_LEAVES_SAPLING_CHANCES));
             provider.add(woodSet.getBlock(CommonCompatBlockVariants.BOOKSHELF), block -> BorealibBlockLootProvider.createSilkTouchDispatchTable(block, provider.applyExplosionDecay(block, LootItem.lootTableItem(Items.BOOK).apply(SetItemCountFunction.setCount(ConstantValue.exactly(3.0F))))));
             provider.add(woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_CHEST).get(), provider::createNameableBlockEntityTable);
             provider.add(woodSet.variantOrThrow(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST).get(), provider::createNameableBlockEntityTable);

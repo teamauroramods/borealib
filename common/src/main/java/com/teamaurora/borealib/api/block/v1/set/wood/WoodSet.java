@@ -60,6 +60,7 @@ public final class WoodSet extends BlockSet<WoodSet> {
     private final TagKey<Item> itemLogTag;
     private BlockFamily family;
     private boolean colorLeaves;
+    private boolean isFull;
     public static final List<BlockVariant<WoodSet>> DEFAULT_VARIANTS = Util.make(() -> {
         ImmutableList.Builder<BlockVariant<WoodSet>> builder = ImmutableList.builder();
         builder.add(WoodVariants.STRIPPED_WOOD)
@@ -85,6 +86,15 @@ public final class WoodSet extends BlockSet<WoodSet> {
         WoodSetImpl.addPlatformBlockVariants(builder);
         return builder.build();
     });
+    public static final List<BlockVariant<WoodSet>> EXTRA_VARIANTS = Util.make(() -> {
+        ImmutableList.Builder<BlockVariant<WoodSet>> builder = ImmutableList.builder();
+        builder.add(WoodVariants.LEAVES)
+                .add(WoodVariants.SAPLING)
+                .add(WoodVariants.POTTED_SAPLING);
+        WoodSetImpl.addExtraPlatformBlockVariants(builder);
+        return builder.build();
+    });
+
     public static final List<ItemVariant<WoodSet>> DEFAULT_ITEM_VARIANTS = Util.make(() -> {
         ImmutableList.Builder<ItemVariant<WoodSet>> builder = ImmutableList.builder();
         builder.add(WoodVariants.SIGN_ITEM)
@@ -109,7 +119,6 @@ public final class WoodSet extends BlockSet<WoodSet> {
         DEFAULT_ITEM_VARIANTS.forEach(this::includeItem);
         ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName()), false);
         ChestVariant.register(new ResourceLocation(this.getNamespace(), this.getBaseName() + "_trapped"), true);
-        // Compat setup for variants that only exist on Forge
     }
 
     /**
@@ -148,15 +157,24 @@ public final class WoodSet extends BlockSet<WoodSet> {
     }
 
     /**
-     * Adds natural blocks like leaves and saplings to be registered.
+     * Adds extra natural blocks to the wood set such as leaves and saplings
      *
-     * @param treeGrower  A supplier for the {@link AbstractTreeGrower} for the sapling
-     * @param colorLeaves Whether the leaves have a changing biome-dependent foliage color
+     * @param treeGrower  The tree grower to use for the sapling
+     * @param colorLeaves Whether the leaves have a fixed color or are tinted
      */
-    public WoodSet includeNaturalBlocks(Supplier<? extends AbstractTreeGrower> treeGrower, boolean colorLeaves) {
+    public WoodSet fullSet(Supplier<? extends AbstractTreeGrower> treeGrower, boolean colorLeaves) {
         this.treeGrower = treeGrower;
         this.colorLeaves = colorLeaves;
-        return this.include(WoodVariants.LEAVES).include(WoodVariants.SAPLING).include(WoodVariants.POTTED_SAPLING);
+        this.isFull = true;
+        EXTRA_VARIANTS.forEach(this::include);
+        return this;
+    }
+
+    /**
+     * @return Whether the wood set contains extra blocks
+     */
+    public boolean isFull() {
+        return this.isFull;
     }
 
     /**
@@ -181,9 +199,11 @@ public final class WoodSet extends BlockSet<WoodSet> {
                         woodSet.getBlock(WoodVariants.BUTTON)
                 ));
             } else if (tabKey == CreativeModeTabs.NATURAL_BLOCKS) {
+                if (woodSet.isFull()) {
+                    output.acceptAfter(Items.FLOWERING_AZALEA_LEAVES, woodSet.getBlock(WoodVariants.LEAVES));
+                    output.acceptAfter(Items.DARK_OAK_SAPLING, woodSet.getBlock(WoodVariants.SAPLING));
+                }
                 output.acceptAfter(Items.MANGROVE_LOG, woodSet.getBlock(WoodVariants.LOG));
-                woodSet.variant(WoodVariants.LEAVES).ifPresent(r -> output.acceptAfter(Items.FLOWERING_AZALEA_LEAVES, r.get()));
-                woodSet.variant(WoodVariants.SAPLING).ifPresent(r -> output.acceptAfter(Items.DARK_OAK_SAPLING, r.get()));
             } else if (tabKey == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
                 output.acceptAfter(Items.MANGROVE_SIGN, woodSet.getItem(WoodVariants.SIGN_ITEM));
             } else if (tabKey == CreativeModeTabs.TOOLS_AND_UTILITIES) {
@@ -203,15 +223,15 @@ public final class WoodSet extends BlockSet<WoodSet> {
     public BlockFamily getOrCreateBlockFamily() {
         if (this.family == null) {
             this.family = new BlockFamily.Builder(this.variantOrThrow(WoodVariants.PLANKS).get())
-                    .button(this.variantOrThrow(WoodVariants.BUTTON).get())
-                    .fence(this.variantOrThrow(WoodVariants.FENCE).get())
-                    .fenceGate(this.variantOrThrow(WoodVariants.FENCE_GATE).get())
-                    .pressurePlate(this.variantOrThrow(WoodVariants.PRESSURE_PLATE).get())
-                    .sign(this.variantOrThrow(WoodVariants.STANDING_SIGN).get(), this.variantOrThrow(WoodVariants.WALL_SIGN).get())
-                    .slab(this.variantOrThrow(WoodVariants.SLAB).get())
-                    .stairs(this.variantOrThrow(WoodVariants.STAIRS).get())
-                    .door(this.variantOrThrow(WoodVariants.DOOR).get())
-                    .trapdoor(this.variantOrThrow(WoodVariants.TRAPDOOR).get())
+                    .button(this.getBlock(WoodVariants.BUTTON))
+                    .fence(this.getBlock(WoodVariants.FENCE))
+                    .fenceGate(this.getBlock(WoodVariants.FENCE_GATE))
+                    .pressurePlate(this.getBlock(WoodVariants.PRESSURE_PLATE))
+                    .sign(this.getBlock(WoodVariants.STANDING_SIGN), this.getBlock(WoodVariants.WALL_SIGN))
+                    .slab(this.getBlock(WoodVariants.SLAB))
+                    .stairs(this.getBlock(WoodVariants.STAIRS))
+                    .door(this.getBlock(WoodVariants.DOOR))
+                    .trapdoor(this.getBlock(WoodVariants.TRAPDOOR))
                     .recipeGroupPrefix("wooden")
                     .recipeUnlockedBy("has_planks")
                     .getFamily();

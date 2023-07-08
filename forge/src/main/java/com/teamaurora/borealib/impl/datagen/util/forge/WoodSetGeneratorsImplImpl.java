@@ -2,6 +2,7 @@ package com.teamaurora.borealib.impl.datagen.util.forge;
 
 import com.teamaurora.borealib.api.base.v1.util.Mods;
 import com.teamaurora.borealib.api.block.v1.compat.CommonCompatBlockVariants;
+import com.teamaurora.borealib.api.block.v1.compat.forge.BorealibHedgeBlock;
 import com.teamaurora.borealib.api.block.v1.compat.forge.BorealibVerticalSlabBlock;
 import com.teamaurora.borealib.api.block.v1.compat.forge.ForgeCompatBlockVariants;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
@@ -28,6 +29,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -41,7 +43,9 @@ import java.util.function.Consumer;
 
 @ApiStatus.Internal
 public class WoodSetGeneratorsImplImpl {
+
     public static void addPlatformBlockTags(BorealibTagsProvider.BlockTagProvider provider, WoodSet... woodSets) {
+        BorealibTagAppender<Block> forgeMineableWithAxe = provider.tag(BlockTags.MINEABLE_WITH_AXE);
         BorealibTagAppender<Block> forgeWoodenChests = provider.tag(Tags.Blocks.CHESTS_WOODEN);
         BorealibTagAppender<Block> forgeTrappedChests = provider.tag(Tags.Blocks.CHESTS_TRAPPED);
         BorealibTagAppender<Block> forgeFences = provider.tag(Tags.Blocks.FENCES_WOODEN);
@@ -49,8 +53,10 @@ public class WoodSetGeneratorsImplImpl {
         BorealibTagAppender<Block> forgeBookshelves = provider.tag(Tags.Blocks.BOOKSHELVES);
         BorealibTagAppender<Block> morePlanks = provider.tag(BlockTags.PLANKS);
         BorealibTagAppender<Block> woodenVerticalSlabs = provider.tag(CompatBlockTags.WOODEN_VERTICAL_SLABS);
+        BorealibTagAppender<Block> hedges = provider.tag(CompatBlockTags.HEDGES);
 
         for (WoodSet woodSet : woodSets) {
+            forgeMineableWithAxe.add(woodSet.getBlock(ForgeCompatBlockVariants.POST), woodSet.getBlock(ForgeCompatBlockVariants.STRIPPED_POST), woodSet.getBlock(ForgeCompatBlockVariants.HEDGE));
             forgeWoodenChests.add(woodSet.getBlock(CommonCompatBlockVariants.WOODEN_CHEST));
             forgeTrappedChests.add(woodSet.getBlock(CommonCompatBlockVariants.WOODEN_TRAPPED_CHEST));
             forgeFenceGates.add(woodSet.getBlock(WoodVariants.FENCE_GATE));
@@ -58,6 +64,7 @@ public class WoodSetGeneratorsImplImpl {
             forgeBookshelves.add(woodSet.getBlock(CommonCompatBlockVariants.BOOKSHELF));
             morePlanks.add(woodSet.getBlock(ForgeCompatBlockVariants.VERTICAL_PLANKS));
             woodenVerticalSlabs.add(woodSet.getBlock(ForgeCompatBlockVariants.WOODEN_VERTICAL_SLAB));
+            if (woodSet.isFull()) hedges.add(woodSet.getBlock(ForgeCompatBlockVariants.HEDGE));
         }
     }
 
@@ -68,6 +75,7 @@ public class WoodSetGeneratorsImplImpl {
         provider.copy(Tags.Blocks.FENCE_GATES_WOODEN, Tags.Items.FENCE_GATES_WOODEN);
         provider.copy(Tags.Blocks.BOOKSHELVES, Tags.Items.BOOKSHELVES);
         provider.copy(CompatBlockTags.WOODEN_VERTICAL_SLABS, CompatItemTags.WOODEN_VERTICAL_SLABS);
+        provider.copy(CompatBlockTags.HEDGES, CompatItemTags.HEDGES);
 
         BorealibTagAppender<Item> quarkBoatableChests = provider.tag(CompatItemTags.BOATABLE_CHESTS);
         BorealibTagAppender<Item> quarkRevertableChests = provider.tag(CompatItemTags.REVERTABLE_CHESTS);
@@ -86,6 +94,8 @@ public class WoodSetGeneratorsImplImpl {
         Consumer<FinishedRecipe> verticalPlankExporter = provider.withConditions(consumer, DefaultResourceConditions.quarkFlag("vertical_planks"));
         Consumer<FinishedRecipe> postsExporter = provider.withConditions(consumer, DefaultResourceConditions.quarkFlag("wooden_posts"));
         Consumer<FinishedRecipe> verticalSlabExporter = provider.withConditions(consumer, DefaultResourceConditions.quarkFlag("vertical_slabs"));
+        Consumer<FinishedRecipe> woodChestRecipeExporter = provider.withConditions(consumer, DefaultResourceConditions.and(DefaultResourceConditions.quarkFlag("variant_chests"), DefaultResourceConditions.quarkFlag("wood_to_chest_recipes")));
+        Consumer<FinishedRecipe> hedgesExporter = provider.withConditions(consumer, DefaultResourceConditions.quarkFlag("hedges"));
 
         // TODO: change the recipe category when these mods update to 1.20 if needed
         for (WoodSet woodSet : woodSets) {
@@ -95,14 +105,18 @@ public class WoodSetGeneratorsImplImpl {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Blocks.BOOKSHELF).define('#', planks).define('X', Items.BOOK).pattern("###").pattern("XXX").pattern("###").unlockedBy("has_book", BorealibRecipeProvider.has(Items.BOOK)).save(shelfExporter);
             Block verticalPlanks = woodSet.getBlock(ForgeCompatBlockVariants.VERTICAL_PLANKS);
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, verticalPlanks, 3).define('#', planks).pattern("#").pattern("#").pattern("#").group("vertical_planks").unlockedBy(BorealibRecipeProvider.getHasName(planks), BorealibRecipeProvider.has(planks)).save(verticalPlankExporter);
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, verticalPlanks).requires(planks).unlockedBy(BorealibRecipeProvider.getHasName(verticalPlanks), BorealibRecipeProvider.has(verticalPlanks)).save(verticalPlankExporter, RecipeBuilder.getDefaultRecipeId(verticalPlanks).withPath(s -> s + "_revert"));
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, planks).requires(verticalPlanks).unlockedBy(BorealibRecipeProvider.getHasName(verticalPlanks), BorealibRecipeProvider.has(verticalPlanks)).save(verticalPlankExporter, RecipeBuilder.getDefaultRecipeId(verticalPlanks).withPath(s -> s + "_revert"));
             Block wood = woodSet.getBlock(WoodVariants.WOOD);
             Block strippedWood = woodSet.getBlock(WoodVariants.STRIPPED_WOOD);
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, woodSet.getBlock(ForgeCompatBlockVariants.POST), 8).define('#', wood).pattern("#").pattern("#").pattern("#").group("wooden_post").unlockedBy(BorealibRecipeProvider.getHasName(wood), BorealibRecipeProvider.has(wood)).save(postsExporter);
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, woodSet.getBlock(ForgeCompatBlockVariants.STRIPPED_POST), 8).define('#', strippedWood).pattern("#").pattern("#").pattern("#").group("wooden_post").unlockedBy(BorealibRecipeProvider.getHasName(strippedWood), BorealibRecipeProvider.has(strippedWood)).save(postsExporter);
             Block verticalSlab = woodSet.getBlock(ForgeCompatBlockVariants.WOODEN_VERTICAL_SLAB);
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, verticalSlab, 6).define('#', planks).pattern("#").pattern("#").pattern("#").unlockedBy(BorealibRecipeProvider.getHasName(planks), BorealibRecipeProvider.has(planks)).save(verticalSlabExporter);
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, verticalSlab).requires(woodSet.getBlock(WoodVariants.SLAB)).unlockedBy(BorealibRecipeProvider.getHasName(verticalSlab), BorealibRecipeProvider.has(verticalSlab)).save(verticalSlabExporter, RecipeBuilder.getDefaultRecipeId(verticalSlab).withPath(s -> s + "_revert"));
+            Block slab = woodSet.getBlock(WoodVariants.SLAB);
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, verticalSlab, 6).define('#', slab).pattern("#").pattern("#").pattern("#").unlockedBy(BorealibRecipeProvider.getHasName(planks), BorealibRecipeProvider.has(planks)).save(verticalSlabExporter);
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, slab).requires(verticalSlab).unlockedBy(BorealibRecipeProvider.getHasName(verticalSlab), BorealibRecipeProvider.has(verticalSlab)).save(verticalSlabExporter, RecipeBuilder.getDefaultRecipeId(verticalSlab).withPath(s -> s + "_revert"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, woodSet.getBlock(CommonCompatBlockVariants.WOODEN_CHEST), 4).define('#', woodSet.getItemLogTag()).pattern("###").pattern("# #").pattern("###").group("wooden_chest").unlockedBy("has_lots_of_items", new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.atLeast(10), MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, new ItemPredicate[0])).save(woodChestRecipeExporter);
+            Block leaves = woodSet.getBlock(WoodVariants.LEAVES);
+            if (woodSet.isFull()) ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, woodSet.getBlock(ForgeCompatBlockVariants.HEDGE), 2).define('#', leaves).define('L', woodSet.getItemLogTag()).pattern("#").pattern("L").group("hedge").unlockedBy(BorealibRecipeProvider.getHasName(leaves), BorealibRecipeProvider.has(leaves)).save(hedgesExporter);
         }
     }
 
@@ -112,6 +126,7 @@ public class WoodSetGeneratorsImplImpl {
             createPost(generators, woodSet.getBlock(ForgeCompatBlockVariants.STRIPPED_POST), woodSet.getBlock(WoodVariants.STRIPPED_LOG));
             createPost(generators, woodSet.getBlock(ForgeCompatBlockVariants.POST), woodSet.getBlock(WoodVariants.LOG));
             createVerticalSlab(generators, woodSet.getBlock(ForgeCompatBlockVariants.WOODEN_VERTICAL_SLAB));
+            if (woodSet.isFull()) createHedge(generators, woodSet.getBlock(ForgeCompatBlockVariants.HEDGE), woodSet.getBlock(WoodVariants.LEAVES), woodSet.getBlock(WoodVariants.LOG));
         }
     }
 
@@ -122,6 +137,16 @@ public class WoodSetGeneratorsImplImpl {
                 .select(BorealibVerticalSlabBlock.Type.EAST, Variant.variant().with(VariantProperties.MODEL, modelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
                 .select(BorealibVerticalSlabBlock.Type.WEST, Variant.variant().with(VariantProperties.MODEL, modelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270))
                 .select(BorealibVerticalSlabBlock.Type.DOUBLE, Variant.variant().with(VariantProperties.MODEL, modelLocation)));
+    }
+
+    private static BlockStateGenerator hedgeState(Block block, ResourceLocation post, ResourceLocation extend, ResourceLocation side) {
+        return MultiPartGenerator.multiPart(block)
+                .with(Condition.condition().term(BorealibHedgeBlock.EXTEND, false), Variant.variant().with(VariantProperties.MODEL, post))
+                .with(Condition.condition().term(BorealibHedgeBlock.EXTEND, true), Variant.variant().with(VariantProperties.MODEL, extend))
+                .with(Condition.condition().term(BlockStateProperties.NORTH, true), Variant.variant().with(VariantProperties.MODEL, side).with(VariantProperties.UV_LOCK, true))
+                .with(Condition.condition().term(BlockStateProperties.EAST, true), Variant.variant().with(VariantProperties.MODEL, side).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.UV_LOCK, true))
+                .with(Condition.condition().term(BlockStateProperties.SOUTH, true), Variant.variant().with(VariantProperties.MODEL, side).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.UV_LOCK, true))
+                .with(Condition.condition().term(BlockStateProperties.WEST, true), Variant.variant().with(VariantProperties.MODEL, side).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.UV_LOCK, true));
     }
 
     private static void createVerticalPlanks(BlockModelGenerators generators, Block verticalPlanks, Block planks) {
@@ -140,12 +165,21 @@ public class WoodSetGeneratorsImplImpl {
         generators.blockStateOutput.accept(verticalSlabState(verticalSlab, blockModelLocation));
     }
 
+    private static void createHedge(BlockModelGenerators generators, Block hedge, Block leaves, Block log) {
+        ResourceLocation logTexture = TextureMapping.getBlockTexture(log);
+        ResourceLocation post = BorealibForgeModelTemplates.HEDGE_POST.create(hedge, new TextureMapping().put(BorealibForgeModelTemplates.LEAF_SLOT, TextureMapping.getBlockTexture(leaves)).put(BorealibForgeModelTemplates.LOG_SLOT, logTexture), generators.modelOutput);
+        ResourceLocation extend = BorealibForgeModelTemplates.HEDGE_EXTEND.create(hedge, new TextureMapping().put(BorealibForgeModelTemplates.LOG_SLOT, logTexture), generators.modelOutput);
+        ResourceLocation side = BorealibForgeModelTemplates.HEDGE_SIDE.create(hedge, new TextureMapping().put(BorealibForgeModelTemplates.LOG_SLOT, logTexture), generators.modelOutput);
+        generators.blockStateOutput.accept(hedgeState(hedge, post, extend, side));
+    }
+
     public static void addPlatformBlockLoot(BorealibBlockLootProvider provider, WoodSet... woodSets) {
         for (WoodSet woodSet : woodSets) {
             provider.dropSelf(woodSet.getBlock(ForgeCompatBlockVariants.VERTICAL_PLANKS));
             provider.dropSelf(woodSet.getBlock(ForgeCompatBlockVariants.STRIPPED_POST));
             provider.dropSelf(woodSet.getBlock(ForgeCompatBlockVariants.POST));
             provider.add(woodSet.getBlock(ForgeCompatBlockVariants.WOODEN_VERTICAL_SLAB), block -> createVerticalSlabTable(block, provider));
+            if (woodSet.isFull()) provider.dropSelf(woodSet.getBlock(ForgeCompatBlockVariants.HEDGE));
         }
     }
 

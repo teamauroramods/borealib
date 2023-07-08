@@ -17,6 +17,11 @@ public class WoodSetImpl {
     }
 
     @ExpectPlatform
+    public static void addExtraPlatformBlockVariants(ImmutableList.Builder<BlockVariant<WoodSet>> builder) {
+        Platform.expect();
+    }
+
+    @ExpectPlatform
     public static void addPlatformItemVariants(ImmutableList.Builder<ItemVariant<WoodSet>> builder) {
         Platform.expect();
     }

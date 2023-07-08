@@ -15,4 +15,7 @@ public class WoodSetImplImpl {
 
     public static void addPlatformItemVariants(ImmutableList.Builder<ItemVariant<WoodSet>> builder) {
     }
+
+    public static void addExtraPlatformBlockVariants(ImmutableList.Builder<BlockVariant<WoodSet>> builder) {
+    }
 }
