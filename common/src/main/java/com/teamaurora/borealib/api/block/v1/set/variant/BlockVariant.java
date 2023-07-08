@@ -29,6 +29,7 @@ public final class BlockVariant<T> {
     private final String suffix;
     private final Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit;
     private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit;
+    private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> commonPostInit;
     private final Supplier<BiConsumer<T, RegistryReference<Item>>> itemClientInit;
     private final Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> itemClientPostInit;
     private final BlockSet.ComponentFactory<Block, T> factory;
@@ -36,6 +37,7 @@ public final class BlockVariant<T> {
     private BlockVariant(BiFunction<T, Block, ? extends BlockItem> blockItemFactory, boolean automaticLang, String prefix, String suffix,
                          Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit,
                          Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit,
+                         Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> commonPostInit,
                          Supplier<BiConsumer<T, RegistryReference<Item>>> itemClientInit,
                          Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> itemClientPostInit,
                          BlockSet.ComponentFactory<Block, T> factory) {
@@ -45,6 +47,7 @@ public final class BlockVariant<T> {
         this.suffix = suffix;
         this.clientInit = clientInit;
         this.clientPostInit = clientPostInit;
+        this.commonPostInit = commonPostInit;
         this.itemClientInit = itemClientInit;
         this.itemClientPostInit = itemClientPostInit;
         this.factory = factory;
@@ -119,6 +122,13 @@ public final class BlockVariant<T> {
     }
 
     /**
+     * @return Code to run for this variant during common post-init
+     */
+    public Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> getCommonPostInit() {
+        return this.commonPostInit;
+    }
+
+    /**
      * @return Code to run for this variant's block item during client init
      */
     public Supplier<BiConsumer<T, RegistryReference<Item>>> getItemClientInit() {
@@ -159,6 +169,7 @@ public final class BlockVariant<T> {
         private String suffix = "";
         private Supplier<BiConsumer<T, RegistryReference<Block>>> clientInit;
         private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> clientPostInit;
+        private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> commonPostInit;
         private Supplier<BiConsumer<T, RegistryReference<Item>>> itemClientInit;
         private Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Item>>> itemClientPostInit;
         private final BlockSet.ComponentFactory<Block, T> factory;
@@ -235,6 +246,16 @@ public final class BlockVariant<T> {
         }
 
         /**
+         * Adds code to run during common post-init for each member of this variant.
+         *
+         * @param commonPostInit The code to run
+         */
+        public Builder<T> commonPostInit(Supplier<TriConsumer<ParallelDispatcher, T, RegistryReference<Block>>> commonPostInit) {
+            this.commonPostInit = commonPostInit;
+            return this;
+        }
+
+        /**
          * Adds code to run during client init for each block item.
          *
          * @param clientInit The code to run
@@ -266,6 +287,7 @@ public final class BlockVariant<T> {
                     this.suffix,
                     this.clientInit,
                     this.clientPostInit,
+                    this.commonPostInit,
                     this.itemClientInit,
                     this.itemClientPostInit,
                     this.factory);

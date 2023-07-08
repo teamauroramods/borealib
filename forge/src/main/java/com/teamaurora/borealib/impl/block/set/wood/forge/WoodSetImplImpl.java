@@ -13,11 +13,10 @@ import org.jetbrains.annotations.ApiStatus;
 public class WoodSetImplImpl {
 
     public static void addPlatformBlockVariants(ImmutableList.Builder<BlockVariant<WoodSet>> builder) {
-        builder.add(ForgeCompatBlockVariants.STRIPPED_POST).add(ForgeCompatBlockVariants.POST).add(ForgeCompatBlockVariants.VERTICAL_PLANKS);
+        builder.add(ForgeCompatBlockVariants.STRIPPED_POST).add(ForgeCompatBlockVariants.POST).add(ForgeCompatBlockVariants.VERTICAL_PLANKS).add(ForgeCompatBlockVariants.LADDER);
     }
 
     public static void addPlatformItemVariants(ImmutableList.Builder<ItemVariant<WoodSet>> builder) {
-
     }
 
     public static void addExtraPlatformBlockVariants(ImmutableList.Builder<BlockVariant<WoodSet>> builder) {
