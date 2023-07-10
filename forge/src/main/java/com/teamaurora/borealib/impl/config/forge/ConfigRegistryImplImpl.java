@@ -1,5 +1,6 @@
 package com.teamaurora.borealib.impl.config.forge;
 
+import com.google.common.collect.Maps;
 import com.teamaurora.borealib.api.base.v1.util.forge.ForgeHelper;
 import com.teamaurora.borealib.api.config.v1.ConfigBuilder;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
@@ -52,7 +53,12 @@ public class ConfigRegistryImplImpl {
     }
 
     public static Optional<ModConfig> get(String modId, ModConfig.Type type) {
-        return !CONFIGS.containsKey(modId) ? Optional.empty() : Optional.ofNullable(CONFIGS.get(modId).get(type));
+        Map<ModConfig.Type, ModConfig> map = CONFIGS.computeIfAbsent(modId, __ -> {
+            EnumMap<ModConfig.Type, ModConfig> newMap = new EnumMap<>(ModConfig.Type.class);
+            ForgeHelper.getRawConfigData(modId).ifPresent(forgeMap -> forgeMap.forEach((forgeType, config) -> newMap.put(convert(forgeType), new ModConfigImpl(config))));
+            return newMap;
+        });
+        return Optional.ofNullable(map.get(type));
     }
 
     public static net.minecraftforge.fml.config.ModConfig.Type convert(ModConfig.Type type) {

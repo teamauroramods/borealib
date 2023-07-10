@@ -7,9 +7,9 @@
   "mixins": [
     "AxeItemMixin",
     "FireBlockAccessor",
-    "ForgeHooksMixin",
     "HandshakeHandlerMixin",
     "ItemBlockRenderTypesMixin",
+    "ModContainerAccessor",
     "SelfBEWLRBlockItemMixin",
     "SelfBorealibChestBlockEntityMixin",
     "SimpleJsonResourceReloadListenerMixin"
