@@ -3,11 +3,7 @@ package com.teamaurora.borealib.api.base.v1.util;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Lifecycle;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
-import net.minecraft.core.MappedRegistry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -60,7 +56,7 @@ public interface CodecHelper {
      * @return A new block with property codec
      */
     static Codec<Block> blockWithProperty(Property<?> property) {
-       return ExtraCodecs.validate(RegistryView.BLOCK.byNameCodec(), block -> {
+       return ExtraCodecs.validate(RegistryWrapper.BLOCK.byNameCodec(), block -> {
            if (!block.defaultBlockState().hasProperty(property))
                return DataResult.error(() -> "Block does not support property " + property);
            return DataResult.success(block);

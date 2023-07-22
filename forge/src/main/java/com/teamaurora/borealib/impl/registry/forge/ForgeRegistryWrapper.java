@@ -2,7 +2,7 @@ package com.teamaurora.borealib.impl.registry.forge;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,12 +18,12 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @ApiStatus.Internal
-public final class ForgeRegistryView<T> implements RegistryView<T> {
+public final class ForgeRegistryWrapper<T> implements RegistryWrapper<T> {
 
     private final IForgeRegistry<T> registry;
 
     // constructor for existing registries
-    ForgeRegistryView(IForgeRegistry<T> registry) {
+    ForgeRegistryWrapper(IForgeRegistry<T> registry) {
         this.registry = registry;
     }
 

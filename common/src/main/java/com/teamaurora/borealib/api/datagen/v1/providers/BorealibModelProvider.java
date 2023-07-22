@@ -1,17 +1,13 @@
 package com.teamaurora.borealib.api.datagen.v1.providers;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
-import net.minecraft.core.registries.BuiltInRegistries;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.ModelProvider;
 import net.minecraft.data.models.blockstates.BlockStateGenerator;
 import net.minecraft.data.models.model.DelegatedModel;
 import net.minecraft.data.models.model.ModelLocationUtils;
@@ -81,8 +77,8 @@ public abstract class BorealibModelProvider implements DataProvider {
         this.generateBlockModels(new BlockModelGenerators(blockStateOutput, modelOutput, skippedAutoModelsOutput));
         this.generateItemModels(new ItemModelGenerators(modelOutput));
 
-        RegistryView.BLOCK.forEach((block) -> {
-            if (!this.domain.equals(RegistryView.BLOCK.getKey(block).getNamespace()))
+        RegistryWrapper.BLOCK.forEach((block) -> {
+            if (!this.domain.equals(RegistryWrapper.BLOCK.getKey(block).getNamespace()))
                 return;
 
             Item item = Item.BY_BLOCK.get(block);

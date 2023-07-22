@@ -36,7 +36,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.function.Consumer;
 
 @ApiStatus.Internal
-public class WoodSetGeneratorsImpl {
+public class AuroraWoodBlockGeneratorsImpl {
 
     public static void createBlockTags(BorealibTagsProvider.BlockTagProvider provider, WoodSet... woodSets){
         Preconditions.checkArgument(woodSets.length > 0, "Must generate data for at least 1 wood set");

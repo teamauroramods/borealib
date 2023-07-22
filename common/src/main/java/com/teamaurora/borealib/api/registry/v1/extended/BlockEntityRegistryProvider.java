@@ -1,9 +1,8 @@
 package com.teamaurora.borealib.api.registry.v1.extended;
 
 import com.google.common.base.Suppliers;
-import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -17,23 +16,23 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * A deferred register that allow for the creation of block entities with an indefinite amount of blocks.
+ * A registry provider that allows for the creation of block entities with an indefinite amount of blocks.
  *
  * @author ebo2022
  * @since 1.0
  */
-public final class DeferredBlockEntityRegister extends ExtendedDeferredRegister<BlockEntityType<?>> {
+public final class BlockEntityRegistryProvider extends ExtendedRegistryWrapperProvider<BlockEntityType<?>> {
 
-    private DeferredBlockEntityRegister(DeferredRegister<BlockEntityType<?>> parent) {
+    private BlockEntityRegistryProvider(RegistryWrapper.Provider<BlockEntityType<?>> parent) {
         super(parent);
     }
 
-    public static DeferredBlockEntityRegister create(String modId) {
-        return new DeferredBlockEntityRegister(DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, modId));
+    public static BlockEntityRegistryProvider create(String owner) {
+        return new BlockEntityRegistryProvider(RegistryWrapper.provider(Registries.BLOCK_ENTITY_TYPE, owner));
     }
 
     private static Supplier<Set<Block>> collectBlocks(Class<?> clazz) {
-        return Suppliers.memoize(() -> RegistryView.BLOCK.stream().filter(clazz::isInstance).collect(Collectors.toSet()));
+        return Suppliers.memoize(() -> RegistryWrapper.BLOCK.stream().filter(clazz::isInstance).collect(Collectors.toSet()));
     }
 
     /**
@@ -78,7 +77,7 @@ public final class DeferredBlockEntityRegister extends ExtendedDeferredRegister<
      * @return A reference to the registered block entity
      */
     public <T extends BlockEntity> RegistryReference<BlockEntityType<T>> registerDynamic(String name, BlockEntityType.BlockEntitySupplier<? extends T> factory, Supplier<Set<Block>> lazyBlockSet) {
-        return this.registerDynamic(new ResourceLocation(this.id(), name), factory, lazyBlockSet);
+        return this.registerDynamic(new ResourceLocation(this.owner(), name), factory, lazyBlockSet);
     }
 
     /**

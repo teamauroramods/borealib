@@ -1,15 +1,13 @@
 package com.teamaurora.borealib.api.registry.v1;
 
 import com.mojang.serialization.Lifecycle;
-import com.teamaurora.borealib.impl.registry.VanillaRegistryView;
+import com.teamaurora.borealib.impl.registry.VanillaRegistryWrapper;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.function.Supplier;
-
-public final class SimpleCustomRegistry<T> extends VanillaRegistryView<T> {
+public final class SimpleCustomRegistry<T> extends VanillaRegistryWrapper<T> {
 
     private SimpleCustomRegistry(Registry<T> parent) {
         super(parent);

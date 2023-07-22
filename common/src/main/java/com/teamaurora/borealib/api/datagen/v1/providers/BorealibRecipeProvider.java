@@ -2,14 +2,11 @@ package com.teamaurora.borealib.api.datagen.v1.providers;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
-import com.teamaurora.borealib.api.base.v1.platform.Platform;
-import com.teamaurora.borealib.api.base.v1.util.Mods;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.api.datagen.v1.SimpleConditionalDataProvider;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionProvider;
 import com.teamaurora.borealib.impl.datagen.providers.BorealibRecipeProviderImpl;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.BlockFamily.Variant;
@@ -444,7 +441,7 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
     }
 
     public static String getItemName(ItemLike itemLike) {
-        return RegistryView.ITEM.getKey(itemLike.asItem()).getPath();
+        return RegistryWrapper.ITEM.getKey(itemLike.asItem()).getPath();
     }
 
     public static String getSimpleRecipeName(ItemLike itemLike) {

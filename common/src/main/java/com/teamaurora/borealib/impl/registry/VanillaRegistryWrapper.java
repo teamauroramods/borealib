@@ -2,8 +2,10 @@ package com.teamaurora.borealib.impl.registry;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.registry.v1.RegistryReference;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -12,14 +14,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @ApiStatus.Internal
-public class VanillaRegistryView<T> implements RegistryView<T> {
+public class VanillaRegistryWrapper<T> implements RegistryWrapper<T> {
 
     protected final Registry<T> parent;
 
-    public VanillaRegistryView(Registry<T> parent) {
+    public VanillaRegistryWrapper(Registry<T> parent) {
         this.parent = parent;
     }
 
@@ -94,5 +97,34 @@ public class VanillaRegistryView<T> implements RegistryView<T> {
     @Override
     public Iterator<T> iterator() {
         return this.parent.iterator();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static class Provider<T> extends RegistryWrapperImpl.Provider<T> {
+
+        private final Map<RegistryReference<T>, Supplier<? extends T>> entries = new LinkedHashMap<>();
+        private final Registry<T> registry;
+
+        public Provider(ResourceKey<? extends Registry<T>> registryKey, String modId) {
+            super(registryKey, modId);
+            this.registry = (Registry<T>) Objects.requireNonNull(BuiltInRegistries.REGISTRY.get(this.registryKey.location()));
+        }
+
+        public Provider(Registry<T> registry, String modId) {
+            super(registry.key(), modId);
+            this.registry = registry;
+        }
+
+        @Override
+        public <R extends T> RegistryReference<R> register(ResourceLocation name, Supplier<? extends R> object) {
+            R registered = Registry.register(this.registry, name, object.get());
+            return new VanillaRegistryReference<>(name, this.registryKey, registered);
+        }
+
+        @NotNull
+        @Override
+        public Iterator<RegistryReference<T>> iterator() {
+            return this.entries.keySet().iterator();
+        }
     }
 }

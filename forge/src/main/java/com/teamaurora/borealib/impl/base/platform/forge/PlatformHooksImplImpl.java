@@ -1,6 +1,6 @@
 package com.teamaurora.borealib.impl.base.platform.forge;
 
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -182,7 +182,7 @@ public class PlatformHooksImplImpl {
     }
 
     public static boolean canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction facing, Block block) {
-        if (!(block instanceof IPlantable plantable)) throw new IllegalArgumentException("Block " + RegistryView.BLOCK.getKey(block) + " is not IPlantable");
+        if (!(block instanceof IPlantable plantable)) throw new IllegalArgumentException("Block " + RegistryWrapper.BLOCK.getKey(block) + " is not IPlantable");
         return state.canSustainPlant(level, pos, facing, plantable);
     }
 }

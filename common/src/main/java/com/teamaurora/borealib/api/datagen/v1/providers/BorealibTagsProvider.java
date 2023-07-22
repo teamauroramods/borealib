@@ -17,7 +17,7 @@
 package com.teamaurora.borealib.api.datagen.v1.providers;
 
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.core.extensions.TagBuilderExtension;
 import com.teamaurora.borealib.impl.datagen.providers.ForcedTagEntry;
 import net.minecraft.core.HolderLookup;
@@ -69,9 +69,9 @@ public abstract class BorealibTagsProvider<T> extends TagsProvider<T> {
 	 */
 	@Nullable
 	protected ResourceKey<T> reverseLookup(T element) {
-		RegistryView<T> registryView = RegistryView.of(this.registryKey);
-		if (registryView != null) {
-			return registryView.getResourceKey(element).orElseThrow();
+		RegistryWrapper<T> registryWrapper = RegistryWrapper.get(this.registryKey);
+		if (registryWrapper != null) {
+			return registryWrapper.getResourceKey(element).orElseThrow();
 		}
 		throw new UnsupportedOperationException("Adding intrinsic objects is not supported by " + this.getClass());
 	}
@@ -163,7 +163,7 @@ public abstract class BorealibTagsProvider<T> extends TagsProvider<T> {
 
 		@Override
 		protected ResourceKey<Enchantment> reverseLookup(Enchantment element) {
-			return RegistryView.ENCHANTMENT.getResourceKey(element)
+			return RegistryWrapper.ENCHANTMENT.getResourceKey(element)
 					.orElseThrow(() -> new IllegalArgumentException("Enchantment " + element + " is not registered"));
 		}
 	}

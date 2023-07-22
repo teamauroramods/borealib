@@ -3,7 +3,7 @@ package com.teamaurora.borealib.impl.resource_condition;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceCondition;
 import com.teamaurora.borealib.core.Borealib;
 import net.minecraft.core.Registry;
@@ -21,7 +21,7 @@ public class RegistryKeyExistsResourceCondition implements ResourceCondition {
     public boolean test(JsonObject json) throws JsonParseException {
         ResourceLocation registryId = new ResourceLocation(GsonHelper.getAsString(json, "registry"));
         ResourceLocation key = new ResourceLocation(GsonHelper.getAsString(json, "key"));
-        RegistryView<?> maybeRegistry = RegistryView.of(registryId);
+        RegistryWrapper<?> maybeRegistry = RegistryWrapper.getById(registryId);
         if (maybeRegistry != null) {
             return maybeRegistry.containsKey(key);
         } else {

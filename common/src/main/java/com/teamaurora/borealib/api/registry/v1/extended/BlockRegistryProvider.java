@@ -1,6 +1,6 @@
 package com.teamaurora.borealib.api.registry.v1.extended;
 
-import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -11,17 +11,17 @@ import net.minecraft.world.level.block.Block;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public final class DeferredBlockRegister extends ExtendedDeferredRegister<Block> {
+public final class BlockRegistryProvider extends ExtendedRegistryWrapperProvider<Block> {
 
-    private final DeferredRegister<Item> itemRegistry;
+    private final RegistryWrapper.Provider<Item> itemRegistry;
 
-    private DeferredBlockRegister(DeferredRegister<Block> blockRegistry, DeferredRegister<Item> itemRegistry) {
+    private BlockRegistryProvider(RegistryWrapper.Provider<Block> blockRegistry, RegistryWrapper.Provider<Item> itemRegistry) {
         super(blockRegistry);
         this.itemRegistry = itemRegistry;
     }
 
-    public static DeferredBlockRegister create(DeferredRegister<Item> itemRegistry) {
-        return new DeferredBlockRegister(DeferredRegister.create(Registries.BLOCK, itemRegistry.id()), itemRegistry);
+    public static BlockRegistryProvider create(String owner) {
+        return new BlockRegistryProvider(RegistryWrapper.provider(Registries.BLOCK, owner), RegistryWrapper.provider(Registries.ITEM, owner));
     }
 
     public <R extends Block> RegistryReference<R> registerWithItem(String id, Supplier<? extends R> block, Item.Properties properties) {
@@ -44,7 +44,7 @@ public final class DeferredBlockRegister extends ExtendedDeferredRegister<Block>
         return register;
     }
 
-    public DeferredRegister<Item> getItemRegistry() {
+    public RegistryWrapper.Provider<Item> getItemRegistry() {
         return this.itemRegistry;
     }
 }

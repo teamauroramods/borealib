@@ -40,12 +40,4 @@ public interface RegistryReference<T> extends Supplier<T> {
      * @return The object as a vanilla {@link Holder} if that's needed for some reason
      */
     Optional<Holder<T>> getHolder();
-
-
-    /**
-     * Adds code to run when the object registers
-     *
-     * @param consumer The code to run
-     */
-    void listen(Consumer<T> consumer);
 }

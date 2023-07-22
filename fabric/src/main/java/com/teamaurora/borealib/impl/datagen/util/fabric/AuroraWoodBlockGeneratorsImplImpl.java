@@ -1,6 +1,5 @@
 package com.teamaurora.borealib.impl.datagen.util.fabric;
 
-import com.teamaurora.borealib.api.base.v1.platform.Platform;
 import com.teamaurora.borealib.api.base.v1.util.Mods;
 import com.teamaurora.borealib.api.block.v1.compat.CommonCompatBlockVariants;
 import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
@@ -10,7 +9,6 @@ import com.teamaurora.borealib.api.datagen.v1.providers.BorealibTagsProvider;
 import com.teamaurora.borealib.api.datagen.v1.providers.BorealibTagsProvider.BorealibTagAppender;
 import com.teamaurora.borealib.api.datagen.v1.providers.loot.BorealibBlockLootProvider;
 import com.teamaurora.borealib.api.resource_condition.v1.DefaultResourceConditions;
-import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -18,8 +16,10 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.recipes.*;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.function.Consumer;
 
 @ApiStatus.Internal
-public class WoodSetGeneratorsImplImpl {
+public class AuroraWoodBlockGeneratorsImplImpl {
 
     public static void addPlatformBlockTags(BorealibTagsProvider.BlockTagProvider provider, WoodSet... woodSets) {
         BorealibTagAppender<Block> fabricChests = provider.tag(ConventionalBlockTags.CHESTS);

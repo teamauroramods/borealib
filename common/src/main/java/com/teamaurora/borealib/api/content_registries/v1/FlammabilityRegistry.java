@@ -1,5 +1,6 @@
 package com.teamaurora.borealib.api.content_registries.v1;
 
+import com.teamaurora.borealib.impl.content_registries.FlammabilityRegistryImpl;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
@@ -29,6 +30,6 @@ public interface FlammabilityRegistry {
      * @param blocks        The blocks to light on fire
      */
     static void register(Block fireBlock, int encouragement, int flammability, Block... blocks) {
-
+        FlammabilityRegistryImpl.register(fireBlock, encouragement, flammability, blocks);
     }
 }

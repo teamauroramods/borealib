@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.api.registry.v1.extended;
 
-import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -10,17 +10,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 import java.util.function.Supplier;
 
-public class ExtendedDeferredRegister<T> implements DeferredRegister<T> {
+public class ExtendedRegistryWrapperProvider<T> implements RegistryWrapper.Provider<T> {
 
-    private final DeferredRegister<T> parent;
+    private final RegistryWrapper.Provider<T> parent;
 
-    protected ExtendedDeferredRegister(DeferredRegister<T> parent) {
+    protected ExtendedRegistryWrapperProvider(RegistryWrapper.Provider<T> parent) {
         this.parent = parent;
     }
 
     @Override
-    public String id() {
-        return this.parent.id();
+    public String owner() {
+        return this.parent.owner();
     }
 
     @Override

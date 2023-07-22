@@ -4,7 +4,7 @@ import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
 import com.teamaurora.borealib.api.datagen.v1.providers.BorealibRecipeProvider;
 import com.teamaurora.borealib.api.datagen.v1.providers.BorealibTagsProvider;
 import com.teamaurora.borealib.api.datagen.v1.providers.loot.BorealibBlockLootProvider;
-import com.teamaurora.borealib.impl.datagen.util.WoodSetGeneratorsImpl;
+import com.teamaurora.borealib.impl.datagen.util.AuroraWoodBlockGeneratorsImpl;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * @author ebo2022
  * @since 1.0
  */
-public interface WoodSetGenerators {
+public interface AuroraWoodBlockGenerators {
 
     /**
      * Generates all block tags for a mod's wood sets.
@@ -26,7 +26,7 @@ public interface WoodSetGenerators {
      * @param woodSets The woodsets to make tags for
      */
     static void createBlockTags(BorealibTagsProvider.BlockTagProvider provider, WoodSet... woodSets) {
-        WoodSetGeneratorsImpl.createBlockTags(provider, woodSets);
+        AuroraWoodBlockGeneratorsImpl.createBlockTags(provider, woodSets);
     }
 
     /**
@@ -36,7 +36,7 @@ public interface WoodSetGenerators {
      * @param woodSets The woodsets to make tags for
      */
     static void createItemTags(BorealibTagsProvider.ItemTagProvider provider, WoodSet... woodSets) {
-        WoodSetGeneratorsImpl.createItemTags(provider, woodSets);
+        AuroraWoodBlockGeneratorsImpl.createItemTags(provider, woodSets);
     }
 
     /**
@@ -46,7 +46,7 @@ public interface WoodSetGenerators {
      * @param woodSets   The woodsets to make models for
      */
     static void createBlockModels(BlockModelGenerators generators, WoodSet... woodSets) {
-        WoodSetGeneratorsImpl.createBlockModels(generators, woodSets);
+        AuroraWoodBlockGeneratorsImpl.createBlockModels(generators, woodSets);
     }
 
     /**
@@ -56,7 +56,7 @@ public interface WoodSetGenerators {
      * @param woodSets   The woodsets to make models for
      */
     static void createItemModels(ItemModelGenerators generators, WoodSet... woodSets) {
-        WoodSetGeneratorsImpl.createItemModels(generators, woodSets);
+        AuroraWoodBlockGeneratorsImpl.createItemModels(generators, woodSets);
     }
 
     /**
@@ -66,7 +66,7 @@ public interface WoodSetGenerators {
      * @param woodSets The woodsets to make loot tables for
      */
     static void createBlockLoot(BorealibBlockLootProvider provider, WoodSet... woodSets) {
-        WoodSetGeneratorsImpl.createBlockLoot(provider, woodSets);
+        AuroraWoodBlockGeneratorsImpl.createBlockLoot(provider, woodSets);
     }
 
     /**
@@ -77,6 +77,6 @@ public interface WoodSetGenerators {
      * @param woodSets The woodsets to make recipes for
      */
     static void createRecipes(BorealibRecipeProvider provider, Consumer<FinishedRecipe> consumer, WoodSet... woodSets) {
-        WoodSetGeneratorsImpl.createRecipes(provider, consumer, woodSets);
+        AuroraWoodBlockGeneratorsImpl.createRecipes(provider, consumer, woodSets);
     }
 }

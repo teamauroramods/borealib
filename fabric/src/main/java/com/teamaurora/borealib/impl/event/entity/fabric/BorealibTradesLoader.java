@@ -2,10 +2,9 @@ package com.teamaurora.borealib.impl.event.entity.fabric;
 
 import com.mojang.logging.LogUtils;
 import com.teamaurora.borealib.api.event.entity.v1.TradeEvents;
-import com.teamaurora.borealib.api.registry.v1.RegistryView;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.core.Registry;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import org.apache.commons.lang3.Validate;
@@ -19,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApiStatus.Internal
-public class VillagerTradeManager {
+public class BorealibTradesLoader {
 
     private static final Map<VillagerProfession, Int2ObjectMap<VillagerTrades.ItemListing[]>> VANILLA_TRADES = new HashMap<>();
     private static final Int2ObjectMap<VillagerTrades.ItemListing[]> WANDERER_TRADES = new Int2ObjectOpenHashMap<>();
@@ -35,11 +34,11 @@ public class VillagerTradeManager {
     }
 
     public static void init() {
-        registerWandererTrades();
-        registerVillagerTrades();
+        initWanderer();
+        initProfessions();
     }
 
-    private static void registerWandererTrades() {
+    private static void initWanderer() {
         TradeEvents.TradeList generic = new TradeEvents.TradeList();
         TradeEvents.TradeList rare = new TradeEvents.TradeList();
         generic.addAll(Arrays.asList(WANDERER_TRADES.get(1)));
@@ -61,8 +60,8 @@ public class VillagerTradeManager {
         VillagerTrades.WANDERING_TRADER_TRADES.put(2, rare.toArray(new VillagerTrades.ItemListing[0]));
     }
 
-    private static void registerVillagerTrades() {
-        for (VillagerProfession prof : RegistryView.VILLAGER_PROFESSION) {
+    private static void initProfessions() {
+        for (VillagerProfession prof : RegistryWrapper.VILLAGER_PROFESSION) {
             Map<Integer, VillagerTrades.ItemListing[]> vanillaTrades = VANILLA_TRADES.get(prof);
             Map<Integer, TradeEvents.TradeList> newTrades = new Int2ObjectOpenHashMap<>();
             if (vanillaTrades != null) {
@@ -73,17 +72,15 @@ public class VillagerTradeManager {
                     newTrades.put(entry.getKey(), registry);
                 }
             } else {
-                // There are no default trades to fill
                 vanillaTrades = Collections.emptyMap();
                 for (int i = 1; i <= 5; i++)
                     newTrades.put(i, new TradeEvents.TradeList());
             }
             int minTier = vanillaTrades.keySet().stream().mapToInt(Integer::intValue).min().orElse(1);
             int maxTier = vanillaTrades.keySet().stream().mapToInt(Integer::intValue).max().orElse(5);
-            // Sanity check to make sure all tiers actually exist
             for (int i = minTier; i <= maxTier; i++) {
                 if (!newTrades.containsKey(i)) {
-                    LOGGER.warn(RegistryView.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + i + " didn't exist, adding");
+                    LOGGER.warn(RegistryWrapper.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + i + " didn't exist, adding");
                     newTrades.put(i, new TradeEvents.TradeList());
                 }
             }
@@ -98,7 +95,7 @@ public class VillagerTradeManager {
                     Validate.inclusiveBetween(minTier, maxTier, tier, "Tier must be between " + minTier + " and " + maxTier);
                     TradeEvents.TradeList registry = newTrades.get(tier);
                     if (registry == null)
-                        throw new IllegalStateException("No registered " + RegistryView.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + tier + ". Valid tiers: " + newTrades.keySet().stream().sorted().map(i -> Integer.toString(i)).collect(Collectors.joining(", ")));
+                        throw new IllegalStateException("No registered " + RegistryWrapper.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + tier + ". Valid tiers: " + newTrades.keySet().stream().sorted().map(i -> Integer.toString(i)).collect(Collectors.joining(", ")));
                     return registry;
                 }
 

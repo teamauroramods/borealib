@@ -42,7 +42,8 @@ public interface ConfigRegistry {
     }
 
     /**
-     * Gets the specified config provided by a Borealib-dependent mod.
+     * Gets the specified config for the given mod id and type.
+     * <p>This also works with Forge configs that <i>are not</i> provided by Borealib.
      *
      * @param modId The id of the mod providing the config
      * @param type  The config type to look for

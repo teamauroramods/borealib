@@ -1,8 +1,8 @@
 package com.teamaurora.borealib.api.registry.v1.extended;
 
 import com.mojang.serialization.Codec;
-import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -15,23 +15,23 @@ import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorTy
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 
-public final class DeferredFeatureRegister extends ExtendedDeferredRegister<Feature<?>> {
+public final class FeatureRegistryProvider extends ExtendedRegistryWrapperProvider<Feature<?>> {
 
-    private final DeferredRegister<FoliagePlacerType<?>> foliagePlacerTypeRegistry;
-    private final DeferredRegister<TrunkPlacerType<?>> trunkPlacerTypeRegistry;
-    private final DeferredRegister<RootPlacerType<?>> rootPlacerTypeRegistry;
-    private final DeferredRegister<TreeDecoratorType<?>> treeDecoratorTypeRegistry;
+    private final RegistryWrapper.Provider<FoliagePlacerType<?>> foliagePlacerTypeRegistry;
+    private final RegistryWrapper.Provider<TrunkPlacerType<?>> trunkPlacerTypeRegistry;
+    private final RegistryWrapper.Provider<RootPlacerType<?>> rootPlacerTypeRegistry;
+    private final RegistryWrapper.Provider<TreeDecoratorType<?>> treeDecoratorTypeRegistry;
 
-    private DeferredFeatureRegister(DeferredRegister<Feature<?>> parent) {
+    private FeatureRegistryProvider(RegistryWrapper.Provider<Feature<?>> parent) {
         super(parent);
-        this.foliagePlacerTypeRegistry = DeferredRegister.create(Registries.FOLIAGE_PLACER_TYPE, parent.id());
-        this.trunkPlacerTypeRegistry = DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, parent.id());
-        this.rootPlacerTypeRegistry = DeferredRegister.create(Registries.ROOT_PLACER_TYPE, parent.id());
-        this.treeDecoratorTypeRegistry = DeferredRegister.create(Registries.TREE_DECORATOR_TYPE, parent.id());
+        this.foliagePlacerTypeRegistry = RegistryWrapper.provider(Registries.FOLIAGE_PLACER_TYPE, parent.owner());
+        this.trunkPlacerTypeRegistry = RegistryWrapper.provider(Registries.TRUNK_PLACER_TYPE, parent.owner());
+        this.rootPlacerTypeRegistry = RegistryWrapper.provider(Registries.ROOT_PLACER_TYPE, parent.owner());
+        this.treeDecoratorTypeRegistry = RegistryWrapper.provider(Registries.TREE_DECORATOR_TYPE, parent.owner());
     }
 
-    public static DeferredFeatureRegister create(String modId) {
-        return new DeferredFeatureRegister(DeferredRegister.create(Registries.FEATURE, modId));
+    public static FeatureRegistryProvider create(String owner) {
+        return new FeatureRegistryProvider(RegistryWrapper.provider(Registries.FEATURE, owner));
     }
 
     public <I extends FoliagePlacer> RegistryReference<FoliagePlacerType<I>> registerFoliagePlacerType(String id, Codec<I> codec) {
@@ -66,19 +66,19 @@ public final class DeferredFeatureRegister extends ExtendedDeferredRegister<Feat
         return this.treeDecoratorTypeRegistry.register(id, () -> new TreeDecoratorType<>(codec));
     }
 
-    public DeferredRegister<FoliagePlacerType<?>> getFoliagePlacerTypeRegistry() {
+    public RegistryWrapper.Provider<FoliagePlacerType<?>> getFoliagePlacerTypeRegistry() {
         return this.foliagePlacerTypeRegistry;
     }
 
-    public DeferredRegister<RootPlacerType<?>> getRootPlacerTypeRegistry() {
+    public RegistryWrapper.Provider<RootPlacerType<?>> getRootPlacerTypeRegistry() {
         return this.rootPlacerTypeRegistry;
     }
 
-    public DeferredRegister<TreeDecoratorType<?>> getTreeDecoratorTypeRegistry() {
+    public RegistryWrapper.Provider<TreeDecoratorType<?>> getTreeDecoratorTypeRegistry() {
         return this.treeDecoratorTypeRegistry;
     }
 
-    public DeferredRegister<TrunkPlacerType<?>> getTrunkPlacerTypeRegistry() {
+    public RegistryWrapper.Provider<TrunkPlacerType<?>> getTrunkPlacerTypeRegistry() {
         return this.trunkPlacerTypeRegistry;
     }
 }

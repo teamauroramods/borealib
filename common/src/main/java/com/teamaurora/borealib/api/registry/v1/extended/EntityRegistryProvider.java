@@ -1,8 +1,8 @@
 package com.teamaurora.borealib.api.registry.v1.extended;
 
 import com.mojang.serialization.Codec;
-import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -18,23 +18,23 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public final class DeferredEntityRegister extends ExtendedDeferredRegister<EntityType<?>> {
+public final class EntityRegistryProvider extends ExtendedRegistryWrapperProvider<EntityType<?>> {
 
-    private final DeferredRegister<MemoryModuleType<?>> memoryModuleTypeRegistry;
-    private final DeferredRegister<SensorType<?>> sensorTypeRegistry;
-    private final DeferredRegister<Schedule> scheduleRegistry;
-    private final DeferredRegister<Activity> activityRegistry;
+    private final RegistryWrapper.Provider<MemoryModuleType<?>> memoryModuleTypeRegistry;
+    private final RegistryWrapper.Provider<SensorType<?>> sensorTypeRegistry;
+    private final RegistryWrapper.Provider<Schedule> scheduleRegistry;
+    private final RegistryWrapper.Provider<Activity> activityRegistry;
 
-    private DeferredEntityRegister(DeferredRegister<EntityType<?>> entityRegistry) {
+    private EntityRegistryProvider(RegistryWrapper.Provider<EntityType<?>> entityRegistry) {
         super(entityRegistry);
-        this.memoryModuleTypeRegistry = DeferredRegister.create(Registries.MEMORY_MODULE_TYPE, entityRegistry.id());
-        this.sensorTypeRegistry = DeferredRegister.create(Registries.SENSOR_TYPE, entityRegistry.id());
-        this.scheduleRegistry = DeferredRegister.create(Registries.SCHEDULE, entityRegistry.id());
-        this.activityRegistry = DeferredRegister.create(Registries.ACTIVITY, entityRegistry.id());
+        this.memoryModuleTypeRegistry = RegistryWrapper.provider(Registries.MEMORY_MODULE_TYPE, entityRegistry.owner());
+        this.sensorTypeRegistry = RegistryWrapper.provider(Registries.SENSOR_TYPE, entityRegistry.owner());
+        this.scheduleRegistry = RegistryWrapper.provider(Registries.SCHEDULE, entityRegistry.owner());
+        this.activityRegistry = RegistryWrapper.provider(Registries.ACTIVITY, entityRegistry.owner());
     }
 
-    public static DeferredEntityRegister create(String modId) {
-        return new DeferredEntityRegister(DeferredRegister.create(Registries.ENTITY_TYPE, modId));
+    public static EntityRegistryProvider create(String owner) {
+        return new EntityRegistryProvider(RegistryWrapper.provider(Registries.ENTITY_TYPE, owner));
     }
 
     public <R> RegistryReference<MemoryModuleType<R>> registerMemoryModuleType(String id) {
@@ -58,7 +58,7 @@ public final class DeferredEntityRegister extends ExtendedDeferredRegister<Entit
     }
 
     public RegistryReference<Activity> registerActivity(ResourceLocation id) {
-        return this.activityRegistry.register(id, () -> new Activity(this.activityRegistry.id() + ":" + id));
+        return this.activityRegistry.register(id, () -> new Activity(id.getNamespace() + ":" + id));
     }
 
     public <R> RegistryReference<MemoryModuleType<R>> registerMemoryModuleType(ResourceLocation id) {
@@ -82,22 +82,22 @@ public final class DeferredEntityRegister extends ExtendedDeferredRegister<Entit
     }
 
     public RegistryReference<Activity> registerActivity(String id) {
-        return this.activityRegistry.register(id, () -> new Activity(this.activityRegistry.id() + ":" + id));
+        return this.activityRegistry.register(id, () -> new Activity(this.activityRegistry.owner() + ":" + id));
     }
 
-    public DeferredRegister<MemoryModuleType<?>> getMemoryModuleTypeRegistry() {
+    public RegistryWrapper.Provider<MemoryModuleType<?>> getMemoryModuleTypeRegistry() {
         return memoryModuleTypeRegistry;
     }
 
-    public DeferredRegister<SensorType<?>> getSensorTypeRegistry() {
+    public RegistryWrapper.Provider<SensorType<?>> getSensorTypeRegistry() {
         return sensorTypeRegistry;
     }
 
-    public DeferredRegister<Schedule> getScheduleRegistry() {
+    public RegistryWrapper.Provider<Schedule> getScheduleRegistry() {
         return scheduleRegistry;
     }
 
-    public DeferredRegister<Activity> getActivityRegistry() {
+    public RegistryWrapper.Provider<Activity> getActivityRegistry() {
         return activityRegistry;
     }
 }
