@@ -441,7 +441,7 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
     }
 
     public static String getItemName(ItemLike itemLike) {
-        return RegistryWrapper.ITEM.getKey(itemLike.asItem()).getPath();
+        return RegistryWrapper.ITEMS.getKey(itemLike.asItem()).getPath();
     }
 
     public static String getSimpleRecipeName(ItemLike itemLike) {

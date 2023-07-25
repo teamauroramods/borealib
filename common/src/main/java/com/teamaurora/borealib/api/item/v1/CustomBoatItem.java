@@ -64,7 +64,7 @@ public class CustomBoatItem extends Item {
 
             CustomBoatItem item = ((CustomBoatItem) stack.getItem());
             CustomBoat boat = item.chest ? new CustomChestBoat(level, x, y + offset, z) : new CustomBoat(level, x, y + offset, z);
-            boat.setPollenType(item.getType());
+            boat.setCustomType(item.getType());
             boat.setYRot(direction.toYRot());
             level.addFreshEntity(boat);
             stack.shrink(1);
@@ -112,7 +112,7 @@ public class CustomBoatItem extends Item {
 
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 CustomBoat boat = this.getBoat(level, hitResult);
-                boat.setPollenType(this.type);
+                boat.setCustomType(this.type);
                 boat.setYRot(player.getYRot());
                 if (!level.noCollision(boat, boat.getBoundingBox().inflate(-0.1)))
                     return InteractionResultHolder.fail(itemStack);

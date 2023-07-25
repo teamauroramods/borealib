@@ -163,7 +163,7 @@ public abstract class BorealibTagsProvider<T> extends TagsProvider<T> {
 
 		@Override
 		protected ResourceKey<Enchantment> reverseLookup(Enchantment element) {
-			return RegistryWrapper.ENCHANTMENT.getResourceKey(element)
+			return RegistryWrapper.ENCHANTMENTS.getResourceKey(element)
 					.orElseThrow(() -> new IllegalArgumentException("Enchantment " + element + " is not registered"));
 		}
 	}

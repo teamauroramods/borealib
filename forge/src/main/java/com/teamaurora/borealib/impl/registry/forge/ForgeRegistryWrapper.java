@@ -2,19 +2,23 @@ package com.teamaurora.borealib.impl.registry.forge;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
+import com.teamaurora.borealib.api.base.v1.util.forge.ForgeHelper;
+import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
+import com.teamaurora.borealib.impl.registry.RegistryWrapperImpl;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.tags.ITagManager;
+import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @ApiStatus.Internal
@@ -81,16 +85,6 @@ public final class ForgeRegistryWrapper<T> implements RegistryWrapper<T> {
     }
 
     @Override
-    public Iterable<T> getTagOrEmpty(TagKey<T> tagKey) {
-        ITagManager<T> tags = this.registry.tags();
-        if (tags != null) {
-            return tags.getTag(tagKey);
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    @Override
     public boolean containsKey(ResourceLocation name) {
         return this.registry.containsKey(name);
     }
@@ -104,5 +98,51 @@ public final class ForgeRegistryWrapper<T> implements RegistryWrapper<T> {
     @Override
     public Iterator<T> iterator() {
         return this.registry.iterator();
+    }
+
+    public static class Provider<T> extends RegistryWrapperImpl.Provider<T> {
+
+        private final Map<ForgeRegistryReference<? extends T, T>, Supplier<? extends T>> entries = new LinkedHashMap<>();
+
+        Provider(ResourceKey<? extends Registry<T>> registryKey, String modId) {
+            super(registryKey, modId);
+            ForgeHelper.getEventBus(modId).register(new EventDispatcher<>(this));
+        }
+
+        @Override
+        public <R extends T> RegistryReference<R> register(ResourceLocation name, Supplier<? extends R> object) {
+            ForgeRegistryReference<R, T> ret = new ForgeRegistryReference<>(name, this.registryKey);
+            if (this.entries.putIfAbsent(ret, object) != null)
+                throw new IllegalArgumentException("Duplicate registration " + name);
+            return ret;
+        }
+
+        @NotNull
+        @Override
+        public Iterator<RegistryReference<T>> iterator() {
+            return ((Set) this.entries.keySet()).iterator();
+        }
+
+        private void addEntries(RegisterEvent event) {
+            if (event.getRegistryKey().equals(this.registryKey)) {
+                for (Map.Entry<ForgeRegistryReference<? extends T, T>, Supplier<? extends T>> e : entries.entrySet()) {
+                    event.register(this.registryKey, e.getKey().getId(), () -> e.getValue().get());
+                    e.getKey().updateReference(event);
+                }
+            }
+        }
+
+        private static class EventDispatcher<T> {
+            private final Provider<T> provider;
+
+            public EventDispatcher(final Provider<T> provider) {
+                this.provider = provider;
+            }
+
+            @SubscribeEvent
+            public void handleEvent(RegisterEvent event) {
+                this.provider.addEntries(event);
+            }
+        }
     }
 }

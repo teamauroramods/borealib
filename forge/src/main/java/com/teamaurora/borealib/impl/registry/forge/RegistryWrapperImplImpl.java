@@ -1,10 +1,13 @@
 package com.teamaurora.borealib.impl.registry.forge;
 
+import com.mojang.serialization.Codec;
+import com.teamaurora.borealib.api.base.v1.util.forge.ForgeHelper;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.impl.registry.VanillaRegistryWrapper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
 import org.jetbrains.annotations.ApiStatus;
@@ -19,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RegistryWrapperImplImpl {
 
     private static final Map<ResourceLocation, RegistryWrapper<?>> REGISTRIES = new ConcurrentHashMap<>();
-    private static final Map<String, Map<ResourceKey<? extends Registry<?>>, RegistryWrapper.Provider<?>>> PROVIDERS = new ConcurrentHashMap<>();
 
     @Nullable
     @SuppressWarnings("unchecked")
@@ -32,8 +34,13 @@ public class RegistryWrapperImplImpl {
         });
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> RegistryWrapper.Provider<T> provider(ResourceKey<? extends Registry<T>> key, String owner) {
-        return (RegistryWrapper.Provider<T>) PROVIDERS.computeIfAbsent(owner, __ -> new HashMap<>()).computeIfAbsent(key, __ -> new VanillaRegistryWrapper.Provider<>(key, owner));
+        return new ForgeRegistryWrapper.Provider<>(key, owner);
+    }
+
+    public static <T> ResourceKey<? extends Registry<T>> dynamicRegistry(ResourceLocation id, Codec<T> codec, @Nullable Codec<T> networkCodec) {
+        ResourceKey<Registry<T>> rkey = ResourceKey.createRegistryKey(id);
+        ForgeHelper.getEventBus(id.getNamespace()).<DataPackRegistryEvent.NewRegistry>addListener(event -> event.dataPackRegistry(rkey, codec, networkCodec));
+        return rkey;
     }
 }

@@ -1,11 +1,9 @@
 package com.teamaurora.borealib.api.datagen.v1.util.forge;
 
-import com.teamaurora.borealib.api.base.v1.util.Mods;
 import com.teamaurora.borealib.api.datagen.v1.util.ModelGeneratorHelper;
 import com.teamaurora.borealib.core.Borealib;
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.TextureSlot;
-import org.jetbrains.annotations.ApiStatus;
 
 public class BorealibForgeModelTemplates {
 
@@ -18,4 +16,6 @@ public class BorealibForgeModelTemplates {
     public static final ModelTemplate HEDGE_EXTEND = ModelGeneratorHelper.template(Borealib.location("block/hedge_extend"), "_extend", LEAF_SLOT);
     public static final ModelTemplate HEDGE_SIDE = ModelGeneratorHelper.template(Borealib.location("block/hedge_side"), "_side",  LEAF_SLOT);
     public static final ModelTemplate LADDER = ModelGeneratorHelper.template(Borealib.location("block/template_ladder"), TextureSlot.TEXTURE);
+    public static final ModelTemplate LEAF_CARPET = ModelGeneratorHelper.template(Borealib.location("block/leaf_carpet"), TextureSlot.ALL);
+    public static final ModelTemplate LEAF_PILE = ModelGeneratorHelper.template(Borealib.location("block/leaf_pile"), TextureSlot.ALL);
 }

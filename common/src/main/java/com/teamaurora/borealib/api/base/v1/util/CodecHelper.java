@@ -48,18 +48,4 @@ public interface CodecHelper {
     static <T> Codec<List<T>> nonEmptyList(Codec<T> elementCodec) {
         return ExtraCodecs.nonEmptyList(list(elementCodec));
     }
-
-    /**
-     * Creates a codec for any block that has the given block state property.
-     *
-     * @param property The block state property to check for
-     * @return A new block with property codec
-     */
-    static Codec<Block> blockWithProperty(Property<?> property) {
-       return ExtraCodecs.validate(RegistryWrapper.BLOCK.byNameCodec(), block -> {
-           if (!block.defaultBlockState().hasProperty(property))
-               return DataResult.error(() -> "Block does not support property " + property);
-           return DataResult.success(block);
-       });
-    }
 }

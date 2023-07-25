@@ -1,6 +1,6 @@
 package com.teamaurora.borealib.core.mixin.fabric;
 
-import com.teamaurora.borealib.impl.registry.fabric.DynamicRegistryHooksImplImpl;
+import com.teamaurora.borealib.impl.registry.fabric.RegistryWrapperImplImpl;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.server.WorldLoader;
 import org.objectweb.asm.Opcodes;
@@ -17,7 +17,7 @@ public class WorldLoaderMixin {
     @Redirect(method = "load", at = @At(value = "FIELD", target = "Lnet/minecraft/resources/RegistryDataLoader;WORLDGEN_REGISTRIES:Ljava/util/List;", opcode = Opcodes.GETSTATIC))
     private static List<RegistryDataLoader.RegistryData<?>> load() {
         List<RegistryDataLoader.RegistryData<?>> data = new ArrayList<>(RegistryDataLoader.WORLDGEN_REGISTRIES);
-        data.addAll(DynamicRegistryHooksImplImpl.getDataRegistries());
+        data.addAll(RegistryWrapperImplImpl.getDynamicRegistries());
         return data;
     }
 }

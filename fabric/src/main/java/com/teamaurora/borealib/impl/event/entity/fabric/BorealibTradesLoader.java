@@ -61,7 +61,7 @@ public class BorealibTradesLoader {
     }
 
     private static void initProfessions() {
-        for (VillagerProfession prof : RegistryWrapper.VILLAGER_PROFESSION) {
+        for (VillagerProfession prof : RegistryWrapper.VILLAGER_PROFESSIONS) {
             Map<Integer, VillagerTrades.ItemListing[]> vanillaTrades = VANILLA_TRADES.get(prof);
             Map<Integer, TradeEvents.TradeList> newTrades = new Int2ObjectOpenHashMap<>();
             if (vanillaTrades != null) {
@@ -80,7 +80,7 @@ public class BorealibTradesLoader {
             int maxTier = vanillaTrades.keySet().stream().mapToInt(Integer::intValue).max().orElse(5);
             for (int i = minTier; i <= maxTier; i++) {
                 if (!newTrades.containsKey(i)) {
-                    LOGGER.warn(RegistryWrapper.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + i + " didn't exist, adding");
+                    LOGGER.warn(RegistryWrapper.VILLAGER_PROFESSIONS.getKey(prof) + " Villager Trades for tier: " + i + " didn't exist, adding");
                     newTrades.put(i, new TradeEvents.TradeList());
                 }
             }
@@ -95,7 +95,7 @@ public class BorealibTradesLoader {
                     Validate.inclusiveBetween(minTier, maxTier, tier, "Tier must be between " + minTier + " and " + maxTier);
                     TradeEvents.TradeList registry = newTrades.get(tier);
                     if (registry == null)
-                        throw new IllegalStateException("No registered " + RegistryWrapper.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + tier + ". Valid tiers: " + newTrades.keySet().stream().sorted().map(i -> Integer.toString(i)).collect(Collectors.joining(", ")));
+                        throw new IllegalStateException("No registered " + RegistryWrapper.VILLAGER_PROFESSIONS.getKey(prof) + " Villager Trades for tier: " + tier + ". Valid tiers: " + newTrades.keySet().stream().sorted().map(i -> Integer.toString(i)).collect(Collectors.joining(", ")));
                     return registry;
                 }
 
