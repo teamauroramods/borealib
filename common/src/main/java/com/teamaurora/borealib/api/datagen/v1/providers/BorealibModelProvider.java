@@ -77,8 +77,8 @@ public abstract class BorealibModelProvider implements DataProvider {
         this.generateBlockModels(new BlockModelGenerators(blockStateOutput, modelOutput, skippedAutoModelsOutput));
         this.generateItemModels(new ItemModelGenerators(modelOutput));
 
-        RegistryWrapper.BLOCK.forEach((block) -> {
-            if (!this.domain.equals(RegistryWrapper.BLOCK.getKey(block).getNamespace()))
+        RegistryWrapper.BLOCKS.forEach((block) -> {
+            if (!this.domain.equals(RegistryWrapper.BLOCKS.getKey(block).getNamespace()))
                 return;
 
             Item item = Item.BY_BLOCK.get(block);

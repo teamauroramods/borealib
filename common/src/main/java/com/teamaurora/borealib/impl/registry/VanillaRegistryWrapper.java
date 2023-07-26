@@ -3,6 +3,7 @@ package com.teamaurora.borealib.impl.registry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
+import com.teamaurora.borealib.api.registry.v1.RegistryTagManager;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,14 +22,23 @@ import java.util.stream.Stream;
 public class VanillaRegistryWrapper<T> implements RegistryWrapper<T> {
 
     protected final Registry<T> parent;
+    @Nullable
+    private final RegistryTagManager<T> tagManager;
 
-    public VanillaRegistryWrapper(Registry<T> parent) {
+    public VanillaRegistryWrapper(Registry<T> parent, @Nullable RegistryTagManager<T> tagManager) {
         this.parent = parent;
+        this.tagManager = tagManager;
     }
 
     @Override
     public Codec<T> byNameCodec() {
         return this.parent.byNameCodec();
+    }
+
+    @Override
+    @Nullable
+    public RegistryTagManager<T> tags() {
+        return this.tagManager;
     }
 
     @Override
@@ -74,13 +84,6 @@ public class VanillaRegistryWrapper<T> implements RegistryWrapper<T> {
     @Override
     public Set<Map.Entry<ResourceKey<T>, T>> entrySet() {
         return this.parent.entrySet();
-    }
-
-    @Override
-    public Iterable<T> getTagOrEmpty(TagKey<T> tagKey) {
-        List<T> values = new ArrayList<>();
-        this.parent.getTagOrEmpty(tagKey).forEach(h -> values.add(h.value()));
-        return values;
     }
 
     @Override

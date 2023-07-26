@@ -1,8 +1,7 @@
 package com.teamaurora.borealib.api.block.v1.compat.forge;
 
 import com.google.common.collect.ImmutableList;
-import com.teamaurora.borealib.api.base.v1.util.Mods;
-import com.teamaurora.borealib.api.datagen.v1.util.CompatBlockTags;
+import com.teamaurora.borealib.api.base.v1.util.CompatBlockTags;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;

@@ -29,7 +29,7 @@ public class RegistryWrapperImplImpl {
         return (RegistryWrapper<T>) REGISTRIES.computeIfAbsent(id, __ -> {
             Registry<T> vanillaRegistry = (Registry<T>) BuiltInRegistries.REGISTRY.get(id);
             if (vanillaRegistry != null)
-                return new VanillaRegistryWrapper<>(vanillaRegistry);
+                return new VanillaRegistryWrapper<>(vanillaRegistry, new FabricRegistryTagManager<>(vanillaRegistry));
             return null;
         });
     }

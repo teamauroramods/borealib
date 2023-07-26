@@ -3,7 +3,6 @@ package com.teamaurora.borealib.api.datagen.v1.providers;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
-import com.teamaurora.borealib.api.block.v1.set.BlockSet;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
@@ -29,9 +28,9 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 /**
  * Generates translation keys for language files.
@@ -72,16 +71,6 @@ public abstract class BorealibLanguageProvider implements DataProvider {
      * @param registry The registry to add translation keys to
      */
     public abstract void generateLanguage(TranslationRegistry registry);
-
-    /**
-     * Automatically gets a formatted English translation key for the specified objects, trying to properly capitalize where possible.
-     *
-     * @param object The registry object to translate
-     * @return The formatted en_us translation key
-     */
-    public static String format(RegistryReference<?> object) {
-        return WordUtils.capitalizeFully(object.getId().getPath().replace("_", " "));
-    }
 
     @Override
     public CompletableFuture<?> run(CachedOutput writer) {

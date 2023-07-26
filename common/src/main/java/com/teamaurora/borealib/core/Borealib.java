@@ -1,7 +1,6 @@
 package com.teamaurora.borealib.core;
 
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
-import com.teamaurora.borealib.api.block.v1.set.wood.WoodSet;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.BlockEntityRendererRegistry;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.EntityRendererRegistry;
 import com.teamaurora.borealib.api.resource_condition.v1.DelegateResourceCondition;
@@ -12,6 +11,7 @@ import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.borealib.core.network.BorealibMessages;
 import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
+import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeModifierActions;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeSelectors;
 import com.teamaurora.borealib.impl.resource_condition.ConfigResourceCondition;
@@ -58,12 +58,10 @@ public class Borealib implements ModLoaderService {
     @Override
     public void onCommonInit() {
 
-        // Init deferred registers
         BorealibEntityTypes.ENTITIES.register();
         BorealibBlockEntityTypes.BLOCK_ENTITIES.register();;
-        BuiltInBiomeSelectors.WRITER.register();
-        BuiltInBiomeModifierActions.WRITER.register();
-        WoodSet.BOAT_TYPE_WRITER.register();
+        BuiltInBiomeModifierActions.PROVIDER.register();
+        BuiltInBiomeSelectors.PROVIDER.register();
         ResourceConditionRegistry.register(ConfigResourceCondition.NAME, new ConfigResourceCondition());
         ResourceConditionRegistry.register(RegistryKeyExistsResourceCondition.NAME, new RegistryKeyExistsResourceCondition());
         ResourceConditionRegistry.register(TestsEnabledResourceCondition.NAME, new TestsEnabledResourceCondition());

@@ -1,4 +1,4 @@
-package com.teamaurora.borealib.api.datagen.v1.util;
+package com.teamaurora.borealib.api.base.v1.util;
 
 import com.teamaurora.borealib.api.base.v1.util.Mods;
 import net.minecraft.core.registries.Registries;

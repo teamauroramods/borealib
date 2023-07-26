@@ -7,6 +7,7 @@ import com.teamaurora.borealib.api.base.v1.util.CodecHelper;
 import com.teamaurora.borealib.api.biome.v1.modifier.BiomeSelector;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
+import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import net.minecraft.core.HolderSet;
@@ -22,19 +23,20 @@ import java.util.List;
 @ApiStatus.Internal
 public class BuiltInBiomeSelectors {
 
-    private static final RegistryReference<Codec<OrSelector>> OR_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("or", () -> CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(OrSelector::new, OrSelector::parents).fieldOf("values").codec());
-    private static final RegistryReference<Codec<AndSelector>> AND_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("and", () -> CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(AndSelector::new, AndSelector::parents).fieldOf("values").codec());
-    private static final RegistryReference<Codec<BiomeCheck>> BIOME_CHECK_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("is_biome", () -> Biome.LIST_CODEC.xmap(BiomeCheck::new, BiomeCheck::biomes).fieldOf("biomes").codec());
-    private static final RegistryReference<Codec<DimensionCheck>> DIMENSION_CHECK_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("generates_in", () -> ResourceKey.codec(Registries.LEVEL_STEM).xmap(DimensionCheck::new, DimensionCheck::dimension).fieldOf("dimension").codec());
-    private static final RegistryReference<Codec<StructureCheck>> STRUCTURE_CHECK_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("has_structure", () -> ResourceKey.codec(Registries.STRUCTURE).xmap(StructureCheck::new, StructureCheck::structure).fieldOf("structure").codec());
-    private static final RegistryReference<Codec<AllSelector>> ALL_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("all", () -> Codec.unit(AllSelector.INSTANCE));
-    private static final RegistryReference<Codec<ConfigToggle>> CONFIG_TOGGLE_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("config_toggle", () -> RecordCodecBuilder.create(instance -> instance.group(
+    public static final RegistryWrapper.Provider<Codec<? extends BiomeSelector>> PROVIDER = BorealibRegistries.BIOME_SELECTOR_TYPES.getDefaultProvider();
+    private static final RegistryReference<Codec<OrSelector>> OR_CODEC = PROVIDER.register("or", () -> CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(OrSelector::new, OrSelector::parents).fieldOf("values").codec());
+    private static final RegistryReference<Codec<AndSelector>> AND_CODEC = PROVIDER.register("and", () -> CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(AndSelector::new, AndSelector::parents).fieldOf("values").codec());
+    private static final RegistryReference<Codec<BiomeCheck>> BIOME_CHECK_CODEC = PROVIDER.register("is_biome", () -> Biome.LIST_CODEC.xmap(BiomeCheck::new, BiomeCheck::biomes).fieldOf("biomes").codec());
+    private static final RegistryReference<Codec<DimensionCheck>> DIMENSION_CHECK_CODEC = PROVIDER.register("generates_in", () -> ResourceKey.codec(Registries.LEVEL_STEM).xmap(DimensionCheck::new, DimensionCheck::dimension).fieldOf("dimension").codec());
+    private static final RegistryReference<Codec<StructureCheck>> STRUCTURE_CHECK_CODEC = PROVIDER.register("has_structure", () -> ResourceKey.codec(Registries.STRUCTURE).xmap(StructureCheck::new, StructureCheck::structure).fieldOf("structure").codec());
+    private static final RegistryReference<Codec<AllSelector>> ALL_CODEC = PROVIDER.register("all", () -> Codec.unit(AllSelector.INSTANCE));
+    private static final RegistryReference<Codec<ConfigToggle>> CONFIG_TOGGLE_CODEC = PROVIDER.register("config_toggle", () -> RecordCodecBuilder.create(instance -> instance.group(
             ModConfig.CODEC.fieldOf("config").forGetter(ConfigToggle::config),
             Codec.STRING.fieldOf("key").forGetter(ConfigToggle::key),
             Codec.BOOL.fieldOf("expected_value").forGetter(ConfigToggle::expectedValue)
     ).apply(instance, ConfigToggle::new)));
-    private static final RegistryReference<Codec<TestsEnabledSelector>> TESTS_ENABLED_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("tests_enabled", () -> Codec.unit(TestsEnabledSelector.INSTANCE));
-    private static final RegistryReference<Codec<NotSelector>> NOT_CODEC = BorealibRegistries.BIOME_SELECTOR_TYPES.getProvider().register("not", () -> BiomeSelector.CODEC.xmap(NotSelector::new, NotSelector::selector).fieldOf("value").codec());
+    private static final RegistryReference<Codec<TestsEnabledSelector>> TESTS_ENABLED_CODEC = PROVIDER.register("tests_enabled", () -> Codec.unit(TestsEnabledSelector.INSTANCE));
+    private static final RegistryReference<Codec<NotSelector>> NOT_CODEC = PROVIDER.register("not", () -> BiomeSelector.CODEC.xmap(NotSelector::new, NotSelector::selector).fieldOf("value").codec());
 
     public static BiomeSelector or(List<BiomeSelector> parents) {
         return new OrSelector(parents);

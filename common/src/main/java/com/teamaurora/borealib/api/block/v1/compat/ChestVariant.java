@@ -3,14 +3,10 @@ package com.teamaurora.borealib.api.block.v1.compat;
 import com.google.common.base.Suppliers;
 import com.teamaurora.borealib.api.base.v1.platform.EnvExecutor;
 import com.teamaurora.borealib.api.base.v1.platform.Environment;
-import com.teamaurora.borealib.api.registry.v1.DeferredRegister;
-import com.teamaurora.borealib.core.Borealib;
-import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.ChestBlock;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -33,8 +29,9 @@ public record ChestVariant(Material single, Material left, Material right) {
 	 *
 	 * @param name    The name of the chest variant
 	 * @param trapped Whether it is trapped
+	 * @return The name of the registered variant
 	 */
-	public static void register(ResourceLocation name, boolean trapped) {
+	public static ResourceLocation register(ResourceLocation name, boolean trapped) {
 		String chestType = trapped ? "trapped" : "normal";
 		EnvExecutor.unsafeRunWhenOn(Environment.CLIENT, () -> () -> {
 			REGISTRY.put(name, Suppliers.memoize(() -> {
@@ -44,6 +41,7 @@ public record ChestVariant(Material single, Material left, Material right) {
 				return new ChestVariant(single, left, right);
 			}));
 		});
+		return name;
 	}
 
 	/**

@@ -7,7 +7,6 @@
     "client.LayerDefinitionsMixin"
   ],
   "mixins": [
-    "BlockMixin",
     "TagBuilderMixin",
     "TagsProviderMixin"
   ],

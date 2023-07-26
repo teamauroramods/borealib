@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Keyable;
 import com.mojang.serialization.Lifecycle;
-import com.teamaurora.borealib.api.registry.v1.extended.FeatureRegistryProvider;
 import com.teamaurora.borealib.impl.registry.RegistryWrapperImpl;
 import net.minecraft.core.IdMap;
 import net.minecraft.core.MappedRegistry;
@@ -74,6 +73,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * An abstracted registry with helper methods to assist in accessing Fabric and Forge registry apis.
+ * <p>Wrappers do not hold nor support dynamic registries, though there are helper methods to assist in creating them.
  *
  * @param <T> The top level of the registry type
  * @author ebo2022
@@ -239,6 +239,12 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
      * @return The codec to identify objects from this registry
      */
     Codec<T> byNameCodec();
+
+    /**
+     * @return The tags for this registry. Returns {@code null} if the registry doesn't support tags
+     */
+    @Nullable
+    RegistryTagManager<T> tags();
 
     /**
      * Retrieves the key for the specified value.

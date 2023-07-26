@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.teamaurora.borealib.api.base.v1.util.forge.ForgeHelper;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
+import com.teamaurora.borealib.api.registry.v1.RegistryTagManager;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.impl.registry.RegistryWrapperImpl;
 import net.minecraft.core.Registry;
@@ -26,14 +27,24 @@ public final class ForgeRegistryWrapper<T> implements RegistryWrapper<T> {
 
     private final IForgeRegistry<T> registry;
 
+    @Nullable
+    private final RegistryTagManager<T> tagManager;
+
     // constructor for existing registries
     ForgeRegistryWrapper(IForgeRegistry<T> registry) {
         this.registry = registry;
+        this.tagManager = this.registry.tags() != null ? new ForgeRegistryTagManager<>(this.registry.tags()) : null;
     }
 
     @Override
     public Codec<T> byNameCodec() {
         return this.registry.getCodec();
+    }
+
+    @Override
+    @Nullable
+    public RegistryTagManager<T> tags() {
+        return this.tagManager;
     }
 
     @Override
