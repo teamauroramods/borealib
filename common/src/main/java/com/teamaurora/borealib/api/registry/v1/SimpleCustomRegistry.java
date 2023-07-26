@@ -21,7 +21,7 @@ public final class SimpleCustomRegistry<T> extends VanillaRegistryWrapper<T> {
     private final Map<String, RegistryWrapper.Provider<T>> providers;
 
     SimpleCustomRegistry(Registry<T> parent) {
-        super(parent, null);
+        super(parent);
         this.providers = new HashMap<>();
     }
 

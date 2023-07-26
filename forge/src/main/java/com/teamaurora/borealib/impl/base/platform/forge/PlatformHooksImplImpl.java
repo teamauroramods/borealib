@@ -182,7 +182,7 @@ public class PlatformHooksImplImpl {
     }
 
     public static boolean canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction facing, Block block) {
-        if (!(block instanceof IPlantable plantable)) throw new IllegalArgumentException("Block " + RegistryWrapper.BLOCK.getKey(block) + " is not IPlantable");
+        if (!(block instanceof IPlantable plantable)) throw new IllegalArgumentException("Block " + RegistryWrapper.BLOCKS.getKey(block) + " is not IPlantable");
         return state.canSustainPlant(level, pos, facing, plantable);
     }
 }

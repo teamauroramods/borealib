@@ -5,16 +5,20 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamaurora.borealib.api.base.v1.util.CodecHelper;
 import com.teamaurora.borealib.api.biome.v1.modifier.BiomeSelector;
+import com.teamaurora.borealib.api.biome.v1.modifier.info.GenerationSettings;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -181,6 +185,25 @@ public class BuiltInBiomeSelectors {
         @Override
         public Codec<NotSelector> type() {
             return NOT_CODEC.get();
+        }
+    }
+
+    private record ExistingFeatureSelector(GenerationStep.Decoration decoration, HolderSet<PlacedFeature> features) implements BiomeSelector {
+
+        @Override
+        public boolean test(Context context) {
+            GenerationSettings settings = context.getExistingInfo().getGenerationSettings();
+            for (Holder<PlacedFeature> feature : this.features) {
+                if (settings.hasFeature(this.decoration, feature)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public Codec<? extends BiomeSelector> type() {
+            return null;
         }
     }
 }

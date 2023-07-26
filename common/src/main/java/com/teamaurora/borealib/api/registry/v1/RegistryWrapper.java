@@ -241,12 +241,6 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
     Codec<T> byNameCodec();
 
     /**
-     * @return The tags for this registry. Returns {@code null} if the registry doesn't support tags
-     */
-    @Nullable
-    RegistryTagManager<T> tags();
-
-    /**
      * Retrieves the key for the specified value.
      *
      * @param value The value to get the key for

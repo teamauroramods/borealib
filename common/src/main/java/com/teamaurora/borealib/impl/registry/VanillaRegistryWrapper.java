@@ -3,13 +3,11 @@ package com.teamaurora.borealib.impl.registry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
-import com.teamaurora.borealib.api.registry.v1.RegistryTagManager;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,23 +20,14 @@ import java.util.stream.Stream;
 public class VanillaRegistryWrapper<T> implements RegistryWrapper<T> {
 
     protected final Registry<T> parent;
-    @Nullable
-    private final RegistryTagManager<T> tagManager;
 
-    public VanillaRegistryWrapper(Registry<T> parent, @Nullable RegistryTagManager<T> tagManager) {
+    public VanillaRegistryWrapper(Registry<T> parent) {
         this.parent = parent;
-        this.tagManager = tagManager;
     }
 
     @Override
     public Codec<T> byNameCodec() {
         return this.parent.byNameCodec();
-    }
-
-    @Override
-    @Nullable
-    public RegistryTagManager<T> tags() {
-        return this.tagManager;
     }
 
     @Override

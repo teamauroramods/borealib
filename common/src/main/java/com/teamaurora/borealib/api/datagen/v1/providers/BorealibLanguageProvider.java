@@ -86,6 +86,11 @@ public abstract class BorealibLanguageProvider implements DataProvider {
         return DataProvider.saveStable(writer, langEntryJson, this.pathProvider.json(new ResourceLocation(this.domain, this.locale)));
     }
 
+    @SuppressWarnings("deprecation")
+    protected static String autoTranslate(String path) {
+        return WordUtils.capitalizeFully(path.replace("_", " "));
+    }
+
     @Override
     public String getName() {
         return "Language (" + this.locale + ")";
