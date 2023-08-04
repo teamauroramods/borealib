@@ -1,14 +1,25 @@
 package com.teamaurora.borealib.api.registry.v1;
 
 import com.google.common.base.Suppliers;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Keyable;
 import com.mojang.serialization.Lifecycle;
+import com.teamaurora.borealib.api.block.v1.BorealibCeilingHangingSignBlock;
+import com.teamaurora.borealib.api.block.v1.BorealibStandingSignBlock;
+import com.teamaurora.borealib.api.block.v1.BorealibWallHangingSignBlock;
+import com.teamaurora.borealib.api.block.v1.BorealibWallSignBlock;
+import com.teamaurora.borealib.api.block.v1.compat.BorealibChestBlock;
+import com.teamaurora.borealib.api.block.v1.compat.BorealibTrappedChestBlock;
+import com.teamaurora.borealib.api.block.v1.compat.ChestVariant;
+import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibChestBlockEntity;
+import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibTrappedChestBlockEntity;
+import com.teamaurora.borealib.api.item.v1.BEWLRBlockItem;
+import com.teamaurora.borealib.core.client.render.block.entity.ChestBlockEntityWithoutLevelRenderer;
 import com.teamaurora.borealib.impl.registry.RegistryWrapperImpl;
-import net.minecraft.core.IdMap;
-import net.minecraft.core.MappedRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -26,20 +37,22 @@ import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
 import net.minecraft.world.entity.schedule.ScheduleBuilder;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Instrument;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -58,6 +71,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -566,10 +580,104 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
         }
 
         /**
+         * Registers a pair of sign blocks with the specified base name.
+         *
+         * @param baseName        The base name to use for the sign blocks and items
+         * @param woodType        The {@link WoodType} to use for signs
+         * @param blockProperties The properties to use for both sign blocks
+         * @param itemProperties  The item properties to use for the sign item
+         * @return A pair of references to the sign blocks
+         */
+        public Pair<RegistryReference<BorealibStandingSignBlock>, RegistryReference<BorealibWallSignBlock>> registerSign(ResourceLocation baseName, WoodType woodType, BlockBehaviour.Properties blockProperties, Item.Properties itemProperties) {
+            RegistryReference<BorealibStandingSignBlock> standing = this.register(baseName.withSuffix("_sign"), () -> new BorealibStandingSignBlock(blockProperties, woodType));
+            RegistryReference<BorealibWallSignBlock> wall = this.register(baseName.withSuffix("_wall_sign"), () -> new BorealibWallSignBlock(blockProperties.dropsLike(standing.get()), woodType));
+            this.itemProvider.register(baseName.withSuffix("_sign"), () -> new SignItem(itemProperties, standing.get(), wall.get()));
+            return Pair.of(standing, wall);
+        }
+
+        /**
+         * Registers a pair of sign blocks with the specified base name.
+         *
+         * @param basePath        The base name to use for the sign blocks and items
+         * @param woodType        The {@link WoodType} to use for signs
+         * @param blockProperties The properties to use for both sign blocks
+         * @param itemProperties  The item properties to use for the sign item
+         * @return A pair of references to the sign blocks
+         */
+        public Pair<RegistryReference<BorealibStandingSignBlock>, RegistryReference<BorealibWallSignBlock>> registerSign(String basePath, WoodType woodType, BlockBehaviour.Properties blockProperties, Item.Properties itemProperties) {
+           return this.registerSign(new ResourceLocation(this.owner(), basePath), woodType, blockProperties, itemProperties);
+        }
+
+
+        /**
+         * Registers a pair of hanging sign blocks with the specified base name.
+         *
+         * @param baseName        The base name to use for the hanging sign blocks and items
+         * @param woodType        The {@link WoodType} to use for hanging signs
+         * @param blockProperties The properties to use for both hanging sign blocks
+         * @param itemProperties  The item properties to use for the hanging sign item
+         * @return A pair of references to the hanging sign blocks
+         */
+        public Pair<RegistryReference<BorealibCeilingHangingSignBlock>, RegistryReference<BorealibWallHangingSignBlock>> registerHangingSign(ResourceLocation baseName, WoodType woodType, BlockBehaviour.Properties blockProperties, Item.Properties itemProperties) {
+            RegistryReference<BorealibCeilingHangingSignBlock> ceiling = this.register(baseName.withSuffix("_hanging_sign"), () -> new BorealibCeilingHangingSignBlock(blockProperties, woodType));
+            RegistryReference<BorealibWallHangingSignBlock> wall = this.register(baseName.withSuffix("_wall_hanging_sign"), () -> new BorealibWallHangingSignBlock(blockProperties.dropsLike(ceiling.get()), woodType));
+            this.itemProvider.register(baseName.withSuffix("_hanging_sign"), () -> new HangingSignItem(ceiling.get(), wall.get(), itemProperties));
+            return Pair.of(ceiling, wall);
+        }
+
+        /**
+         * Registers a pair of hanging sign blocks with the specified base name.
+         *
+         * @param basePath        The base name to use for the hanging sign blocks and items
+         * @param woodType        The {@link WoodType} to use for hanging signs
+         * @param blockProperties The properties to use for both hanging sign blocks
+         * @param itemProperties  The item properties to use for the hanging sign item
+         * @return A pair of references to the hanging sign blocks
+         */
+        public Pair<RegistryReference<BorealibCeilingHangingSignBlock>, RegistryReference<BorealibWallHangingSignBlock>> registerHangingSign(String basePath, WoodType woodType, BlockBehaviour.Properties blockProperties, Item.Properties itemProperties) {
+            return this.registerHangingSign(new ResourceLocation(this.owner(), basePath), woodType, blockProperties, itemProperties);
+        }
+
+        /**
+         * Registers a pair of chest blocks with wood properties.
+         *
+         * @param baseName The base name of the chest blocks and items
+         * @param mapColor The map color for the chests to appear as
+         * @return A pair of references to the regular and trapped chest, respectively
+         */
+        public Pair<RegistryReference<BorealibChestBlock>, RegistryReference<BorealibTrappedChestBlock>> registerWoodenChest(ResourceLocation baseName, MapColor mapColor) {
+            ResourceLocation regularName = ChestVariant.register(baseName, false);
+            ResourceLocation trappedName = ChestVariant.register(baseName, true);
+            RegistryReference<BorealibChestBlock> regular = this.registerWithItem(baseName.withSuffix("_chest"), () -> new BorealibChestBlock(regularName, BlockBehaviour.Properties.of().mapColor(mapColor).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.CHERRY_WOOD).ignitedByLava()), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> chestBEWLR(false)));
+            RegistryReference<BorealibTrappedChestBlock> trapped = this.registerWithItem(baseName.withPath(s -> "trapped_" + s + "_chest"), () -> new BorealibTrappedChestBlock(trappedName, BlockBehaviour.Properties.of().mapColor(mapColor).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.CHERRY_WOOD).ignitedByLava()), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> chestBEWLR(true)));
+            return Pair.of(regular, trapped);
+        }
+
+        /**
+         * Registers a pair of chest blocks with wood properties.
+         *
+         * @param basePath The base name of the chest blocks and items
+         * @param mapColor The map color for the chests to appear as
+         * @return A pair of references to the regular and trapped chest, respectively
+         */
+        public Pair<RegistryReference<BorealibChestBlock>, RegistryReference<BorealibTrappedChestBlock>> registerWoodenChest(String basePath, MapColor mapColor) {
+            return this.registerWoodenChest(new ResourceLocation(this.owner(), basePath), mapColor);
+        }
+
+        /**
          * @return The provider used to register items and block items
          */
         public RegistryWrapper.Provider<Item> getItemProvider() {
             return this.itemProvider;
+        }
+
+        @Environment(EnvType.CLIENT)
+        private static BEWLRBlockItem.LazyBEWLR chestBEWLR(boolean trapped) {
+            return trapped ? new BEWLRBlockItem.LazyBEWLR((dispatcher, entityModelSet) -> {
+                return new ChestBlockEntityWithoutLevelRenderer<>(dispatcher, entityModelSet, new BorealibTrappedChestBlockEntity(BlockPos.ZERO, Blocks.TRAPPED_CHEST.defaultBlockState()));
+            }) : new BEWLRBlockItem.LazyBEWLR((dispatcher, entityModelSet) -> {
+                return new ChestBlockEntityWithoutLevelRenderer<>(dispatcher, entityModelSet, new BorealibChestBlockEntity(BlockPos.ZERO, Blocks.CHEST.defaultBlockState()));
+            });
         }
     }
 

@@ -21,4 +21,5 @@ public final class BorealibBlockEntityTypes {
     public static final RegistryReference<BlockEntityType<BorealibHangingSignBlockEntity>> HANGING_SIGN = BLOCK_ENTITIES.registerLazy("hanging_sign", BorealibHangingSignBlockEntity::new, () -> BorealibHangingSignBlockEntity.VALID_BLOCKS);
     public static final RegistryReference<BlockEntityType<BorealibChestBlockEntity>> CHEST = BLOCK_ENTITIES.registerTyped("chest", BorealibChestBlockEntity::new, BorealibChestBlock.class);
     public static final RegistryReference<BlockEntityType<BorealibTrappedChestBlockEntity>> TRAPPED_CHEST = BLOCK_ENTITIES.registerTyped("trapped_chest", BorealibTrappedChestBlockEntity::new, BorealibTrappedChestBlock.class);
+
 }

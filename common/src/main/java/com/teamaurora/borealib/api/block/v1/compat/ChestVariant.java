@@ -33,6 +33,7 @@ public record ChestVariant(Material single, Material left, Material right) {
 	 */
 	public static ResourceLocation register(ResourceLocation name, boolean trapped) {
 		String chestType = trapped ? "trapped" : "normal";
+		ResourceLocation registryName = name.withSuffix("_" + chestType);
 		EnvExecutor.unsafeRunWhenOn(Environment.CLIENT, () -> () -> {
 			REGISTRY.put(name, Suppliers.memoize(() -> {
 				Material single = new Material(Sheets.CHEST_SHEET, new ResourceLocation(name.getNamespace(), "entity/chest/" + name + "/" + chestType));
@@ -41,7 +42,7 @@ public record ChestVariant(Material single, Material left, Material right) {
 				return new ChestVariant(single, left, right);
 			}));
 		});
-		return name;
+		return registryName;
 	}
 
 	/**
