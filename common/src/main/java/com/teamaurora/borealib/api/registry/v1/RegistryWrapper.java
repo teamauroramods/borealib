@@ -148,10 +148,10 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
      *
      * @param id  The name of the registry
      * @param <T> The top level registry type
-     * @return A new {@link SimpleCustomRegistry}
+     * @return A new {@link SimpleRegistry}
      */
-    static <T> SimpleCustomRegistry<T> createSimple(ResourceLocation id) {
-        return new SimpleCustomRegistry<>(new MappedRegistry<>(ResourceKey.createRegistryKey(id), Lifecycle.stable()));
+    static <T> SimpleRegistry<T> createSimple(ResourceLocation id) {
+        return new SimpleRegistry<>(id);
     }
 
     /**
@@ -320,7 +320,7 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
     Set<ResourceLocation> keySet();
 
     /**
-     * @return A set of all registered entries in the entry
+     * @return A set of all registered entries in the registry
      */
     Set<Map.Entry<ResourceKey<T>, T>> entrySet();
 

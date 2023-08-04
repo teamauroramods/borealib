@@ -57,11 +57,10 @@ public class Borealib implements ModLoaderService {
 
     @Override
     public void onCommonInit() {
-
         BorealibEntityTypes.ENTITIES.register();
         BorealibBlockEntityTypes.BLOCK_ENTITIES.register();;
-        BuiltInBiomeModifierActions.PROVIDER.register();
-        BuiltInBiomeSelectors.PROVIDER.register();
+        BuiltInBiomeModifierActions.init();
+        BuiltInBiomeSelectors.init();
         ResourceConditionRegistry.register(ConfigResourceCondition.NAME, new ConfigResourceCondition());
         ResourceConditionRegistry.register(RegistryKeyExistsResourceCondition.NAME, new RegistryKeyExistsResourceCondition());
         ResourceConditionRegistry.register(TestsEnabledResourceCondition.NAME, new TestsEnabledResourceCondition());
