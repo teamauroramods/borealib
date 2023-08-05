@@ -18,4 +18,7 @@ public class BorealibForgeModelTemplates {
     public static final ModelTemplate LADDER = ModelGeneratorHelper.template(Borealib.location("block/template_ladder"), TextureSlot.TEXTURE);
     public static final ModelTemplate LEAF_CARPET = ModelGeneratorHelper.template(Borealib.location("block/leaf_carpet"), TextureSlot.ALL);
     public static final ModelTemplate LEAF_PILE = ModelGeneratorHelper.template(Borealib.location("block/leaf_pile"), TextureSlot.ALL);
+    public static final ModelTemplate HOLLOW_LOG = ModelGeneratorHelper.template(Borealib.location("block/hollow_log"), TextureSlot.END, TextureSlot.SIDE, TextureSlot.INSIDE);
+    public static final ModelTemplate HOLLOW_LOG_HORIZONTAL = ModelGeneratorHelper.template(Borealib.location("block/hollow_log_horizontal"), TextureSlot.END, TextureSlot.SIDE, TextureSlot.INSIDE);
+
 }

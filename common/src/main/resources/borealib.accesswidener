@@ -1,8 +1,8 @@
 accessWidener   v2  named
 
-accessible method net/minecraft/core/HolderSet$Named bind (Ljava/util/List;)V
 accessible field net/minecraft/world/entity/vehicle/Boat lastYd D
 accessible field net/minecraft/world/entity/vehicle/Boat status Lnet/minecraft/world/entity/vehicle/Boat$Status;
+accessible method net/minecraft/advancements/critereon/SimpleCriterionTrigger trigger (Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Predicate;)V
 transitive-accessible field net/minecraft/world/item/CreativeModeTabs BUILDING_BLOCKS Lnet/minecraft/resources/ResourceKey;
 transitive-accessible field net/minecraft/world/item/CreativeModeTabs COLORED_BLOCKS Lnet/minecraft/resources/ResourceKey;
 transitive-accessible field net/minecraft/world/item/CreativeModeTabs NATURAL_BLOCKS Lnet/minecraft/resources/ResourceKey;

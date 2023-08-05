@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 
 @Mixin(TagsProvider.class)
 public class TagsProviderMixin {
+
     @Inject(method = "method_27046", at = @At(value = "INVOKE", target = "Lnet/minecraft/data/DataProvider;saveStable(Lnet/minecraft/data/CachedOutput;Lcom/google/gson/JsonElement;Ljava/nio/file/Path;)Ljava/util/concurrent/CompletableFuture;"), locals = LocalCapture.CAPTURE_FAILHARD)
     public void addReplaced(Predicate<ResourceLocation> predicate, Predicate<ResourceLocation> predicate2, CachedOutput cachedOutput, Map.Entry<ResourceLocation, TagBuilder> entry, CallbackInfoReturnable<CompletableFuture<?>> cir, ResourceLocation identifier, TagBuilder builder, List<TagEntry> list, List<TagEntry> list2, JsonElement jsonElement, Path path) {
         if (builder instanceof TagBuilderExtension borealibTagBuilder) {

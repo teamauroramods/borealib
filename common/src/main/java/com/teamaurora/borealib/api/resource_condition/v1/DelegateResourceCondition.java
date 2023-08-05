@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
  *
  * @param id       The id the condition should be referred to in data files
  * @param actualId The id of the condition to actually use
- * @param mapper   A consumer mapping the contents of the first json object onto the second one. This is used to convert the data into the format the external condition can read.
+ * @param mapper   A consumer mapping the contents of the first json object onto the second one. This is used to convert the data into the format the external condition can read
  *
  * @author ebo2022
  * @since 1.0
