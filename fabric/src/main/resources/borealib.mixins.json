@@ -11,6 +11,7 @@
     "BiomeAccessor",
     "ClientHandshakePacketListenerImplAccessor",
     "DedicatedServerMixin",
+    "FabricDynamicRegistryProviderMixin",
     "ItemMixin",
     "MinecraftServerMixin",
     "PlayerListMixin",

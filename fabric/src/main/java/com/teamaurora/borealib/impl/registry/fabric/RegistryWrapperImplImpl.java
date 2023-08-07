@@ -21,7 +21,7 @@ public class RegistryWrapperImplImpl {
     private static final Map<ResourceLocation, RegistryWrapper<?>> REGISTRIES = new ConcurrentHashMap<>();
     private static final List<RegistryDataLoader.RegistryData<?>> DYNAMIC_REGISTRIES = new ArrayList<>();
     private static final Map<ResourceKey<Registry<?>>, RegistrySynchronization.NetworkedRegistryData<?>> NETWORKABLE_DYNAMIC_REGISTRIES = new HashMap<>();
-    private static final Set<ResourceLocation> KEYS = new HashSet<>();
+    private static final Set<ResourceLocation> DYNAMIC_REGISTRY_KEYS = new HashSet<>();
 
     @Nullable
     @SuppressWarnings("unchecked")
@@ -41,7 +41,7 @@ public class RegistryWrapperImplImpl {
     public static <T> ResourceKey<? extends Registry<T>> dynamicRegistry(ResourceLocation id, Codec<T> codec, @Nullable Codec<T> networkCodec) {
         ResourceKey<Registry<T>> key = ResourceKey.createRegistryKey(id);
         DYNAMIC_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(key, codec));
-        KEYS.add(key.location());
+        DYNAMIC_REGISTRY_KEYS.add(key.location());
         if (networkCodec != null)
             NETWORKABLE_DYNAMIC_REGISTRIES.put((ResourceKey) key, new RegistrySynchronization.NetworkedRegistryData<>(key, networkCodec));
         return key;
@@ -55,7 +55,11 @@ public class RegistryWrapperImplImpl {
         return NETWORKABLE_DYNAMIC_REGISTRIES;
     }
 
-    public static boolean shouldPrefix(ResourceLocation l) {
-        return !l.getNamespace().equals("minecraft") && KEYS.contains(l);
+    public static String prefix(ResourceLocation location) {
+        // Mirrors Forge's directory style
+        // Ignores vanilla registries for obvious reasons + any possible non-Borealib dynamic registries whose behavior should be untouched
+        if (!location.getNamespace().equals("minecraft") && DYNAMIC_REGISTRY_KEYS.contains(location))
+            return location.getNamespace() + "/" + location.getPath();
+        return location.getPath();
     }
 }

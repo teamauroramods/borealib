@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.teamaurora.borealib.api.base.v1.util.CodecHelper;
 import com.teamaurora.borealib.api.biome.v1.modifier.BiomeSelector;
 import com.teamaurora.borealib.api.biome.v1.modifier.info.GenerationSettings;
+import com.teamaurora.borealib.api.config.v1.ConfigRegistry;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
@@ -39,10 +40,22 @@ public class BuiltInBiomeSelectors {
             Codec.BOOL.fieldOf("expected_value").forGetter(ConfigToggle::expectedValue)
     ).apply(instance, ConfigToggle::new)));
     private static final Codec<TestsEnabledSelector> TESTS_ENABLED_CODEC = register("tests_enabled", Codec.unit(TestsEnabledSelector.INSTANCE));
+    private static final Codec<ExistingFeatureSelector> EXISTING_FEATURES_CODEC = register("has_existing_features", RecordCodecBuilder.create(instance -> instance.group(
+            GenerationStep.Decoration.CODEC.fieldOf("step").forGetter(ExistingFeatureSelector::decoration),
+            PlacedFeature.LIST_CODEC.fieldOf("features").forGetter(ExistingFeatureSelector::features)
+    ).apply(instance, ExistingFeatureSelector::new)));
     private static final Codec<NotSelector> NOT_CODEC = register("not", BiomeSelector.CODEC.xmap(NotSelector::new, NotSelector::selector).fieldOf("value").codec());
 
     private static <T extends BiomeSelector> Codec<T> register(String path, Codec<T> codec) {
         return BorealibRegistries.BIOME_SELECTOR_TYPES.register(Borealib.location(path), codec);
+    }
+
+    public static BiomeSelector all() {
+        return AllSelector.INSTANCE;
+    }
+
+    public static BiomeSelector testsEnabled() {
+        return TestsEnabledSelector.INSTANCE;
     }
 
     public static BiomeSelector or(List<BiomeSelector> parents) {
@@ -53,12 +66,28 @@ public class BuiltInBiomeSelectors {
         return new AndSelector(parents);
     }
 
+    public static BiomeSelector not(BiomeSelector value) {
+        return new NotSelector(value);
+    }
+
     public static BiomeSelector biomeCheck(HolderSet<Biome> biomes) {
         return new BiomeCheck(biomes);
     }
 
     public static BiomeSelector dimensionCheck(ResourceKey<LevelStem> dimension) {
         return new DimensionCheck(dimension);
+    }
+
+    public static BiomeSelector structureCheck(ResourceKey<Structure> structure) {
+        return new StructureCheck(structure);
+    }
+
+    public static BiomeSelector configToggle(ModConfig config, String key, boolean value) {
+        return new ConfigToggle(config, key, value);
+    }
+
+    public static BiomeSelector hasExistingFeatures(GenerationStep.Decoration decoration, HolderSet<PlacedFeature> features) {
+        return new ExistingFeatureSelector(decoration, features);
     }
 
     public static void init() {}
@@ -208,7 +237,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<? extends BiomeSelector> type() {
-            return null;
+            return EXISTING_FEATURES_CODEC;
         }
     }
 }

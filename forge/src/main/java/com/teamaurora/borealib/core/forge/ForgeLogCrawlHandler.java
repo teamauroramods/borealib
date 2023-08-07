@@ -30,16 +30,17 @@ import java.util.Optional;
 public class ForgeLogCrawlHandler {
 
     // Hacky workaround to access Quark's config options. Not really any better way to do this
-    public static boolean AUTO_CRAWL_ENABLED = Util.make(() -> {
+    public static boolean autoCrawlEnabled() {
         Optional<ModConfig> cfg = ConfigRegistry.get(Mods.QUARK, ModConfig.Type.COMMON);
         return cfg.isPresent() ? cfg.get().getConfigData().get("building.hollow_logs.Enable Auto Crawl") : false;
-    });
+    }
+
     private static final String TAG_TRYING_TO_CRAWL = "quark:trying_crawl";
     private static final ResourceLocation TRIGGER_NAME = new ResourceLocation("quark:hollow_log_crawl");
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
-        if(AUTO_CRAWL_ENABLED && event.phase == TickEvent.Phase.START) {
+        if(autoCrawlEnabled() && event.phase == TickEvent.Phase.START) {
             Player player = event.player;
             BlockPos playerPos = player.blockPosition();
             boolean isTrying = player.isVisuallyCrawling() ||

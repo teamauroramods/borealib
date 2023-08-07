@@ -88,12 +88,7 @@ public interface ModLoaderService {
     default void onDataInit(BorealibDataGenerator generator) {
     }
 
-    /**
-     * Used during data generation to build contents for dynamic registries whose contents can only be defined via data.
-     *
-     * @param builder The {@link RegistrySetBuilder} to hook dynamic registry bootstraps to
-     */
-    default void buildRegistries(RegistrySetBuilder builder) {
+    default void buildRegistries(BorealibDataGenerator.DynamicRegistries registries) {
     }
 
     /**

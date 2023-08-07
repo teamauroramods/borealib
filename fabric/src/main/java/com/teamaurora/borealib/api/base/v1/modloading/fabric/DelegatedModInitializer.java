@@ -1,27 +1,26 @@
 package com.teamaurora.borealib.api.base.v1.modloading.fabric;
 
-import com.teamaurora.borealib.api.base.v1.platform.Environment;
-import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
+import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.datagen.v1.BorealibDataGenerator;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
-import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.impl.base.platform.fabric.ModContainerImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -63,7 +62,8 @@ public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEn
 
     @Override
     default void onInitializeDataGenerator(FabricDataGenerator generator) {
-        ModLoaderService.byId(this.id()).onDataInit(new BorealibDataGenerator() {
+        ModLoaderService service = ModLoaderService.byId(this.id());
+        service.onDataInit(new BorealibDataGenerator() {
             ModContainer container = new ModContainerImpl(generator.getModContainer());
             FabricDataGenerator.Pack pack = generator.createPack();
             private BorealibPackOutput borealibOutput;
@@ -103,10 +103,40 @@ public interface DelegatedModInitializer extends ModInitializer, DataGeneratorEn
                 return borealibOutput;
             }
         });
+
+        // buildRegistries: ran again here to get the registries that have elements registered, then create a provider to handle those
+        Set<ResourceKey<? extends Registry<?>>> registryKeys = new HashSet<>();
+        service.buildRegistries(new BorealibDataGenerator.DynamicRegistries() {
+            @Override
+            public <T> BorealibDataGenerator.DynamicRegistries add(ResourceKey<? extends Registry<T>> registry, RegistrySetBuilder.RegistryBootstrap<T> bootstrap) {
+                registryKeys.add(registry);
+                return this;
+            }
+        });
+        if (!registryKeys.isEmpty()) {
+            generator.createPack().addProvider(((output, registriesFuture) -> new FabricDynamicRegistryProvider(output, registriesFuture) {
+                @Override
+                protected void configure(HolderLookup.Provider registries, Entries entries) {
+                    registryKeys.forEach(key -> entries.addAll(registries.lookupOrThrow(key)));
+                }
+
+                @Override
+                public String getName() {
+                    return "Dynamic Registries: " + id();
+                }
+            }));
+        }
     }
 
     @Override
     default void buildRegistry(RegistrySetBuilder builder) {
-        ModLoaderService.byId(this.id()).buildRegistries(builder);
+        // buildRegistries: ran here to add the elements to the bootstrap
+        ModLoaderService.byId(this.id()).buildRegistries(new BorealibDataGenerator.DynamicRegistries() {
+            @Override
+            public <T> BorealibDataGenerator.DynamicRegistries add(ResourceKey<? extends Registry<T>> registry, RegistrySetBuilder.RegistryBootstrap<T> bootstrap) {
+                builder.add(registry, bootstrap);
+                return this;
+            }
+        });
     }
 }

@@ -14,7 +14,6 @@ public class RegistryDataLoaderMixin {
     // Mirror forge's directory style for Borealib registries
     @Inject(method = "registryDirPath", at = @At("HEAD"), cancellable = true)
     private static void registryDirPath(ResourceLocation key, CallbackInfoReturnable<String> cir) {
-        if (RegistryWrapperImplImpl.shouldPrefix(key))
-            cir.setReturnValue(key.getNamespace() + "/" + key.getPath());
+        cir.setReturnValue(RegistryWrapperImplImpl.prefix(key));
     }
 }

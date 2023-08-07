@@ -5,14 +5,14 @@ import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.util.forge.ForgeHelper;
 import com.teamaurora.borealib.api.datagen.v1.BorealibDataGenerator;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
-import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.impl.base.modloading.forge.ParallelDispatcherImpl;
 import com.teamaurora.borealib.impl.base.platform.forge.ModContainerImpl;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
 
 /**
  * Handles Forge {@link ModLoaderService} initialization.
@@ -46,12 +45,12 @@ public final class ForgeModFactory {
      */
     public static void loadMod(String id) {
         IEventBus bus = ForgeHelper.getEventBus(id);
-        ModLoaderService s = ModLoaderService.byId(id);
-        bus.<FMLCommonSetupEvent>addListener(e -> s.onCommonPostInit(new ParallelDispatcherImpl(e)));
-        bus.<FMLClientSetupEvent>addListener(e -> s.onClientPostInit(new ParallelDispatcherImpl(e)));
-        bus.<FMLDedicatedServerSetupEvent>addListener(e -> s.onServerPostInit(new ParallelDispatcherImpl(e)));
+        ModLoaderService service = ModLoaderService.byId(id);
+        bus.<FMLCommonSetupEvent>addListener(e -> service.onCommonPostInit(new ParallelDispatcherImpl(e)));
+        bus.<FMLClientSetupEvent>addListener(e -> service.onClientPostInit(new ParallelDispatcherImpl(e)));
+        bus.<FMLDedicatedServerSetupEvent>addListener(e -> service.onServerPostInit(new ParallelDispatcherImpl(e)));
         bus.<GatherDataEvent>addListener(e -> {
-            s.onDataInit(new BorealibDataGenerator() {
+            service.onDataInit(new BorealibDataGenerator() {
                 ModContainer container = new ModContainerImpl(e.getModContainer());
                 private BorealibPackOutput borealibOutput;
 
@@ -91,14 +90,19 @@ public final class ForgeModFactory {
                 }
             });
             RegistrySetBuilder builder = new RegistrySetBuilder();
-            s.buildRegistries(builder);
-            // only add a provider if the builder is actually being used
+            service.buildRegistries(new BorealibDataGenerator.DynamicRegistries() {
+                @Override
+                public <T> BorealibDataGenerator.DynamicRegistries add(ResourceKey<? extends Registry<T>> registry, RegistrySetBuilder.RegistryBootstrap<T> bootstrap) {
+                    builder.add(registry, bootstrap);
+                    return this;
+                }
+            });
             if (!builder.getEntryKeys().isEmpty())
                 e.getGenerator().addProvider(e.includeServer(), (DataProvider.Factory<DynamicRegistryHandler>) output -> new DynamicRegistryHandler(builder, id, output, e.getLookupProvider()));
         });
-        s.onCommonInit();
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> s::onClientInit);
-        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> s::onServerInit);
+        service.onCommonInit();
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> service::onClientInit);
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> service::onServerInit);
     }
 
     private static class DynamicRegistryHandler extends DatapackBuiltinEntriesProvider {
