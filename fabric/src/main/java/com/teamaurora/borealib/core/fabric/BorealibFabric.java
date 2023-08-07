@@ -6,6 +6,7 @@ import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.borealib.api.event.lifecycle.v1.ServerLifecycleEvents;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.core.Borealib;
+import com.teamaurora.borealib.impl.biome.modifier.fabric.FabricBiomeModifierLoader;
 import com.teamaurora.borealib.impl.config.fabric.ConfigLoadingHelper;
 import com.teamaurora.borealib.impl.config.fabric.ConfigTracker;
 import com.teamaurora.borealib.impl.event.creativetabs.CreativeTabEventsImpl;
@@ -57,6 +58,7 @@ public class BorealibFabric implements DelegatedModInitializer {
             com.teamaurora.borealib.core.fabric.BorealibFabric.server = null;
             ConfigTracker.INSTANCE.unloadConfigs(ModConfig.Type.SERVER, ConfigLoadingHelper.getServerConfigDirectory(server1));
             ServerLifecycleEvents.STOPPED.invoker().forServer(server1);
+            FabricBiomeModifierLoader.purgeOldModifiers();
         });
         CreativeTabEventsImpl.forEach((tab, event) -> {
             ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {

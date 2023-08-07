@@ -89,6 +89,7 @@ public final class ForgeModFactory {
                     return borealibOutput;
                 }
             });
+
             RegistrySetBuilder builder = new RegistrySetBuilder();
             service.buildRegistries(new BorealibDataGenerator.DynamicRegistries() {
                 @Override
@@ -97,26 +98,18 @@ public final class ForgeModFactory {
                     return this;
                 }
             });
-            if (!builder.getEntryKeys().isEmpty())
-                e.getGenerator().addProvider(e.includeServer(), (DataProvider.Factory<DynamicRegistryHandler>) output -> new DynamicRegistryHandler(builder, id, output, e.getLookupProvider()));
+            if (!builder.getEntryKeys().isEmpty()) {
+                e.getGenerator().addProvider(e.includeServer(), (DataProvider.Factory<DatapackBuiltinEntriesProvider>) output -> new DatapackBuiltinEntriesProvider(output, e.getLookupProvider(), builder, Set.of(id)) {
+
+                    @Override
+                    public String getName() {
+                        return "Dynamic Registries: " + id;
+                    }
+                });
+            }
         });
         service.onCommonInit();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> service::onClientInit);
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> service::onServerInit);
-    }
-
-    private static class DynamicRegistryHandler extends DatapackBuiltinEntriesProvider {
-
-        private final String modId;
-
-        private DynamicRegistryHandler(RegistrySetBuilder builder, String modId, PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-            super(output, registries, builder, Set.of(modId));
-            this.modId = modId;
-        }
-
-        @Override
-        public @NotNull String getName() {
-            return "Dynamic Registries: " + this.modId;
-        }
     }
 }

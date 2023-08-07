@@ -16,7 +16,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -45,6 +48,10 @@ public class BuiltInBiomeSelectors {
             PlacedFeature.LIST_CODEC.fieldOf("features").forGetter(ExistingFeatureSelector::features)
     ).apply(instance, ExistingFeatureSelector::new)));
     private static final Codec<NotSelector> NOT_CODEC = register("not", BiomeSelector.CODEC.xmap(NotSelector::new, NotSelector::selector).fieldOf("value").codec());
+    private static final Codec<ExistingSpawnSelector> EXISTING_SPAWN_CODEC = register("has_existing_spawn", RecordCodecBuilder.create(instance -> instance.group(
+            MobCategory.CODEC.fieldOf("category").forGetter(ExistingSpawnSelector::category),
+            RegistryWrapper.ENTITY_TYPES.byNameCodec().fieldOf("entity").forGetter(ExistingSpawnSelector::entityType)
+    ).apply(instance, ExistingSpawnSelector::new)));
 
     private static <T extends BiomeSelector> Codec<T> register(String path, Codec<T> codec) {
         return BorealibRegistries.BIOME_SELECTOR_TYPES.register(Borealib.location(path), codec);
@@ -88,6 +95,10 @@ public class BuiltInBiomeSelectors {
 
     public static BiomeSelector hasExistingFeatures(GenerationStep.Decoration decoration, HolderSet<PlacedFeature> features) {
         return new ExistingFeatureSelector(decoration, features);
+    }
+
+    public static BiomeSelector hasExistingSpawn(MobCategory category, EntityType<?> entityType) {
+        return new ExistingSpawnSelector(category, entityType);
     }
 
     public static void init() {}
@@ -238,6 +249,19 @@ public class BuiltInBiomeSelectors {
         @Override
         public Codec<? extends BiomeSelector> type() {
             return EXISTING_FEATURES_CODEC;
+        }
+    }
+
+    private record ExistingSpawnSelector(MobCategory category, EntityType<?> entityType) implements BiomeSelector {
+
+        @Override
+        public boolean test(Context context) {
+            return context.getExistingInfo().getSpawnSettings().getSpawners().get(this.category).stream().anyMatch(data -> data.type == entityType);
+        }
+
+        @Override
+        public Codec<? extends BiomeSelector> type() {
+            return EXISTING_SPAWN_CODEC;
         }
     }
 }

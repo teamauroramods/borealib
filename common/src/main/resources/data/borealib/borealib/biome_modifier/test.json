@@ -13,7 +13,7 @@
   },
   "actions": [
     {
-      "type": "borealib:modify_sky_color",
+      "type": "borealib:set_sky_color",
       "sky_color": 1234567
     }
   ]

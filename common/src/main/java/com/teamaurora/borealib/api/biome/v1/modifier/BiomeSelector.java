@@ -10,6 +10,8 @@ import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeSelectors;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -135,6 +137,17 @@ public interface BiomeSelector extends Predicate<BiomeSelector.Context> {
      */
     static BiomeSelector existingFeatures(GenerationStep.Decoration decoration, HolderSet<PlacedFeature> feature) {
         return BuiltInBiomeSelectors.hasExistingFeatures(decoration, feature);
+    }
+
+    /**
+     * Creates a biome selector checking whether the biome spawns the specified entity in the given category.
+     *
+     * @param category   The mob category to search for the entity spawns in
+     * @param entityType The entity to look for
+     * @return A new existing spawn selector
+     */
+    static BiomeSelector existingSpawn(MobCategory category, EntityType<?> entityType) {
+        return BuiltInBiomeSelectors.hasExistingSpawn(category, entityType);
     }
 
     /**

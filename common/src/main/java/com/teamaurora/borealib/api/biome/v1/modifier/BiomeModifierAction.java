@@ -3,6 +3,7 @@ package com.teamaurora.borealib.api.biome.v1.modifier;
 import com.mojang.serialization.Codec;
 import com.teamaurora.borealib.api.biome.v1.modifier.info.BiomeInfo;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
+import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeModifierActions;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -34,6 +35,46 @@ public interface BiomeModifierAction extends Consumer<BiomeInfo.Mutable> {
      * @return The stage to run the action at
      */
     Stage applicationStage();
+
+    /**
+     * Creates a modifier action that sets the biome fog color.
+     *
+     * @param color The color to change the fog to
+     * @return A new fog color modification
+     */
+    static BiomeModifierAction setfogColor(int color) {
+        return BuiltInBiomeModifierActions.setFogColor(color);
+    }
+
+    /**
+     * Creates a modifier action that sets the biome water color.
+     *
+     * @param color The color to change the water to
+     * @return A new water color modification
+     */
+    static BiomeModifierAction setWaterColor(int color) {
+        return BuiltInBiomeModifierActions.setWaterColor(color);
+    }
+
+    /**
+     * Creates a modifier action that sets the biome water fog color.
+     *
+     * @param color The color to change the water fog to
+     * @return A new water fog color modification
+     */
+    static BiomeModifierAction setWaterFogColor(int color) {
+        return BuiltInBiomeModifierActions.setWaterFogColor(color);
+    }
+
+    /**
+     * Creates a modifier action that sets the biome sky color.
+     *
+     * @param color The color to change the sky to
+     * @return A new sky color modification
+     */
+    static BiomeModifierAction setSkyColor(int color) {
+        return BuiltInBiomeModifierActions.setSkyColor(color);
+    }
 
     /**
      * Stages of biome modification.

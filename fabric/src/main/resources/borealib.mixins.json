@@ -9,11 +9,13 @@
   "mixins": [
     "AxeItemMixin",
     "BiomeAccessor",
+    "BiomeModificationImplAccessor",
     "ClientHandshakePacketListenerImplAccessor",
     "DedicatedServerMixin",
     "FabricDynamicRegistryProviderMixin",
     "ItemMixin",
     "MinecraftServerMixin",
+    "ModifierRecordAccessor",
     "PlayerListMixin",
     "RegistryDataLoaderMixin",
     "RegistrySynchronizationMixin",
