@@ -7,6 +7,11 @@ import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.sounds.Music;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.biome.AmbientAdditionsSettings;
+import net.minecraft.world.level.biome.AmbientMoodSettings;
 import net.minecraft.world.level.biome.AmbientParticleSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import org.jetbrains.annotations.ApiStatus;
@@ -22,6 +27,10 @@ public class BuiltInBiomeModifierActions {
     private static final Codec<GrassColorModification> GRASS_COLOR_MODIFICATION_CODEC = register("set_grass_color", Codec.INT.xmap(GrassColorModification::new, GrassColorModification::grassColor).fieldOf("grass_color").codec());
     private static final Codec<GrassColorModifierModification> GRASS_COLOR_MODIFIER_MODIFICATION_CODEC = register("set_grass_color_modifier", BiomeSpecialEffects.GrassColorModifier.CODEC.xmap(GrassColorModifierModification::new, GrassColorModifierModification::modifier).fieldOf("modifier").codec());
     private static final Codec<AmbientParticleModification> AMBIENT_PARTICLE_MODIFICATION_CODEC = register("set_ambient_particle", AmbientParticleSettings.CODEC.xmap(AmbientParticleModification::new, AmbientParticleModification::particleSettings).fieldOf("particle").codec());
+    private static final Codec<AmbientSoundModification> AMBIENT_SOUND_MODIFICATION_CODEC = register("set_ambient_sound", SoundEvent.CODEC.xmap(AmbientSoundModification::new, AmbientSoundModification::ambientSound).fieldOf("sound").codec());
+    private static final Codec<AmbientMoodSoundModification> AMBIENT_MOOD_SOUND_MODIFICATION_CODEC = register("set_mood_sound", AmbientMoodSettings.CODEC.xmap(AmbientMoodSoundModification::new, AmbientMoodSoundModification::moodSettings).fieldOf("settings").codec());
+    private static final Codec<AdditionSoundModification> ADDITION_SOUND_MODIFICATION_CODEC = register("set_additions_sound", AmbientAdditionsSettings.CODEC.xmap(AdditionSoundModification::new, AdditionSoundModification::additionsSettings).fieldOf("settings").codec());
+    private static final Codec<MusicModification> MUSIC_MODIFICATION_CODEC = register("set_music", Music.CODEC.xmap(MusicModification::new, MusicModification::music).fieldOf("music").codec());
 
     private static <T extends BiomeModifierAction> Codec<T> register(String path, Codec<T> codec) {
         return BorealibRegistries.BIOME_MODIFIER_ACTION_TYPES.register(Borealib.location(path), codec);
@@ -182,6 +191,78 @@ public class BuiltInBiomeModifierActions {
         @Override
         public Codec<AmbientParticleModification> type() {
             return AMBIENT_PARTICLE_MODIFICATION_CODEC;
+        }
+
+        @Override
+        public Stage applicationStage() {
+            return Stage.POST_PROCESSING;
+        }
+    }
+
+    private record AmbientSoundModification(Holder<SoundEvent> ambientSound) implements BiomeModifierAction {
+
+        @Override
+        public void accept(BiomeInfo.Mutable info) {
+            info.getEffectSettings().setAmbientLoopSound(this.ambientSound);
+        }
+
+        @Override
+        public Codec<AmbientSoundModification> type() {
+            return AMBIENT_SOUND_MODIFICATION_CODEC;
+        }
+
+        @Override
+        public Stage applicationStage() {
+            return Stage.POST_PROCESSING;
+        }
+    }
+
+    private record AmbientMoodSoundModification(AmbientMoodSettings moodSettings) implements BiomeModifierAction {
+
+        @Override
+        public void accept(BiomeInfo.Mutable info) {
+            info.getEffectSettings().setAmbientMoodSound(this.moodSettings);
+        }
+
+        @Override
+        public Codec<AmbientMoodSoundModification> type() {
+            return AMBIENT_MOOD_SOUND_MODIFICATION_CODEC;
+        }
+
+        @Override
+        public Stage applicationStage() {
+            return Stage.POST_PROCESSING;
+        }
+    }
+
+    private record AdditionSoundModification(AmbientAdditionsSettings additionsSettings) implements BiomeModifierAction {
+
+        @Override
+        public void accept(BiomeInfo.Mutable info) {
+            info.getEffectSettings().setAmbientAdditionsSound(this.additionsSettings);
+        }
+
+        @Override
+        public Codec<AdditionSoundModification> type() {
+            return ADDITION_SOUND_MODIFICATION_CODEC;
+        }
+
+        @Override
+        public Stage applicationStage() {
+            return Stage.POST_PROCESSING;
+        }
+    }
+
+    private record MusicModification(Music music) implements BiomeModifierAction {
+
+        @Override
+        public void accept(BiomeInfo.Mutable info) {
+            info.getEffectSettings().setBackgroundMusic(this.music);
+        }
+
+        @Override
+        public Codec<MusicModification> type() {
+            return MUSIC_MODIFICATION_CODEC;
         }
 
         @Override
