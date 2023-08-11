@@ -354,6 +354,14 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
     boolean containsKey(ResourceLocation name);
 
     /**
+     * Gets an object wrapped by a generic vanilla {@link Holder}.
+     *
+     * @param object The object to get a holder for
+     * @return The holder for the object if it exists
+     */
+    Optional<Holder<T>> getHolder(T object);
+
+    /**
      * Used to queue content to be added to registries.
      *
      * @param <T> The top level registry type

@@ -41,7 +41,7 @@ public interface BiomeSelector extends Predicate<BiomeSelector.Context> {
     }
 
     /**
-     * @return A biome selector testing whether Borealib testing mode is enabled
+     * @return A biome selector checking whether Borealib testing mode is enabled
      */
     static BiomeSelector testsEnabled() {
         return BuiltInBiomeSelectors.testsEnabled();

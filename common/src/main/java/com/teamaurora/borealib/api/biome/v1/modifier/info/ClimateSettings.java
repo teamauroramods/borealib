@@ -26,7 +26,7 @@ public interface ClimateSettings {
     TemperatureModifier getTemperatureModifier();
 
     /**
-     * @return The downfall value of the biome.
+     * @return The downfall value of the biome
      */
     float getDownfall();
 

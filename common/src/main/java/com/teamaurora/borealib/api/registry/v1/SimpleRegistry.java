@@ -128,6 +128,11 @@ public final class SimpleRegistry<T> implements RegistryWrapper<T> {
     }
 
     @Override
+    public Optional<Holder<T>> getHolder(T object) {
+        return Optional.empty();
+    }
+
+    @Override
     public <T1> Stream<T1> keys(DynamicOps<T1> ops) {
         return this.keySet().stream().map(rl -> ops.createString(rl.toString()));
     }

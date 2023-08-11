@@ -39,7 +39,7 @@ public final class FabricBiomeModifierLoader {
             Predicate<BiomeSelectionContext> sharedSelector = context -> entry.getValue().selector().test(new BiomeSelectorContextImpl(context));
             entry.getValue().actions().forEach(action -> {
                 for (BiomeModifierAction.Stage stage : BiomeModifierAction.Stage.values()) {
-                    if (stage == action.applicationStage()) {
+                    if (stage == action.stage()) {
                         fabricModification.add(wrapPhase(stage), sharedSelector, (selectorCtx, ctx) -> action.accept(new BiomeInfoImpl.Mutable(selectorCtx.getBiome(), ctx, selectorCtx)));
                     }
                 }

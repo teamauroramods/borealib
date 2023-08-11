@@ -3,7 +3,11 @@ package com.teamaurora.borealib.core.fabric;
 import com.teamaurora.borealib.api.base.v1.modloading.fabric.DelegatedModInitializer;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
+import com.teamaurora.borealib.api.event.entity.v1.player.PlayerEvents;
+import com.teamaurora.borealib.api.event.entity.v1.player.PlayerInteractionEvents;
+import com.teamaurora.borealib.api.event.lifecycle.v1.LevelLifecycleEvents;
 import com.teamaurora.borealib.api.event.lifecycle.v1.ServerLifecycleEvents;
+import com.teamaurora.borealib.api.event.registry.v1.CommandRegistryEvent;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.core.Borealib;
 import com.teamaurora.borealib.impl.biome.modifier.fabric.FabricBiomeModifierLoader;
@@ -13,6 +17,13 @@ import com.teamaurora.borealib.impl.event.creativetabs.CreativeTabEventsImpl;
 import com.teamaurora.borealib.impl.event.entity.fabric.BorealibTradesLoader;
 import com.teamaurora.borealib.impl.resource_condition.fabric.DefaultResourceConditionsImplImpl;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -66,6 +77,14 @@ public class BorealibFabric implements DelegatedModInitializer {
             });
         });
         ItemGroupEvents.MODIFY_ENTRIES_ALL.register((group, entries) -> CreativeTabEvents.MODIFY_ENTRIES_ALL.invoker().modifyEntries(RegistryWrapper.CREATIVE_MODE_TABS.getResourceKey(group).orElseThrow(), group, entries.getEnabledFeatures(), entries.getContext(), wrapOutput(entries), entries.shouldShowOpRestrictedItems()));
+        ServerWorldEvents.LOAD.register((server, world) -> LevelLifecycleEvents.LOAD.invoker().load(world));
+        ServerWorldEvents.UNLOAD.register((server, world) -> LevelLifecycleEvents.UNLOAD.invoker().unload(world));
+        EntitySleepEvents.ALLOW_SLEEPING.register(((player, sleepingPos) -> PlayerEvents.START_SLEEPING.invoker().startSleeping(player, sleepingPos)));
+        UseItemCallback.EVENT.register((player, level, hand) -> PlayerInteractionEvents.RIGHT_CLICK_ITEM.invoker().interaction(player, level, hand));
+        UseBlockCallback.EVENT.register((player, level, hand, result) -> PlayerInteractionEvents.RIGHT_CLICK_BLOCK.invoker().interaction(player, level, hand, result));
+        AttackBlockCallback.EVENT.register((player, level, hand, pos, direction) -> PlayerInteractionEvents.LEFT_CLICK_BLOCK.invoker().interaction(player, level, hand, pos, direction));
+        UseEntityCallback.EVENT.register((player, world, hand, entity, entityHitResult) -> PlayerInteractionEvents.RIGHT_CLICK_ENTITY.invoker().interaction(player, world, hand, entity));
+        CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> CommandRegistryEvent.EVENT.invoker().registerCommands(dispatcher, buildContext, environment));
     }
 
     private static CreativeTabEvents.Output wrapOutput(FabricItemGroupEntries entries) {

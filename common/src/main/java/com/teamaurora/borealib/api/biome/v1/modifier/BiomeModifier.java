@@ -92,7 +92,7 @@ public final class BiomeModifier {
          * @return A new biome modifier
          */
         public BiomeModifier build() {
-            return new BiomeModifier(this.selector, this.actions);
+            return new BiomeModifier(this.selector, ImmutableList.copyOf(this.actions));
         }
     }
 }

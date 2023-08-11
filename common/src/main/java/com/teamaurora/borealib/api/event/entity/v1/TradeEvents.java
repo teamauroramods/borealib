@@ -18,6 +18,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Supplier;
 
+/**
+ * Events for modifying villager-like entity trades.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public final class TradeEvents {
 
     public static final Event<ModifyVillager> VILLAGER = Event.createLoop(ModifyVillager.class);
@@ -26,11 +32,26 @@ public final class TradeEvents {
     private TradeEvents() {
     }
 
+    /**
+     * Fired to setup any modded villager trades.
+     *
+     * @since 1.0
+     */
     @FunctionalInterface
     public interface ModifyVillager {
 
+        /**
+         * Modifies the trades.
+         *
+         * @param context Context to add custom villager trades
+         */
         void modifyTrades(Context context);
 
+        /**
+         * The context used to modify the villager trades.
+         *
+         * @since 1.0
+         */
         interface Context {
 
             VillagerProfession getProfession();
@@ -43,11 +64,26 @@ public final class TradeEvents {
         }
     }
 
+    /**
+     * Fired to setup any modded wanderer trades.
+     *
+     * @since 1.0
+     */
     @FunctionalInterface
     public interface ModifyWanderer {
 
+        /**
+         * Modifies the trades.
+         *
+         * @param context Context to add custom wanderer trades
+         */
         void modifyTrades(Context context);
 
+        /**
+         * The context used to modify the wanderer trades.
+         *
+         * @since 1.0
+         */
         interface Context {
 
             TradeList getGeneric();

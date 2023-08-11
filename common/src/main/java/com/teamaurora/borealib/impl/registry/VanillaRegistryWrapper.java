@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -78,6 +79,11 @@ public class VanillaRegistryWrapper<T> implements RegistryWrapper<T> {
     @Override
     public boolean containsKey(ResourceLocation name) {
         return this.parent.containsKey(name);
+    }
+
+    @Override
+    public Optional<Holder<T>> getHolder(T object) {
+        return this.getResourceKey(object).flatMap(this.parent::getHolder);
     }
 
     @Override

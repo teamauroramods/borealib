@@ -10,6 +10,12 @@ import net.minecraft.world.level.ItemLike;
 
 import java.util.Collection;
 
+/**
+ * Events for modifying creative tab entries. Creating custom tabs is currently unsupported.
+ *
+ * @author ebo2022
+ * @since 1.0
+ */
 public final class CreativeTabEvents {
 
     public static final Event<ModifyEntriesAll> MODIFY_ENTRIES_ALL = Event.createLoop(ModifyEntriesAll.class);

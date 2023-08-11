@@ -6,6 +6,7 @@ import com.teamaurora.borealib.api.base.v1.util.forge.ForgeHelper;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.impl.registry.RegistryWrapperImpl;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -87,6 +88,11 @@ public final class ForgeRegistryWrapper<T> implements RegistryWrapper<T> {
     @Override
     public boolean containsKey(ResourceLocation name) {
         return this.registry.containsKey(name);
+    }
+
+    @Override
+    public Optional<Holder<T>> getHolder(T object) {
+        return this.registry.getHolder(object);
     }
 
     @Override

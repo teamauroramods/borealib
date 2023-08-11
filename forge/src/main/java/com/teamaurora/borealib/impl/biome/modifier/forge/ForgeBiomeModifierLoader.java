@@ -62,7 +62,7 @@ public final class ForgeBiomeModifierLoader {
             registry.forEach(modifier -> {
                 if (modifier.selector().test(selectionContext)) {
                     modifier.actions().forEach(action -> {
-                        if (phase == wrapPhase(action.applicationStage())) {
+                        if (phase == wrapPhase(action.stage())) {
                             action.accept(info);
                         }
                     });

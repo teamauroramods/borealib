@@ -31,24 +31,24 @@ import java.util.List;
 @ApiStatus.Internal
 public class BuiltInBiomeSelectors {
 
-    private static final Codec<OrSelector> OR_CODEC = register("or", CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(OrSelector::new, OrSelector::parents).fieldOf("values").codec());
-    private static final Codec<AndSelector> AND_CODEC = register("and", CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(AndSelector::new, AndSelector::parents).fieldOf("values").codec());
-    private static final Codec<BiomeCheck> BIOME_CHECK_CODEC = register("is_biome", Biome.LIST_CODEC.xmap(BiomeCheck::new, BiomeCheck::biomes).fieldOf("biomes").codec());
-    private static final Codec<DimensionCheck> DIMENSION_CHECK_CODEC = register("generates_in", ResourceKey.codec(Registries.LEVEL_STEM).xmap(DimensionCheck::new, DimensionCheck::dimension).fieldOf("dimension").codec());
-    private static final Codec<StructureCheck> STRUCTURE_CHECK_CODEC = register("has_structure", ResourceKey.codec(Registries.STRUCTURE).xmap(StructureCheck::new, StructureCheck::structure).fieldOf("structure").codec());
-    private static final Codec<AllSelector> ALL_CODEC = register("all", Codec.unit(AllSelector.INSTANCE));
-    private static final Codec<ConfigToggle> CONFIG_TOGGLE_CODEC = register("config_toggle", RecordCodecBuilder.create(instance -> instance.group(
+    private static final Codec<OrSelector> OR = register("or", CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(OrSelector::new, OrSelector::parents).fieldOf("values").codec());
+    private static final Codec<AndSelector> AND = register("and", CodecHelper.nonEmptyList(BiomeSelector.CODEC).xmap(AndSelector::new, AndSelector::parents).fieldOf("values").codec());
+    private static final Codec<BiomeCheck> IS_BIOME = register("is_biome", Biome.LIST_CODEC.xmap(BiomeCheck::new, BiomeCheck::biomes).fieldOf("biomes").codec());
+    private static final Codec<DimensionCheck> IN_DIMENSION = register("generates_in", ResourceKey.codec(Registries.LEVEL_STEM).xmap(DimensionCheck::new, DimensionCheck::dimension).fieldOf("dimension").codec());
+    private static final Codec<StructureCheck> HAS_STRUCTURE = register("has_structure", ResourceKey.codec(Registries.STRUCTURE).xmap(StructureCheck::new, StructureCheck::structure).fieldOf("structure").codec());
+    private static final Codec<AllSelector> ALL = register("all", Codec.unit(AllSelector.INSTANCE));
+    private static final Codec<ConfigToggle> CONFIG = register("config_toggle", RecordCodecBuilder.create(instance -> instance.group(
             ModConfig.CODEC.fieldOf("config").forGetter(ConfigToggle::config),
             Codec.STRING.fieldOf("key").forGetter(ConfigToggle::key),
             Codec.BOOL.fieldOf("expected_value").forGetter(ConfigToggle::expectedValue)
     ).apply(instance, ConfigToggle::new)));
-    private static final Codec<TestsEnabledSelector> TESTS_ENABLED_CODEC = register("tests_enabled", Codec.unit(TestsEnabledSelector.INSTANCE));
-    private static final Codec<ExistingFeatureSelector> EXISTING_FEATURES_CODEC = register("has_existing_features", RecordCodecBuilder.create(instance -> instance.group(
+    private static final Codec<TestsEnabledSelector> TESTS_ENABLED = register("tests_enabled", Codec.unit(TestsEnabledSelector.INSTANCE));
+    private static final Codec<ExistingFeatureSelector> EXISTING_FEATURES = register("has_existing_features", RecordCodecBuilder.create(instance -> instance.group(
             GenerationStep.Decoration.CODEC.fieldOf("step").forGetter(ExistingFeatureSelector::decoration),
             PlacedFeature.LIST_CODEC.fieldOf("features").forGetter(ExistingFeatureSelector::features)
     ).apply(instance, ExistingFeatureSelector::new)));
-    private static final Codec<NotSelector> NOT_CODEC = register("not", BiomeSelector.CODEC.xmap(NotSelector::new, NotSelector::selector).fieldOf("value").codec());
-    private static final Codec<ExistingSpawnSelector> EXISTING_SPAWN_CODEC = register("has_existing_spawn", RecordCodecBuilder.create(instance -> instance.group(
+    private static final Codec<NotSelector> NOT = register("not", BiomeSelector.CODEC.xmap(NotSelector::new, NotSelector::selector).fieldOf("value").codec());
+    private static final Codec<ExistingSpawnSelector> EXISTING_SPAWN = register("has_existing_spawn", RecordCodecBuilder.create(instance -> instance.group(
             MobCategory.CODEC.fieldOf("category").forGetter(ExistingSpawnSelector::category),
             RegistryWrapper.ENTITY_TYPES.byNameCodec().fieldOf("entity").forGetter(ExistingSpawnSelector::entityType)
     ).apply(instance, ExistingSpawnSelector::new)));
@@ -114,7 +114,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<AllSelector> type() {
-            return ALL_CODEC;
+            return ALL;
         }
     }
 
@@ -129,7 +129,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<OrSelector> type() {
-            return OR_CODEC;
+            return OR;
         }
     }
 
@@ -144,7 +144,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<AndSelector> type() {
-            return AND_CODEC;
+            return AND;
         }
     }
 
@@ -157,7 +157,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<BiomeCheck> type() {
-            return BIOME_CHECK_CODEC;
+            return IS_BIOME;
         }
     }
 
@@ -170,7 +170,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<DimensionCheck> type() {
-            return DIMENSION_CHECK_CODEC;
+            return IN_DIMENSION;
         }
     }
 
@@ -183,7 +183,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<StructureCheck> type() {
-            return STRUCTURE_CHECK_CODEC;
+            return HAS_STRUCTURE;
         }
     }
 
@@ -201,7 +201,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<ConfigToggle> type() {
-            return CONFIG_TOGGLE_CODEC;
+            return CONFIG;
         }
     }
 
@@ -216,7 +216,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<TestsEnabledSelector> type() {
-            return TESTS_ENABLED_CODEC;
+            return TESTS_ENABLED;
         }
     }
 
@@ -229,7 +229,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<NotSelector> type() {
-            return NOT_CODEC;
+            return NOT;
         }
     }
 
@@ -248,7 +248,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<? extends BiomeSelector> type() {
-            return EXISTING_FEATURES_CODEC;
+            return EXISTING_FEATURES;
         }
     }
 
@@ -261,7 +261,7 @@ public class BuiltInBiomeSelectors {
 
         @Override
         public Codec<? extends BiomeSelector> type() {
-            return EXISTING_SPAWN_CODEC;
+            return EXISTING_SPAWN;
         }
     }
 }
