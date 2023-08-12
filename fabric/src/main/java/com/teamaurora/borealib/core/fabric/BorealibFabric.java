@@ -80,10 +80,10 @@ public class BorealibFabric implements DelegatedModInitializer {
         ServerWorldEvents.LOAD.register((server, world) -> LevelLifecycleEvents.LOAD.invoker().load(world));
         ServerWorldEvents.UNLOAD.register((server, world) -> LevelLifecycleEvents.UNLOAD.invoker().unload(world));
         EntitySleepEvents.ALLOW_SLEEPING.register(((player, sleepingPos) -> PlayerEvents.START_SLEEPING.invoker().startSleeping(player, sleepingPos)));
-        UseItemCallback.EVENT.register((player, level, hand) -> PlayerInteractionEvents.RIGHT_CLICK_ITEM.invoker().interaction(player, level, hand));
-        UseBlockCallback.EVENT.register((player, level, hand, result) -> PlayerInteractionEvents.RIGHT_CLICK_BLOCK.invoker().interaction(player, level, hand, result));
-        AttackBlockCallback.EVENT.register((player, level, hand, pos, direction) -> PlayerInteractionEvents.LEFT_CLICK_BLOCK.invoker().interaction(player, level, hand, pos, direction));
-        UseEntityCallback.EVENT.register((player, world, hand, entity, entityHitResult) -> PlayerInteractionEvents.RIGHT_CLICK_ENTITY.invoker().interaction(player, world, hand, entity));
+        UseItemCallback.EVENT.register((player, level, hand) -> PlayerInteractionEvents.RIGHT_CLICK_ITEM.invoker().interact(player, level, hand));
+        UseBlockCallback.EVENT.register((player, level, hand, result) -> PlayerInteractionEvents.RIGHT_CLICK_BLOCK.invoker().interact(player, level, hand, result));
+        AttackBlockCallback.EVENT.register((player, level, hand, pos, direction) -> PlayerInteractionEvents.LEFT_CLICK_BLOCK.invoker().interact(player, level, hand, pos, direction));
+        UseEntityCallback.EVENT.register((player, world, hand, entity, entityHitResult) -> PlayerInteractionEvents.RIGHT_CLICK_ENTITY.invoker().interact(player, world, hand, entity));
         CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> CommandRegistryEvent.EVENT.invoker().registerCommands(dispatcher, buildContext, environment));
     }
 

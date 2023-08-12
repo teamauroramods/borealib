@@ -1,8 +1,6 @@
 package com.teamaurora.borealib.api.event.entity.v1.player;
 
 import com.teamaurora.borealib.api.base.v1.event.Event;
-import gg.moonflower.pollen.api.event.PollinatedEvent;
-import gg.moonflower.pollen.api.registry.EventRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -18,7 +16,7 @@ public final class PlayerInteractionEvents {
 
     public static final Event<RightClickItem> RIGHT_CLICK_ITEM = Event.create(RightClickItem.class, events -> (player, level, hand) -> {
         for (RightClickItem event : events) {
-            InteractionResultHolder<ItemStack> result = event.interaction(player, level, hand);
+            InteractionResultHolder<ItemStack> result = event.interact(player, level, hand);
             if (result.getResult() != InteractionResult.PASS)
                 return result;
         }
@@ -39,7 +37,7 @@ public final class PlayerInteractionEvents {
      */
     @FunctionalInterface
     public interface RightClickItem {
-        InteractionResultHolder<ItemStack> interaction(Player player, Level level, InteractionHand hand);
+        InteractionResultHolder<ItemStack> interact(Player player, Level level, InteractionHand hand);
     }
 
     /**
@@ -49,7 +47,7 @@ public final class PlayerInteractionEvents {
      */
     @FunctionalInterface
     public interface RightClickEntity {
-        InteractionResult interaction(Player player, Level level, InteractionHand hand, Entity entity);
+        InteractionResult interact(Player player, Level level, InteractionHand hand, Entity entity);
     }
 
     /**
@@ -59,7 +57,7 @@ public final class PlayerInteractionEvents {
      */
     @FunctionalInterface
     public interface RightClickBlock {
-        InteractionResult interaction(Player player, Level level, InteractionHand hand, BlockHitResult hitResult);
+        InteractionResult interact(Player player, Level level, InteractionHand hand, BlockHitResult hitResult);
     }
 
     /**
@@ -69,6 +67,6 @@ public final class PlayerInteractionEvents {
      */
     @FunctionalInterface
     public interface LeftClickBlock {
-        InteractionResult interaction(Player player, Level level, InteractionHand hand, BlockPos pos, Direction direction);
+        InteractionResult interact(Player player, Level level, InteractionHand hand, BlockPos pos, Direction direction);
     }
 }

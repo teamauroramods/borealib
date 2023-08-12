@@ -230,7 +230,7 @@ public class BorealibCommonForgeEvents {
 
     @SubscribeEvent
     public static void onEvent(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickItem event) {
-        InteractionResultHolder<ItemStack> result = PlayerInteractionEvents.RIGHT_CLICK_ITEM.invoker().interaction(event.getEntity(), event.getLevel(), event.getHand());
+        InteractionResultHolder<ItemStack> result = PlayerInteractionEvents.RIGHT_CLICK_ITEM.invoker().interact(event.getEntity(), event.getLevel(), event.getHand());
         if (result.getResult() != InteractionResult.PASS) {
             event.setCanceled(true);
             event.setCancellationResult(result.getResult());
@@ -239,7 +239,7 @@ public class BorealibCommonForgeEvents {
 
     @SubscribeEvent
     public static void onEvent(net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
-        InteractionResult result = PlayerInteractionEvents.RIGHT_CLICK_BLOCK.invoker().interaction(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
+        InteractionResult result = PlayerInteractionEvents.RIGHT_CLICK_BLOCK.invoker().interact(event.getEntity(), event.getLevel(), event.getHand(), event.getHitVec());
         if (result != InteractionResult.PASS) {
             event.setCanceled(true);
             event.setCancellationResult(result);
@@ -248,7 +248,7 @@ public class BorealibCommonForgeEvents {
 
     @SubscribeEvent
     public static void onEvent(net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock event) {
-        InteractionResult result = PlayerInteractionEvents.LEFT_CLICK_BLOCK.invoker().interaction(event.getEntity(), event.getLevel(), event.getHand(), event.getPos(), event.getFace());
+        InteractionResult result = PlayerInteractionEvents.LEFT_CLICK_BLOCK.invoker().interact(event.getEntity(), event.getLevel(), event.getHand(), event.getPos(), event.getFace());
         if (result != InteractionResult.PASS) {
             event.setCanceled(true);
             event.setCancellationResult(result);
@@ -257,7 +257,7 @@ public class BorealibCommonForgeEvents {
 
     @SubscribeEvent
     public static void onEvent(net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract event) {
-        InteractionResult result = PlayerInteractionEvents.RIGHT_CLICK_ENTITY.invoker().interaction(event.getEntity(), event.getLevel(), event.getHand(), event.getTarget());
+        InteractionResult result = PlayerInteractionEvents.RIGHT_CLICK_ENTITY.invoker().interact(event.getEntity(), event.getLevel(), event.getHand(), event.getTarget());
         if (result != InteractionResult.PASS) {
             event.setCanceled(true);
             event.setCancellationResult(result);
