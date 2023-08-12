@@ -35,7 +35,7 @@ public interface StrippingRegistry {
 
     /**
      * Gives blocks finer control as to how block states transfer over to stripped variants.
-     * <p>If this class isn't implemented, all block state properties shared between the blocks will be copied over.
+     * <p>If this class isn't implemented, all block state properties common to both blocks will be copied over.
      *
      * @since 1.0.0
      */
