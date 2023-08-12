@@ -25,12 +25,10 @@ import java.util.function.Consumer;
  */
 public abstract class BorealibSoundProvider implements DataProvider {
 
-    private final String namespace;
     private final Path soundPath;
 
     protected BorealibSoundProvider(BorealibPackOutput output) {
-        this.namespace = output.getModId();
-        this.soundPath = output.getOutputFolder(PackOutput.Target.RESOURCE_PACK).resolve("sounds.json");
+        this.soundPath = output.getOutputFolder(PackOutput.Target.RESOURCE_PACK).resolve( output.getModId() + "/sounds.json");
     }
 
     /**
