@@ -81,26 +81,20 @@ components.java {
 publishing {
     publications {
         mavenFabric(MavenPublication) {
-            artifactId = project.archivesBaseName
+            artifactId = rootProject.archivesBaseName + "-fabric"
+            from components.java
+        }
+    }
 
-            artifact remapJar
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-
-            pom.withXml {
-                def depsNode = asNode().appendNode('dependencies')
-                [this.configurations.modApi, this.configurations.api].each {
-                    it.allDependencies.each {
-                        def depNode = depsNode.appendNode('dependency')
-                        depNode.appendNode('groupId', it.group)
-                        depNode.appendNode('artifactId', it.name)
-                        depNode.appendNode('version', it.version)
-                    }
+    repositories {
+        if (System.getenv("MAVEN_PASSWORD") != null) {
+            maven {
+                url = "https://maven.stevenplayzz.studio/releases"
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
                 }
             }
         }
     }
 }
-
-loom.disableDeprecatedPomGeneration(publishing.publications.mavenFabric)
