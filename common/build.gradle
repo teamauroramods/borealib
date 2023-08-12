@@ -26,7 +26,7 @@ processResources {
 
 publishing {
     publications {
-        mavenFabric(MavenPublication) {
+        mavenCommon(MavenPublication) {
             artifactId = rootProject.archivesBaseName
             from components.java
         }

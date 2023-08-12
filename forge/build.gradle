@@ -90,7 +90,7 @@ components.java {
 
 publishing {
     publications {
-        mavenFabric(MavenPublication) {
+        mavenForge(MavenPublication) {
             artifactId = rootProject.archivesBaseName + "-forge"
             from components.java
         }
