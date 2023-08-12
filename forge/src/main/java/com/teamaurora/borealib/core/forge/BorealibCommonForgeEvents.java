@@ -11,6 +11,7 @@ import com.teamaurora.borealib.api.event.entity.v1.player.PlayerInteractionEvent
 import com.teamaurora.borealib.api.event.lifecycle.v1.LevelLifecycleEvents;
 import com.teamaurora.borealib.api.event.lifecycle.v1.ServerLifecycleEvents;
 import com.teamaurora.borealib.api.event.registry.v1.CommandRegistryEvent;
+import com.teamaurora.borealib.api.event.world.v1.ExplosionEvents;
 import com.teamaurora.borealib.api.event.world.v1.WorldEvents;
 import com.teamaurora.borealib.core.Borealib;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -267,6 +268,17 @@ public class BorealibCommonForgeEvents {
     @SubscribeEvent
     public static void onEvent(RegisterCommandsEvent event) {
         CommandRegistryEvent.EVENT.invoker().registerCommands(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
+    }
+
+    @SubscribeEvent
+    public static void onEvent(net.minecraftforge.event.level.ExplosionEvent.Start event) {
+        if (!ExplosionEvents.START.invoker().onStart(event.getLevel(), event.getExplosion()))
+            event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onEvent(net.minecraftforge.event.level.ExplosionEvent.Detonate event) {
+        ExplosionEvents.DETONATE.invoker().detonate(event.getLevel(), event.getExplosion(), event.getAffectedEntities());
     }
 
     public static Event.Result convertResult(InteractionResult result) {

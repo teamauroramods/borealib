@@ -11,7 +11,6 @@ import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.borealib.core.network.BorealibMessages;
 import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
-import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeModifierActions;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeSelectors;
 import com.teamaurora.borealib.impl.resource_condition.ConfigResourceCondition;
