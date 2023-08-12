@@ -14,8 +14,11 @@ import com.teamaurora.borealib.api.block.v1.compat.BorealibTrappedChestBlock;
 import com.teamaurora.borealib.api.block.v1.compat.ChestVariant;
 import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibChestBlockEntity;
 import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibTrappedChestBlockEntity;
+import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
 import com.teamaurora.borealib.api.item.v1.BEWLRBlockItem;
+import com.teamaurora.borealib.api.item.v1.CustomBoatItem;
 import com.teamaurora.borealib.core.client.render.block.entity.ChestBlockEntityWithoutLevelRenderer;
+import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import com.teamaurora.borealib.impl.registry.RegistryWrapperImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -1003,4 +1006,40 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
         }
     }
 
+    /**
+     * A provider specialized for registering items.
+     *
+     * @since 1.0
+     */
+    final class ItemProvider extends DelegatedProvider<Item> {
+
+        private ItemProvider(Provider<Item> parent) {
+            super(parent);
+        }
+
+        /**
+         * Registers a set of boat and chest boat items.
+         *
+         * @param name  The base boat name
+         * @param block The block to use as planks
+         * @return A pair of registered boat and chest boat items
+         */
+        public Pair<RegistryReference<Item>, RegistryReference<Item>> registerBoats(ResourceLocation name, RegistryReference<Block> block) {
+            CustomBoatType type = BorealibRegistries.BOAT_TYPES.register(name, new CustomBoatType(name.withPath(s -> "textures/entity/boat/" + s + ".png"), name.withPath(s -> "textures/entity/chest_boat/" + s + ".png"), block));
+            RegistryReference<Item> boat = this.register(name.withSuffix("_boat"), () -> new CustomBoatItem(type, false, new Item.Properties().stacksTo(1)));
+            RegistryReference<Item> chestBoat = this.register(name.withPrefix("_chest_boat"), () -> new CustomBoatItem(type, true, new Item.Properties().stacksTo(1)));
+            return Pair.of(boat, chestBoat);
+        }
+
+        /**
+         * Registers a set of boat and chest boat items.
+         *
+         * @param path  The base boat name
+         * @param block The block to use as planks
+         * @return A pair of registered boat and chest boat items
+         */
+        public Pair<RegistryReference<Item>, RegistryReference<Item>> registerBoats(String path, RegistryReference<Block> block) {
+            return this.registerBoats(new ResourceLocation(this.owner(), path), block);
+        }
+    }
 }
