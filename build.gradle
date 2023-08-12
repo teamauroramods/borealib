@@ -65,4 +65,19 @@ allprojects {
     java {
         withSourcesJar()
     }
+
+    def ENV = System.getenv()
+    publishing {
+        if (ENV.MAVEN_URL) {
+            repositories.maven {
+                url ENV.MAVEN_URL
+                if (ENV.MAVEN_USERNAME) {
+                    credentials {
+                        username ENV.MAVEN_USERNAME
+                        password ENV.MAVEN_PASSWORD
+                    }
+                }
+            }
+        }
+    }
 }

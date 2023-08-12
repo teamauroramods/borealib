@@ -5,19 +5,15 @@
   "name": "${mod_name}",
   "description": "${mod_description}",
   "authors": [
-    "Team Aurors"
+    "Team Aurora"
   ],
   "contributors": [
-    "Exoplanetary",
-    "ebo2022",
-    "Audako",
-    "StevenPlayzz",
-    "JustinPlayzz"
+    "ebo2022"
   ],
   "contact": {
-    "homepage": "https://discord.com/invite/VzXSCFp",
-    "issues": "https://github.com/MoonflowerTeam/${archives_base_name}/issues",
-    "sources": "https://github.com/MoonflowerTeam/${archives_base_name}/"
+    "homepage": "https://discord.gg/VzXSCFp",
+    "issues": "https://github.com/teamauroramods/${archives_base_name}/issues",
+    "sources": "https://github.com/teamauroramods/${archives_base_name}/"
   },
   "license": "GPLv3",
   "environment": "*",

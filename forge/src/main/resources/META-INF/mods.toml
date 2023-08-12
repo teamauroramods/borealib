@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[${forge_major_version},)"
-issueTrackerURL = "https://github.com/MoonflowerTeam/${archives_base_name}/issues"
+issueTrackerURL = "https://github.com/teamauroramods/${archives_base_name}/issues"
 license = "LGPLv3"
 
 [[mods]]
@@ -9,9 +9,9 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 description = "${mod_description}"
 logoFile = "${mod_id}.logo.png"
-authors = "Moonflower"
-credits = "Jackson, Ocelot"
-displayURL= "https://www.moonflower.gg/"
+authors = "Team Aurora"
+credits = "ebo2022"
+displayURL= "https://discord.gg/VzXSCFp"
 
 [modproperties.${mod_id}]
 catalogueImageIcon="${mod_id}.icon.png"
