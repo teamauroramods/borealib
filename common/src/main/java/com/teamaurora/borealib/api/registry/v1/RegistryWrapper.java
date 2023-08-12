@@ -27,6 +27,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.StatType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -103,6 +104,7 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
     RegistryWrapper<Enchantment> ENCHANTMENTS = get(Registries.ENCHANTMENT);
     RegistryWrapper<EntityType<?>> ENTITY_TYPES = get(Registries.ENTITY_TYPE);
     RegistryWrapper<Item> ITEMS = get(Registries.ITEM);
+    RegistryWrapper<SoundEvent> SOUND_EVENTS = get(Registries.SOUND_EVENT);
     RegistryWrapper<Potion> POTIONS = get(Registries.POTION);
     RegistryWrapper<ParticleType<?>> PARTICLE_TYPES = get(Registries.PARTICLE_TYPE);
     RegistryWrapper<BlockEntityType<?>> BLOCK_ENTITY_TYPES = get(Registries.BLOCK_ENTITY_TYPE);

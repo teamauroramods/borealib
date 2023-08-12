@@ -2,10 +2,12 @@ package com.teamaurora.borealib.core.registry;
 
 import com.teamaurora.borealib.api.block.v1.compat.BorealibChestBlock;
 import com.teamaurora.borealib.api.block.v1.compat.BorealibTrappedChestBlock;
+import com.teamaurora.borealib.api.block.v1.compat.CabinetBlock;
 import com.teamaurora.borealib.api.block.v1.entity.BorealibHangingSignBlockEntity;
 import com.teamaurora.borealib.api.block.v1.entity.BorealibSignBlockEntity;
 import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibChestBlockEntity;
 import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibTrappedChestBlockEntity;
+import com.teamaurora.borealib.api.block.v1.entity.compat.CabinetBlockEntity;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.core.Borealib;
@@ -21,5 +23,5 @@ public final class BorealibBlockEntityTypes {
     public static final RegistryReference<BlockEntityType<BorealibHangingSignBlockEntity>> HANGING_SIGN = BLOCK_ENTITIES.registerLazy("hanging_sign", BorealibHangingSignBlockEntity::new, () -> BorealibHangingSignBlockEntity.VALID_BLOCKS);
     public static final RegistryReference<BlockEntityType<BorealibChestBlockEntity>> CHEST = BLOCK_ENTITIES.registerTyped("chest", BorealibChestBlockEntity::new, BorealibChestBlock.class);
     public static final RegistryReference<BlockEntityType<BorealibTrappedChestBlockEntity>> TRAPPED_CHEST = BLOCK_ENTITIES.registerTyped("trapped_chest", BorealibTrappedChestBlockEntity::new, BorealibTrappedChestBlock.class);
-
+    public static final RegistryReference<BlockEntityType<CabinetBlockEntity>> CABINET = BLOCK_ENTITIES.registerTyped("cabinet", CabinetBlockEntity::new, CabinetBlock.class);
 }
