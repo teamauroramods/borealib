@@ -1,4 +1,4 @@
-package com.teamaurora.borealib.core.mixin.fabric;
+package com.teamaurora.borealib.core.mixin.fabric.client;
 
 import com.teamaurora.borealib.api.item.v1.BEWLRBlockItem;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;

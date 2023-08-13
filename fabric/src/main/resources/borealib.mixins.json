@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.ClientHandshakePacketListenerImplMixin",
-    "client.IntegratedServerMixin"
+    "client.IntegratedServerMixin",
+    "client.ItemMixin"
   ],
   "mixins": [
     "AxeItemMixin",
@@ -16,7 +17,6 @@
     "ExplosionMixin",
     "FabricDynamicRegistryProviderMixin",
     "FurnaceResultSlotMixin",
-    "ItemMixin",
     "LevelMixin",
     "MinecraftServerMixin",
     "ModifierRecordAccessor",
