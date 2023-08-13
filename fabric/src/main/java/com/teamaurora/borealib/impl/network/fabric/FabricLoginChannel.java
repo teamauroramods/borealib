@@ -5,7 +5,7 @@ import com.teamaurora.borealib.api.network.v1.message.BorealibPacket;
 import com.teamaurora.borealib.api.network.v1.message.PacketDecoder;
 import com.teamaurora.borealib.api.network.v1.message.login.BorealibLoginPacket;
 import com.teamaurora.borealib.core.extensions.fabric.ServerLoginPacketListenerImplExtension;
-import com.teamaurora.borealib.core.mixin.fabric.ClientHandshakePacketListenerImplAccessor;
+import com.teamaurora.borealib.core.mixin.fabric.client.ClientHandshakePacketListenerImplAccessor;
 import com.teamaurora.borealib.impl.network.NetworkManagerImpl;
 import com.teamaurora.borealib.impl.network.context.fabric.FabricLoginPacketContext;
 import com.teamaurora.borealib.impl.network.context.fabric.FabricPacketContext;

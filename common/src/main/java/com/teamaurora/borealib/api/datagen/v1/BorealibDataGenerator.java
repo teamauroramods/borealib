@@ -1,20 +1,9 @@
 package com.teamaurora.borealib.api.datagen.v1;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.resources.ResourceKey;
-import org.jetbrains.annotations.ApiStatus;
-import oshi.util.tuples.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
 /**
  * Wraps each platforms' methods of handling data generation.
@@ -62,25 +51,6 @@ public interface BorealibDataGenerator {
      * @return The registered data provider
      */
     <T extends DataProvider> T addProvider(boolean run, RegistryDependentFactory<T> registryDependentFactory);
-
-
-    /**
-     * Used to add bootstrap functions to the data generator, wrapping platform-specific functionality.
-     *
-     * @since 1.0
-     */
-    @ApiStatus.NonExtendable
-    interface DynamicRegistries {
-
-        /**
-         * Adds a bootstrap function to generate dynamic registry elements.
-         *
-         * @param registry  The registry to add a bootstrap function for
-         * @param bootstrap The bootstrap handler
-         * @param <T>       The registry object type
-         */
-        <T> DynamicRegistries add(ResourceKey<? extends Registry<T>> registry, RegistrySetBuilder.RegistryBootstrap<T> bootstrap);
-    }
 
     /**
      * Generates a data provider. This is typically the constructor reference if there is no complex behavior involved.

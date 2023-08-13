@@ -1,4 +1,4 @@
-package com.teamaurora.borealib.core.mixin.fabric;
+package com.teamaurora.borealib.core.mixin.fabric.client;
 
 import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
 import net.minecraft.network.Connection;

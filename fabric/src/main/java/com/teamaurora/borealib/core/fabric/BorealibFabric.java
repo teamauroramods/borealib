@@ -1,6 +1,6 @@
 package com.teamaurora.borealib.core.fabric;
 
-import com.teamaurora.borealib.api.base.v1.modloading.fabric.DelegatedModInitializer;
+import com.teamaurora.borealib.api.base.v1.modloading.fabric.FabricParallelDispatcher;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.borealib.api.event.entity.v1.player.PlayerEvents;
@@ -17,6 +17,7 @@ import com.teamaurora.borealib.impl.event.creativetabs.CreativeTabEventsImpl;
 import com.teamaurora.borealib.impl.event.entity.fabric.BorealibTradesLoader;
 import com.teamaurora.borealib.impl.resource_condition.fabric.DefaultResourceConditionsImplImpl;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -38,20 +39,16 @@ import java.util.List;
 
 @ApiStatus.Internal
 @SuppressWarnings("UnstableApiUsage")
-public class BorealibFabric implements DelegatedModInitializer {
+public class BorealibFabric implements ModInitializer {
 
     static MinecraftServer server;
     private static final LevelResource SERVERCONFIG = new LevelResource("serverconfig");
 
-    @Override
-    public String id() {
-        return Borealib.MOD_ID;
-    }
-
 
     @Override
     public void onInitialize() {
-        DelegatedModInitializer.super.onInitialize();
+        Borealib.onCommonInit();
+        Borealib.onCommonPostInit(FabricParallelDispatcher.get());
         DefaultResourceConditionsImplImpl.init();
         ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)

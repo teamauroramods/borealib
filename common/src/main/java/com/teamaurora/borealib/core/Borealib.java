@@ -1,13 +1,8 @@
 package com.teamaurora.borealib.core;
 
-import com.teamaurora.borealib.api.base.v1.modloading.ModLoaderService;
-import com.teamaurora.borealib.api.content_registries.v1.client.render.BlockEntityRendererRegistry;
-import com.teamaurora.borealib.api.content_registries.v1.client.render.EntityRendererRegistry;
+import com.teamaurora.borealib.api.base.v1.util.ParallelDispatcher;
 import com.teamaurora.borealib.api.resource_condition.v1.DelegateResourceCondition;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionRegistry;
-import com.teamaurora.borealib.core.client.render.block.entity.BorealibChestRenderer;
-import com.teamaurora.borealib.core.client.render.block.entity.BorealibSignRenderer;
-import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.borealib.core.network.BorealibMessages;
 import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
@@ -24,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public class Borealib implements ModLoaderService {
+public class Borealib {
 
     public static final String MOD_ID = "borealib";
     public static final boolean TESTS_ENABLED;
@@ -40,24 +35,9 @@ public class Borealib implements ModLoaderService {
         return new ResourceLocation(MOD_ID, path);
     }
 
-    @Override
-    public void onClientInit() {
-        EntityRendererRegistry.register(BorealibEntityTypes.CHEST_BOAT, ctx -> new CustomBoatRenderer<>(ctx, true));
-        EntityRendererRegistry.register(BorealibEntityTypes.BOAT, ctx -> new CustomBoatRenderer<>(ctx, false));
-        BlockEntityRendererRegistry.register(BorealibBlockEntityTypes.CHEST, BorealibChestRenderer::new);
-        BlockEntityRendererRegistry.register(BorealibBlockEntityTypes.TRAPPED_CHEST, BorealibChestRenderer::new);
-        BlockEntityRendererRegistry.register(BorealibBlockEntityTypes.SIGN, BorealibSignRenderer::new);
-    }
-
-    @Override
-    public String id() {
-        return MOD_ID;
-    }
-
-    @Override
-    public void onCommonInit() {
+    public static void onCommonInit() {
         BorealibEntityTypes.ENTITIES.register();
-        BorealibBlockEntityTypes.BLOCK_ENTITIES.register();;
+        BorealibBlockEntityTypes.BLOCK_ENTITIES.register();
         BuiltInBiomeModifierActions.init();
         BuiltInBiomeSelectors.init();
         ResourceConditionRegistry.register(ConfigResourceCondition.NAME, new ConfigResourceCondition());
@@ -71,8 +51,7 @@ public class Borealib implements ModLoaderService {
         }));
     }
 
-    @Override
-    public void onCommonPostInit(ParallelDispatcher dispatcher) {
+    public static void onCommonPostInit(ParallelDispatcher dispatcher) {
         BorealibMessages.init();
     }
 }

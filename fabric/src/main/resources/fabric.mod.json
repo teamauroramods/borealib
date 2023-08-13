@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "com.teamaurora.borealib.core.fabric.BorealibFabric"
+    ],
+    "client": [
+      "com.teamaurora.borealib.core.fabric.BorealibFabricClient"
     ]
   },
   "mixins": [

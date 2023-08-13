@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "client.ClientHandshakePacketListenerImplMixin",
+    "client.ClientHandshakePacketListenerImplAccessor",
     "client.IntegratedServerMixin",
     "client.ItemMixin"
   ],
@@ -12,7 +13,6 @@
     "BiomeAccessor",
     "BiomeModificationImplAccessor",
     "BoneMealItemMixin",
-    "ClientHandshakePacketListenerImplAccessor",
     "DedicatedServerMixin",
     "ExplosionMixin",
     "FabricDynamicRegistryProviderMixin",
