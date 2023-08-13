@@ -99,9 +99,9 @@ publishing {
     repositories {
         if (System.getenv("MAVEN_PASSWORD") != null) {
             maven {
-                url = "https://maven.stevenplayzz.studio/releases"
+                url = "https://maven.stevenplayzz.studio/aurora-releases"
                 credentials {
-                    username = System.getenv("MAVEN_USERNAME")
+                    username = "teamaurora"
                     password = System.getenv("MAVEN_PASSWORD")
                 }
             }
