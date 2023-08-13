@@ -37,8 +37,8 @@ publishing {
             maven {
                 url = "https://maven.stevenplayzz.studio/releases"
                 credentials {
-                    username = System.getenv("MAVEN_USERNAME")
-                    password = System.getenv("MAVEN_PASSWORD")
+                    username = "teamaurora"
+                    password = ""
                 }
             }
         }
