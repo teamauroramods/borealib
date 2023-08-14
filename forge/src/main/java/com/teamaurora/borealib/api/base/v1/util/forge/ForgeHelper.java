@@ -6,11 +6,13 @@ import com.teamaurora.borealib.api.base.v1.util.ParallelDispatcher;
 import com.teamaurora.borealib.api.datagen.v1.BorealibDataGenerator;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.api.datagen.v1.RegistrySetWrapper;
+import com.teamaurora.borealib.api.datagen.v1.providers.BorealibTagsProvider;
 import com.teamaurora.borealib.core.mixin.forge.ModContainerAccessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -20,6 +22,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 
+import java.lang.reflect.Field;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -101,12 +104,12 @@ public interface ForgeHelper {
 
             @Override
             public boolean includeDev() {
-                return false;
+                return e.includeDev();
             }
 
             @Override
             public boolean includeReports() {
-                return false;
+                return e.includeReports();
             }
 
             @Override
@@ -116,7 +119,11 @@ public interface ForgeHelper {
 
             @Override
             public <T extends DataProvider> T addProvider(boolean run, BorealibDataGenerator.RegistryDependentFactory<T> factory) {
-                return e.getGenerator().<T>addProvider(run, output -> factory.create(this.getOrCreatePackOutput(output), e.getLookupProvider()));
+                return e.getGenerator().<T>addProvider(run, output -> {
+                    T provider = factory.create(this.getOrCreatePackOutput(output), e.getLookupProvider());
+                    if (provider instanceof BorealibTagsProvider<?> tagsProvider) patchTagsProvider(tagsProvider, e);
+                    return provider;
+                });
             }
 
             private BorealibPackOutput getOrCreatePackOutput(PackOutput vanilla) {
@@ -142,6 +149,37 @@ public interface ForgeHelper {
         @Override
         public <T> CompletableFuture<T> enqueueWork(Supplier<T> work) {
             return this.event.enqueueWork(work);
+        }
+    }
+
+    // More for internal use, fixes ExistingFileHelper not being present due to constructor diff
+    static <T extends BorealibTagsProvider<?>> void patchTagsProvider(T provider, GatherDataEvent event) {
+        try {
+            DataPatcher.EXISTING_FILE_HELPER_FIELD.set(provider, event.getExistingFileHelper());
+            DataPatcher.MOD_ID_FIELD.set(provider, provider.getDomain());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Failed to patch tags provider", e);
+        }
+    }
+
+    final class DataPatcher {
+
+        private static final Field EXISTING_FILE_HELPER_FIELD;
+        private static final Field MOD_ID_FIELD;
+
+        static {
+            try {
+                EXISTING_FILE_HELPER_FIELD = TagsProvider.class.getDeclaredField("existingFileHelper");
+                EXISTING_FILE_HELPER_FIELD.setAccessible(true);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to get existingFileHelper from TagsProvider.class", e);
+            }
+            try {
+                MOD_ID_FIELD = TagsProvider.class.getDeclaredField("modId");
+                MOD_ID_FIELD.setAccessible(true);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to get modId from TagsProvider.class", e);
+            }
         }
     }
 }
