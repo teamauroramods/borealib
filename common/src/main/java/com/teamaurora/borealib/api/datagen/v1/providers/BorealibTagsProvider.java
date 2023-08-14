@@ -18,7 +18,6 @@ package com.teamaurora.borealib.api.datagen.v1.providers;
 
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
-import com.teamaurora.borealib.core.extensions.TagBuilderExtension;
 import com.teamaurora.borealib.impl.datagen.providers.ForcedTagEntry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -213,17 +212,6 @@ public abstract class BorealibTagsProvider<T> extends TagsProvider<T> {
 			super(parent.builder);
 			this.parent = parent;
 			this.provider = provider;
-		}
-
-		/**
-		 * Sets the `replace` flag in the resultant tag file to the specified value.
-		 * <p>When set to true, the tag file will replace any existing tag entries.
-		 *
-		 * @param replace The new replace value
-		 */
-		public BorealibTagAppender<T> setReplace(boolean replace) {
-			((TagBuilderExtension) this.builder).borealib$setReplace(replace);
-			return this;
 		}
 
 		/**

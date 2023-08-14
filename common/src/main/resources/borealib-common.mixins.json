@@ -3,12 +3,10 @@
   "package": "com.teamaurora.borealib.core.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "ItemBlockRenderTypesMixin",
+    "client.ItemBlockRenderTypesMixin",
     "client.LayerDefinitionsMixin"
   ],
   "mixins": [
-    "TagBuilderMixin",
-    "TagsProviderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

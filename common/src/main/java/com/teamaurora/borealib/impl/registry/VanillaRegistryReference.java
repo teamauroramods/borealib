@@ -17,6 +17,7 @@ public class VanillaRegistryReference<R extends T, T> implements RegistryReferen
     private Holder<R> holder;
     private final ResourceKey<? extends Registry<T>> registryKey;
 
+    @SuppressWarnings("unchecked")
     public VanillaRegistryReference(ResourceLocation id, ResourceKey<? extends Registry<T>> registryKey, R value) {
         this.value = value;
         this.id = id;
