@@ -2,6 +2,7 @@ package com.teamaurora.borealib.api.base.v1.util.fabric;
 
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
+import com.teamaurora.borealib.api.base.v1.util.ParallelDispatcher;
 import com.teamaurora.borealib.api.datagen.v1.BorealibDataGenerator;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.api.datagen.v1.RegistrySetWrapper;
@@ -16,9 +17,34 @@ import net.minecraft.resources.ResourceKey;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public interface FabricHelper {
+
+    /**
+     * @return The Fabric implementation of {@link ParallelDispatcher}; has no effect on task completion2
+     */
+    static ParallelDispatcher getDispatcher() {
+        return ParallelDispatcherImpl.INSTANCE;
+    }
+
+    final class ParallelDispatcherImpl implements ParallelDispatcher {
+
+        private static final ParallelDispatcherImpl INSTANCE = new ParallelDispatcherImpl();
+
+        @Override
+        public CompletableFuture<Void> enqueueWork(Runnable work) {
+            work.run();
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public <T> CompletableFuture<T> enqueueWork(Supplier<T> work) {
+            return CompletableFuture.completedFuture(work.get());
+        }
+    }
 
     /**
      * Accepts dynamic registries to be generated for a data generator entrypoint.
