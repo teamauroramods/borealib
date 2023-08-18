@@ -23,6 +23,8 @@ public class CompatBlockTags {
 	public static final TagKey<Block> VERTICAL_SLABS = tag(Mods.QUARK, "vertical_slabs");
 	public static final TagKey<Block> WOODEN_VERTICAL_SLABS = tag(Mods.QUARK, "wooden_vertical_slabs");
 	public static final TagKey<Block> HOLLOW_LOGS = tag(Mods.QUARK, "hollow_logs");
+	public static final TagKey<Block> CABINETS = tag(Mods.FARMERS_DELIGHT, "cabinets");
+	public static final TagKey<Block> CABINETS_WOODEN = tag(Mods.FARMERS_DELIGHT, "cabinets/wooden");
 
 	private static TagKey<Block> tag(String namespace, String path) {
 		return TagKey.create(Registries.BLOCK, new ResourceLocation(namespace, path));

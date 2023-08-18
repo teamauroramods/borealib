@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 /**
  * Item tags for mods that Team Aurora supports compatibility with.
@@ -25,6 +26,8 @@ public class CompatItemTags {
 	public static final TagKey<Item> LADDERS = tag(Mods.QUARK, "ladders");
 	public static final TagKey<Item> VERTICAL_SLABS = tag(Mods.QUARK, "vertical_slabs");
 	public static final TagKey<Item> WOODEN_VERTICAL_SLABS = tag(Mods.QUARK, "wooden_vertical_slabs");
+	public static final TagKey<Item> CABINETS = tag(Mods.FARMERS_DELIGHT, "cabinets");
+	public static final TagKey<Item> CABINETS_WOODEN = tag(Mods.FARMERS_DELIGHT, "cabinets/wooden");
 
 	private static TagKey<Item> tag(String namespace, String path) {
 		return TagKey.create(Registries.ITEM, new ResourceLocation(namespace, path));
