@@ -74,6 +74,34 @@ public class BuiltInBiomeModifierActions {
         return BorealibRegistries.BIOME_MODIFIER_ACTION_TYPES.register(Borealib.location(path), codec);
     }
 
+    public static BiomeModifierAction addFeatures(GenerationStep.Decoration decoration, HolderSet<PlacedFeature> features) {
+        return new AddFeaturesModification(decoration, features);
+    }
+
+    public static BiomeModifierAction removeFeatures(Set<GenerationStep.Decoration> decorations, HolderSet<PlacedFeature> features) {
+        return new RemoveFeaturesModification(decorations, features);
+    }
+
+    public static BiomeModifierAction replaceFeaturesLinear(GenerationStep.Decoration decoration, Holder<PlacedFeature> original, Holder<PlacedFeature> replacement) {
+        return new LinearFeatureReplacement(decoration, original, replacement);
+    }
+
+    public static BiomeModifierAction replaceFeaturesNonlinear(GenerationStep.Decoration decoration, HolderSet<PlacedFeature> originals, HolderSet<PlacedFeature> replacements) {
+        return new NonlinearFeatureReplacement(decoration, originals, replacements);
+    }
+
+    public static BiomeModifierAction addSpawns(List<MobSpawnSettings.SpawnerData> data) {
+        return new AddSpawnsModification(data);
+    }
+
+    public static BiomeModifierAction removeSpawns(HolderSet<EntityType<?>> entityTypes) {
+        return new RemoveSpawnsModification(entityTypes);
+    }
+
+    public static BiomeModifierAction replaceSpawn(EntityType<?> original, EntityType<?> replacement) {
+        return new ReplaceEntitySpawnModification(original, replacement);
+    }
+
     public static BiomeModifierAction setFogColor(int color) {
         return new FogColorModification(color);
     }

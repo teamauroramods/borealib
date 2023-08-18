@@ -1,6 +1,6 @@
 package com.teamaurora.borealib.core.fabric;
 
-import com.teamaurora.borealib.api.base.v1.modloading.fabric.FabricParallelDispatcher;
+import com.teamaurora.borealib.api.base.v1.util.fabric.FabricHelper;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.event.creativetabs.v1.CreativeTabEvents;
 import com.teamaurora.borealib.api.event.entity.v1.player.PlayerEvents;
@@ -48,7 +48,7 @@ public class BorealibFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         Borealib.onCommonInit();
-        Borealib.onCommonPostInit(FabricParallelDispatcher.get());
+        Borealib.onCommonPostInit(FabricHelper.getDispatcher());
         DefaultResourceConditionsImplImpl.init();
         ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)

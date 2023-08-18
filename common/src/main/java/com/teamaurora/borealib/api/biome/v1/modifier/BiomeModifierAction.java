@@ -5,13 +5,18 @@ import com.teamaurora.borealib.api.biome.v1.modifier.info.BiomeInfo;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeModifierActions;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.level.biome.AmbientAdditionsSettings;
-import net.minecraft.world.level.biome.AmbientMoodSettings;
-import net.minecraft.world.level.biome.AmbientParticleSettings;
-import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -44,7 +49,96 @@ public interface BiomeModifierAction extends Consumer<BiomeInfo.Mutable> {
     Stage stage();
 
 
-    // Effects Modifications \\
+    /**
+     * Creates a modifier action that adds features to the given step.
+     *
+     * @param decoration The decoration stage to add features to
+     * @param features   The features to add
+     * @return A new modification adding features at the given stage
+     */
+    static BiomeModifierAction addFeatures(GenerationStep.Decoration decoration, HolderSet<PlacedFeature> features) {
+        return BuiltInBiomeModifierActions.addFeatures(decoration, features);
+    }
+
+    /**
+     * Creates a modifier action that removes features to the given steps.
+     *
+     * @param decorations The decoration stages to remove features from
+     * @param features    The features to remove (should be backed by an {@link BiomeSelector#existingFeatures(GenerationStep.Decoration, HolderSet) existing feature selector} if they aren't guaranteed to exist by other selectors
+     * @return A new modification removing features at the given stages
+     */
+    static BiomeModifierAction removeFeatures(Set<GenerationStep.Decoration> decorations, HolderSet<PlacedFeature> features) {
+        return BuiltInBiomeModifierActions.removeFeatures(decorations, features);
+    }
+
+    /**
+     * Creates a modifier action that replaces one feature with another. The number of features will remain unchanged.
+     * <p>Use {@link #replaceFeaturesNonlinear(GenerationStep.Decoration, HolderSet, HolderSet)} if there is an unknown amount of features being added and/or removed.\
+     * <p>Should be backed by {@link BiomeSelector#existingFeatures(GenerationStep.Decoration, HolderSet)} if the feature existing isn't guaranteed by other selectors.
+     *
+     * @param decoration  The decoration stage to replace features (should be the same for both)
+     * @param original    The feature to replace
+     * @param replacement The feature to replace the original with
+     * @return A new modification replacing features at the given stage
+     */
+    static BiomeModifierAction replaceFeaturesLinear(GenerationStep.Decoration decoration, Holder<PlacedFeature> original, Holder<PlacedFeature> replacement) {
+        return BuiltInBiomeModifierActions.replaceFeaturesLinear(decoration, original, replacement);
+    }
+
+    /**
+     * Creates a modifier action replacing one group of features with another. There may be more or less total features afterward.
+     * <p>Should be backed by {@link BiomeSelector#existingFeatures(GenerationStep.Decoration, HolderSet)} if the feature existing isn't guaranteed by other selectors.
+     *
+     * @param decoration   The decoration stage to replace features (should be the same for all)
+     * @param originals    The features to replace
+     * @param replacements The features to replace the originals with
+     * @return A new modification replacing features at the given stage
+     */
+    static BiomeModifierAction replaceFeaturesNonlinear(GenerationStep.Decoration decoration, HolderSet<PlacedFeature> originals, HolderSet<PlacedFeature> replacements) {
+        return BuiltInBiomeModifierActions.replaceFeaturesNonlinear(decoration, originals, replacements);
+    }
+
+    /**
+     * Creates a modifier action adding a spawn to the biome.
+     *
+     * @param datum The spawner to add to the biome
+     * @return A new action adding the spawn to the biome
+     */
+    static BiomeModifierAction addSpawn(MobSpawnSettings.SpawnerData datum) {
+        return addSpawns(Collections.singletonList(datum));
+    }
+
+    /**
+     * Creates a modifier action adding spawns to the biome.
+     *
+     * @param data The spawners to add to the biome
+     * @return A new action adding the spawns to the biome
+     */
+    static BiomeModifierAction addSpawns(List<MobSpawnSettings.SpawnerData> data) {
+        return BuiltInBiomeModifierActions.addSpawns(data);
+    }
+
+    /**
+     * Creates a modifier action removing spawns from the biome.
+     *
+     * @param entityTypes The entities to remove spawns for
+     * @return A new action removing spawns
+     */
+    static BiomeModifierAction removeSpawns(HolderSet<EntityType<?>> entityTypes) {
+        return BuiltInBiomeModifierActions.removeSpawns(entityTypes);
+    }
+
+    /**
+     * Creates a modifier action replacing one entity spawn in the biome with another. All other data such as counts and costs will remain untouched.
+     * <p>Should be backed by {@link BiomeSelector#existingSpawn(MobCategory, EntityType)} if the spawn isn't guaranteed to exist by other selectors.
+     *
+     * @param original    The original entity
+     * @param replacement The entity to replace the original with
+     * @return A new modifier action replacing the first entity with the second
+     */
+    static BiomeModifierAction replaceSpawn(EntityType<?> original, EntityType<?> replacement) {
+        return BuiltInBiomeModifierActions.replaceSpawn(original, replacement);
+    }
 
     /**
      * Creates a modifier action that sets the biome fog color.

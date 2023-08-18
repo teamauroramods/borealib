@@ -3,8 +3,8 @@
   "package": "com.teamaurora.borealib.core.mixin.fabric",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "client.ClientHandshakePacketListenerImplMixin",
     "client.ClientHandshakePacketListenerImplAccessor",
+    "client.ClientHandshakePacketListenerImplMixin",
     "client.IntegratedServerMixin",
     "client.ItemMixin"
   ],
@@ -31,6 +31,7 @@
     "ServerGamePacketListenerImplAccessor",
     "ServerLoginPacketListenerImplAccessor",
     "ServerLoginPacketListenerImplMixin",
+    "TagManagerMixin",
     "WorldLoaderMixin"
   ],
   "injectors": {
