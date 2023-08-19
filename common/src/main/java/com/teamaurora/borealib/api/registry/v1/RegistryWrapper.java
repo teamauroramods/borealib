@@ -255,6 +255,16 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
     }
 
     /**
+     * Creates a specialized {@link ItemProvider} with the specified id.
+     *
+     * @param owner The id of the mod the provider is for (this doesn't have to be the namespace objects are registered under)
+     * @return A specialized item provider
+     */
+    static ItemProvider itemProvider(String owner) {
+        return new ItemProvider(provider(Registries.ITEM, owner));
+    }
+
+    /**
      * @return The codec to identify objects from this registry
      */
     Codec<T> byNameCodec();
@@ -654,15 +664,15 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
         /**
          * Registers a pair of chest blocks with wood properties.
          *
-         * @param baseName The base name of the chest blocks and items
-         * @param mapColor The map color for the chests to appear as
+         * @param baseName   The base name of the chest blocks and items
+         * @param properties The properties to use for the chests
          * @return A pair of references to the regular and trapped chest, respectively
          */
-        public Pair<RegistryReference<BorealibChestBlock>, RegistryReference<BorealibTrappedChestBlock>> registerWoodenChest(ResourceLocation baseName, MapColor mapColor) {
+        public Pair<RegistryReference<BorealibChestBlock>, RegistryReference<BorealibTrappedChestBlock>> registerChest(ResourceLocation baseName, BlockBehaviour.Properties properties) {
             ResourceLocation regularName = ChestVariant.register(baseName, false);
             ResourceLocation trappedName = ChestVariant.register(baseName, true);
-            RegistryReference<BorealibChestBlock> regular = this.registerWithItem(baseName.withSuffix("_chest"), () -> new BorealibChestBlock(regularName, BlockBehaviour.Properties.of().mapColor(mapColor).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.CHERRY_WOOD).ignitedByLava()), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> chestBEWLR(false)));
-            RegistryReference<BorealibTrappedChestBlock> trapped = this.registerWithItem(baseName.withPath(s -> "trapped_" + s + "_chest"), () -> new BorealibTrappedChestBlock(trappedName, BlockBehaviour.Properties.of().mapColor(mapColor).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.CHERRY_WOOD).ignitedByLava()), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> chestBEWLR(true)));
+            RegistryReference<BorealibChestBlock> regular = this.registerWithItem(baseName.withSuffix("_chest"), () -> new BorealibChestBlock(regularName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> chestBEWLR(false)));
+            RegistryReference<BorealibTrappedChestBlock> trapped = this.registerWithItem(baseName.withPath(s -> "trapped_" + s + "_chest"), () -> new BorealibTrappedChestBlock(trappedName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> chestBEWLR(true)));
             return Pair.of(regular, trapped);
         }
 
@@ -670,11 +680,11 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
          * Registers a pair of chest blocks with wood properties.
          *
          * @param basePath The base name of the chest blocks and items
-         * @param mapColor The map color for the chests to appear as
+         * @param properties The properties to use for the chests
          * @return A pair of references to the regular and trapped chest, respectively
          */
-        public Pair<RegistryReference<BorealibChestBlock>, RegistryReference<BorealibTrappedChestBlock>> registerWoodenChest(String basePath, MapColor mapColor) {
-            return this.registerWoodenChest(new ResourceLocation(this.owner(), basePath), mapColor);
+        public Pair<RegistryReference<BorealibChestBlock>, RegistryReference<BorealibTrappedChestBlock>> registerChest(String basePath, BlockBehaviour.Properties properties) {
+            return this.registerChest(new ResourceLocation(this.owner(), basePath), properties);
         }
 
         /**
