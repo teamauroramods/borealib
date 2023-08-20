@@ -1,11 +1,8 @@
 package com.teamaurora.borealib.core;
 
-import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibChestBlockEntity;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.BlockEntityRendererRegistry;
 import com.teamaurora.borealib.api.content_registries.v1.client.render.EntityRendererRegistry;
 import com.teamaurora.borealib.core.client.render.block.entity.BorealibChestRenderer;
-import com.teamaurora.borealib.core.client.render.block.entity.BorealibHangingSignRenderer;
-import com.teamaurora.borealib.core.client.render.block.entity.BorealibSignRenderer;
 import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
 import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
