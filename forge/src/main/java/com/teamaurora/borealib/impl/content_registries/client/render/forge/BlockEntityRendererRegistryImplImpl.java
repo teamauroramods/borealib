@@ -1,4 +1,4 @@
-package com.teamaurora.borealib.impl.content_registries.client.forge;
+package com.teamaurora.borealib.impl.content_registries.client.render.forge;
 
 import com.teamaurora.borealib.core.Borealib;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -26,7 +26,7 @@ public class BlockEntityRendererRegistryImplImpl {
         BLOCK_ENTITY_FACTORIES.forEach(consumer -> consumer.accept(event));
     }
 
-    public static <T extends BlockEntity> void register(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<T> factory) {
+    public static <T extends BlockEntity> void register(Supplier<? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> factory) {
         BLOCK_ENTITY_FACTORIES.add(event -> event.registerBlockEntityRenderer(type.get(), factory));
     }
 }

@@ -1,4 +1,4 @@
-package com.teamaurora.borealib.impl.content_registries.client;
+package com.teamaurora.borealib.impl.content_registries.client.render;
 
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class BlockEntityRendererRegistryImpl {
 
     @ExpectPlatform
-    public static <T extends BlockEntity> void register(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<T> factory) {
+    public static <T extends BlockEntity> void register(Supplier<? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> factory) {
         Platform.expect();
     }
 }

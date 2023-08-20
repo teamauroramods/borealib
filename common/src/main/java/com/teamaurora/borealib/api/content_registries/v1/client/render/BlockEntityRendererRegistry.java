@@ -1,6 +1,6 @@
 package com.teamaurora.borealib.api.content_registries.v1.client.render;
 
-import com.teamaurora.borealib.impl.content_registries.client.BlockEntityRendererRegistryImpl;
+import com.teamaurora.borealib.impl.content_registries.client.render.BlockEntityRendererRegistryImpl;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,7 +22,7 @@ public interface BlockEntityRendererRegistry {
      * @param factory The factory to generate a new renderer
      * @param <T>     The block entity type
      */
-    static <T extends BlockEntity> void register(Supplier<BlockEntityType<T>> type, BlockEntityRendererProvider<T> factory) {
+    static <T extends BlockEntity> void register(Supplier<? extends BlockEntityType<? extends T>> type, BlockEntityRendererProvider<T> factory) {
         BlockEntityRendererRegistryImpl.register(type, factory);
     }
 }
