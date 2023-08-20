@@ -17,6 +17,7 @@ import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibTrappedChestBl
 import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
 import com.teamaurora.borealib.api.item.v1.BEWLRBlockItem;
 import com.teamaurora.borealib.api.item.v1.CustomBoatItem;
+import com.teamaurora.borealib.api.registry.v1.util.PropertiesHelper;
 import com.teamaurora.borealib.core.client.render.block.entity.ChestBlockEntityWithoutLevelRenderer;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import com.teamaurora.borealib.impl.registry.RegistryWrapperImpl;
@@ -1038,8 +1039,8 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
          */
         public Pair<RegistryReference<Item>, RegistryReference<Item>> registerBoats(ResourceLocation name, RegistryReference<Block> block) {
             CustomBoatType type = BorealibRegistries.BOAT_TYPES.register(name, new CustomBoatType(name.withPath(s -> "textures/entity/boat/" + s + ".png"), name.withPath(s -> "textures/entity/chest_boat/" + s + ".png"), block));
-            RegistryReference<Item> boat = this.register(name.withSuffix("_boat"), () -> new CustomBoatItem(type, false, new Item.Properties().stacksTo(1)));
-            RegistryReference<Item> chestBoat = this.register(name.withPrefix("_chest_boat"), () -> new CustomBoatItem(type, true, new Item.Properties().stacksTo(1)));
+            RegistryReference<Item> boat = this.register(name.withSuffix("_boat"), () -> new CustomBoatItem(type, false, PropertiesHelper.stacksOnce()));
+            RegistryReference<Item> chestBoat = this.register(name.withPrefix("_chest_boat"), () -> new CustomBoatItem(type, true, PropertiesHelper.stacksOnce()));
             return Pair.of(boat, chestBoat);
         }
 
