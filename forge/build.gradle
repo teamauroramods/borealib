@@ -99,10 +99,10 @@ publishing {
     repositories {
         if (System.getenv("MAVEN_PASSWORD") != null) {
             maven {
-                url = "https://maven.stevenplayzz.studio/aurora-releases"
+                url = "https://maven.stevenplayzz.studio/team-aurora-modding-releases"
                 credentials {
                     username = "teamaurora"
-                    password = System.getenv("MAVEN_PASSWORD")
+                    password = "aroruamate"
                 }
             }
         }
