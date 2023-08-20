@@ -92,7 +92,7 @@ publishing {
                 url = "https://maven.stevenplayzz.studio/team-aurora-modding-releases"
                 credentials {
                     username = "teamaurora"
-                    password = "aroruamate"
+                    password = System.getenv("MAVEN_PASSWORD")
                 }
             }
         }
