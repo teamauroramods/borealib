@@ -105,7 +105,7 @@ public class BorealibSignRenderer implements BlockEntityRenderer<BorealibSignBlo
     }
 
     void renderSignModel(PoseStack poseStack, int i, int j, Model model, VertexConsumer vertexConsumer) {
-        net.minecraft.client.renderer.blockentity.SignRenderer.SignModel signModel = (net.minecraft.client.renderer.blockentity.SignRenderer.SignModel)model;
+        SignModel signModel = (SignModel)model;
         signModel.root.render(poseStack, vertexConsumer, i, j);
     }
 
@@ -190,8 +190,8 @@ public class BorealibSignRenderer implements BlockEntityRenderer<BorealibSignBlo
         }
     }
 
-    public static net.minecraft.client.renderer.blockentity.SignRenderer.SignModel createSignModel(EntityModelSet entityModelSet, WoodType woodType) {
-        return new net.minecraft.client.renderer.blockentity.SignRenderer.SignModel(entityModelSet.bakeLayer(ModelLayers.createSignModelName(woodType)));
+    public static SignModel createSignModel(EntityModelSet entityModelSet, WoodType woodType) {
+        return new SignModel(entityModelSet.bakeLayer(ModelLayers.createSignModelName(woodType)));
     }
 
     public static LayerDefinition createSignLayer() {
