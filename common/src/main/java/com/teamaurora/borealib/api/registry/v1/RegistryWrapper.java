@@ -1040,7 +1040,7 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
         public Pair<RegistryReference<Item>, RegistryReference<Item>> registerBoats(ResourceLocation name, RegistryReference<Block> block) {
             CustomBoatType type = BorealibRegistries.BOAT_TYPES.register(name, new CustomBoatType(name.withPath(s -> "textures/entity/boat/" + s + ".png"), name.withPath(s -> "textures/entity/chest_boat/" + s + ".png"), block));
             RegistryReference<Item> boat = this.register(name.withSuffix("_boat"), () -> new CustomBoatItem(type, false, PropertiesHelper.stacksOnce()));
-            RegistryReference<Item> chestBoat = this.register(name.withPrefix("_chest_boat"), () -> new CustomBoatItem(type, true, PropertiesHelper.stacksOnce()));
+            RegistryReference<Item> chestBoat = this.register(name.withSuffix("_chest_boat"), () -> new CustomBoatItem(type, true, PropertiesHelper.stacksOnce()));
             return Pair.of(boat, chestBoat);
         }
 
