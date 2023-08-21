@@ -667,7 +667,7 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
             ResourceLocation regularName = ChestVariant.register(baseName, false);
             ResourceLocation trappedName = ChestVariant.register(baseName, true);
             RegistryReference<BorealibChestBlock> regular = this.registerWithItem(baseName.withSuffix("_chest"), () -> new BorealibChestBlock(regularName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> BorealibClient.chestBEWLR(false)));
-            RegistryReference<BorealibTrappedChestBlock> trapped = this.registerWithItem(baseName.withPath(s -> "trapped_" + s + "_chest"), () -> new BorealibTrappedChestBlock(trappedName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> BorealibClient.chestBEWLR(true)));
+            RegistryReference<BorealibTrappedChestBlock> trapped = this.registerWithItem(baseName.withSuffix("_trapped_chest"), () -> new BorealibTrappedChestBlock(trappedName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> BorealibClient.chestBEWLR(true)));
             return Pair.of(regular, trapped);
         }
 

@@ -43,10 +43,10 @@ public class Borealib {
         ResourceConditionRegistry.register(ConfigResourceCondition.NAME, new ConfigResourceCondition());
         ResourceConditionRegistry.register(RegistryKeyExistsResourceCondition.NAME, new RegistryKeyExistsResourceCondition());
         ResourceConditionRegistry.register(TestsEnabledResourceCondition.NAME, new TestsEnabledResourceCondition());
-        ResourceConditionRegistry.register(DefaultResourceConditionsImpl.QUARK_FLAG, new DelegateResourceCondition(Borealib.location("quark_flag"), new ResourceLocation("quark:flag"), (original, mapped) -> {
+        ResourceConditionRegistry.register(DefaultResourceConditionsImpl.QUARK_FLAG, new DelegateResourceCondition(location("quark_flag"), new ResourceLocation("quark:flag"), (original, mapped) -> {
             mapped.addProperty("flag", GsonHelper.getAsString(original, "flag"));
         }));
-        ResourceConditionRegistry.register(DefaultResourceConditionsImpl.WOODWORKS_FLAG, new DelegateResourceCondition(Borealib.location("woodworks_flag"), new ResourceLocation("woodworks:config"), (original, mapped) -> {
+        ResourceConditionRegistry.register(DefaultResourceConditionsImpl.WOODWORKS_FLAG, new DelegateResourceCondition(location("woodworks_flag"), new ResourceLocation("woodworks:config"), (original, mapped) -> {
             mapped.addProperty("value", GsonHelper.getAsString(original, "value"));
         }));
     }

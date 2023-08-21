@@ -5,12 +5,11 @@ import com.teamaurora.borealib.api.base.v1.platform.EnvExecutor;
 import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -22,7 +21,7 @@ import java.util.function.Supplier;
  */
 public record ChestVariant(Material single, Material left, Material right) {
 
-	private static final Map<ResourceLocation, Supplier<ChestVariant>> REGISTRY = new ConcurrentHashMap<>();
+	private static final Map<ResourceLocation, Supplier<ChestVariant>> REGISTRY = new HashMap<>();
 
 	/**
 	 * Registers a chest variant.
@@ -35,10 +34,10 @@ public record ChestVariant(Material single, Material left, Material right) {
 		String chestType = trapped ? "trapped" : "normal";
 		ResourceLocation registryName = name.withSuffix("_" + chestType);
 		EnvExecutor.unsafeRunWhenOn(Environment.CLIENT, () -> () -> {
-			REGISTRY.put(name, Suppliers.memoize(() -> {
-				Material single = new Material(Sheets.CHEST_SHEET, new ResourceLocation(name.getNamespace(), "entity/chest/" + name + "/" + chestType));
-				Material left = new Material(Sheets.CHEST_SHEET, new ResourceLocation(name.getNamespace(), "entity/chest/" + name + "/" + chestType + "_left"));
-				Material right = new Material(Sheets.CHEST_SHEET, new ResourceLocation(name.getNamespace(), "entity/chest/" + name + "/" + chestType + "_right"));
+			REGISTRY.put(registryName, Suppliers.memoize(() -> {
+				Material single = new Material(Sheets.CHEST_SHEET, new ResourceLocation(name.getNamespace(), "entity/chest/" + name.getPath() + "/" + chestType));
+				Material left = new Material(Sheets.CHEST_SHEET, new ResourceLocation(name.getNamespace(), "entity/chest/" + name.getPath() + "/" + chestType + "_left"));
+				Material right = new Material(Sheets.CHEST_SHEET, new ResourceLocation(name.getNamespace(), "entity/chest/" + name.getPath() + "/" + chestType + "_right"));
 				return new ChestVariant(single, left, right);
 			}));
 		});
@@ -53,9 +52,6 @@ public record ChestVariant(Material single, Material left, Material right) {
 	 */
 	@Nullable
 	public static ChestVariant get(ResourceLocation name) {
-		Supplier<ChestVariant> ret = REGISTRY.get(name);
-		if (ret != null)
-			return ret.get();
-		return null;
+		return REGISTRY.get(name).get();
 	}
 }
