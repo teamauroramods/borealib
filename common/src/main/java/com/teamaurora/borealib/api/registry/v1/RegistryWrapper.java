@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Keyable;
-import com.mojang.serialization.Lifecycle;
 import com.teamaurora.borealib.api.block.v1.BorealibCeilingHangingSignBlock;
 import com.teamaurora.borealib.api.block.v1.BorealibStandingSignBlock;
 import com.teamaurora.borealib.api.block.v1.BorealibWallHangingSignBlock;
@@ -12,18 +11,17 @@ import com.teamaurora.borealib.api.block.v1.BorealibWallSignBlock;
 import com.teamaurora.borealib.api.block.v1.compat.BorealibChestBlock;
 import com.teamaurora.borealib.api.block.v1.compat.BorealibTrappedChestBlock;
 import com.teamaurora.borealib.api.block.v1.compat.ChestVariant;
-import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibChestBlockEntity;
-import com.teamaurora.borealib.api.block.v1.entity.compat.BorealibTrappedChestBlockEntity;
 import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
 import com.teamaurora.borealib.api.item.v1.BEWLRBlockItem;
 import com.teamaurora.borealib.api.item.v1.CustomBoatItem;
 import com.teamaurora.borealib.api.registry.v1.util.PropertiesHelper;
-import com.teamaurora.borealib.core.client.render.block.entity.ChestBlockEntityWithoutLevelRenderer;
+import com.teamaurora.borealib.core.BorealibClient;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import com.teamaurora.borealib.impl.registry.RegistryWrapperImpl;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.core.*;
+import net.minecraft.core.Holder;
+import net.minecraft.core.IdMap;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -49,14 +47,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.DensityFunction;
@@ -76,7 +71,6 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
-import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -672,8 +666,8 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
         public Pair<RegistryReference<BorealibChestBlock>, RegistryReference<BorealibTrappedChestBlock>> registerChest(ResourceLocation baseName, BlockBehaviour.Properties properties) {
             ResourceLocation regularName = ChestVariant.register(baseName, false);
             ResourceLocation trappedName = ChestVariant.register(baseName, true);
-            RegistryReference<BorealibChestBlock> regular = this.registerWithItem(baseName.withSuffix("_chest"), () -> new BorealibChestBlock(regularName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> chestBEWLR(false)));
-            RegistryReference<BorealibTrappedChestBlock> trapped = this.registerWithItem(baseName.withPath(s -> "trapped_" + s + "_chest"), () -> new BorealibTrappedChestBlock(trappedName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> chestBEWLR(true)));
+            RegistryReference<BorealibChestBlock> regular = this.registerWithItem(baseName.withSuffix("_chest"), () -> new BorealibChestBlock(regularName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> BorealibClient.chestBEWLR(false)));
+            RegistryReference<BorealibTrappedChestBlock> trapped = this.registerWithItem(baseName.withPath(s -> "trapped_" + s + "_chest"), () -> new BorealibTrappedChestBlock(trappedName, properties), block -> new BEWLRBlockItem(block, new Item.Properties(), () -> () -> BorealibClient.chestBEWLR(true)));
             return Pair.of(regular, trapped);
         }
 
@@ -693,15 +687,6 @@ public interface RegistryWrapper<T> extends Keyable, IdMap<T> {
          */
         public RegistryWrapper.Provider<Item> getItemProvider() {
             return this.itemProvider;
-        }
-
-        @Environment(EnvType.CLIENT)
-        private static BEWLRBlockItem.LazyBEWLR chestBEWLR(boolean trapped) {
-            return trapped ? new BEWLRBlockItem.LazyBEWLR((dispatcher, entityModelSet) -> {
-                return new ChestBlockEntityWithoutLevelRenderer<>(dispatcher, entityModelSet, new BorealibTrappedChestBlockEntity(BlockPos.ZERO, Blocks.TRAPPED_CHEST.defaultBlockState()));
-            }) : new BEWLRBlockItem.LazyBEWLR((dispatcher, entityModelSet) -> {
-                return new ChestBlockEntityWithoutLevelRenderer<>(dispatcher, entityModelSet, new BorealibChestBlockEntity(BlockPos.ZERO, Blocks.CHEST.defaultBlockState()));
-            });
         }
     }
 
