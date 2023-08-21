@@ -100,7 +100,7 @@ public class VanillaRegistryWrapper<T> implements RegistryWrapper<T> {
     @SuppressWarnings("unchecked")
     public static class Provider<T> extends RegistryWrapperImpl.Provider<T> {
 
-        private final Map<RegistryReference<T>, Supplier<? extends T>> entries = new LinkedHashMap<>();
+        private final Set<RegistryReference<T>> references = new LinkedHashSet<>();
         private final Registry<T> registry;
 
         public Provider(ResourceKey<? extends Registry<T>> registryKey, String modId) {
@@ -116,13 +116,15 @@ public class VanillaRegistryWrapper<T> implements RegistryWrapper<T> {
         @Override
         public <R extends T> RegistryReference<R> register(ResourceLocation name, Supplier<? extends R> object) {
             R registered = Registry.register(this.registry, name, object.get());
-            return new VanillaRegistryReference<>(name, this.registryKey, registered);
+            RegistryReference<R> reference = new VanillaRegistryReference<>(name, this.registryKey, registered);
+            if (!this.references.add((RegistryReference<T>) reference)) throw new IllegalStateException("Duplicate registry entry " + reference.getId());
+            return reference;
         }
 
         @NotNull
         @Override
         public Iterator<RegistryReference<T>> iterator() {
-            return this.entries.keySet().iterator();
+            return this.references.iterator();
         }
     }
 }
