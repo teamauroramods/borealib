@@ -72,6 +72,12 @@ public abstract class BorealibTagsProvider<T> extends IntrinsicHolderTagsProvide
 		return domain;
 	}
 
+	// Extra layer of precaution; access wideners are iffy on non-common platforms
+	@Override
+	public IntrinsicTagAppender<T> tag(TagKey<T> tagKey) {
+		return super.tag(tagKey);
+	}
+
 	/**
 	 * Registers the tags to be generated.
 	 *

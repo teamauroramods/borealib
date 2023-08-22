@@ -3,6 +3,7 @@ package com.teamaurora.borealib.api.datagen.v1.providers;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
+import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
@@ -49,8 +50,8 @@ public abstract class BorealibLanguageProvider implements DataProvider {
      *
      * @param output The data output generator
      */
-    protected BorealibLanguageProvider(PackOutput output, ModContainer modContainer) {
-        this(output, modContainer, "en_us");
+    protected BorealibLanguageProvider(BorealibPackOutput output) {
+        this(output, "en_us");
     }
 
     /**
@@ -59,9 +60,9 @@ public abstract class BorealibLanguageProvider implements DataProvider {
      * @param output The data output generator
      * @param locale The language code
      */
-    protected BorealibLanguageProvider(PackOutput output, ModContainer container, String locale) {
+    protected BorealibLanguageProvider(BorealibPackOutput output, String locale) {
         this.pathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "lang");
-        this.domain = container.getId();
+        this.domain = output.getModId();
         this.locale = locale;
     }
 
