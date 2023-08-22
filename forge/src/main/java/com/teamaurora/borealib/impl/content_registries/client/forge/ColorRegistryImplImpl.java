@@ -36,7 +36,7 @@ public class ColorRegistryImplImpl {
     public static void register(ItemColor itemColor, Supplier<? extends ItemLike>... items) {
         ITEM_COLORS.add(event -> {
             for (Supplier<? extends ItemLike> item : items) {
-                event.getItemColors().register(itemColor, item.get());
+                event.register(itemColor, item.get());
             }
         });
     }
@@ -45,7 +45,7 @@ public class ColorRegistryImplImpl {
     public static void register(BlockColor blockColor, Supplier<? extends Block>... blocks) {
         BLOCK_COLORS.add(event -> {
             for (Supplier<? extends Block> block : blocks) {
-                event.getBlockColors().register(blockColor, block.get());
+                event.register(blockColor, block.get());
             }
         });
     }
