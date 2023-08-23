@@ -12,7 +12,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.ApiStatus;
 
-@ApiStatus.Internal
 public final class BorealibRegistries {
 
     public static final SimpleRegistry<CustomBoatType> BOAT_TYPES = RegistryWrapper.createSimple(Borealib.location("boat_type"));

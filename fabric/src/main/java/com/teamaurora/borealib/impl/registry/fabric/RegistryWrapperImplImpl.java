@@ -2,6 +2,7 @@ package com.teamaurora.borealib.impl.registry.fabric;
 
 import com.mojang.serialization.Codec;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
+import com.teamaurora.borealib.core.mixin.fabric.RegistryDataLoaderAccessor;
 import com.teamaurora.borealib.impl.registry.VanillaRegistryWrapper;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySynchronization;
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RegistryWrapperImplImpl {
 
     private static final Map<ResourceLocation, RegistryWrapper<?>> REGISTRIES = new ConcurrentHashMap<>();
-    private static final List<RegistryDataLoader.RegistryData<?>> DYNAMIC_REGISTRIES = new ArrayList<>();
+    private static final List<RegistryDataLoader.RegistryData<?>> DYNAMIC_REGISTRIES = new ArrayList<>(RegistryDataLoader.WORLDGEN_REGISTRIES);
     private static final Map<ResourceKey<Registry<?>>, RegistrySynchronization.NetworkedRegistryData<?>> NETWORKABLE_DYNAMIC_REGISTRIES = new HashMap<>();
     private static final Set<ResourceLocation> DYNAMIC_REGISTRY_KEYS = new HashSet<>();
 
@@ -44,6 +45,7 @@ public class RegistryWrapperImplImpl {
         DYNAMIC_REGISTRY_KEYS.add(key.location());
         if (networkCodec != null)
             NETWORKABLE_DYNAMIC_REGISTRIES.put((ResourceKey) key, new RegistrySynchronization.NetworkedRegistryData<>(key, networkCodec));
+        RegistryDataLoaderAccessor.setWorldgenRegistries(DYNAMIC_REGISTRIES);
         return key;
     }
 
