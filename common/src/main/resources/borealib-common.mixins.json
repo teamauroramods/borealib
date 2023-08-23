@@ -7,7 +7,8 @@
     "client.LayerDefinitionsMixin"
   ],
   "mixins": [
-    "EntityTypeMixin"
+    "EntityTypeMixin",
+    "IntrinsicTagAppenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
