@@ -59,7 +59,10 @@ public class ForgeResourceConditionProvider<T extends ICondition> implements Res
            } else if (condition instanceof DefaultResourceConditionsImplImpl.ProviderBasedWrapper wrapper) {
                wrapper.value().write(json);
            } else {
-               throw new IllegalStateException("Unwrapped resource condition: expected ConditionBasedWrapper or ProviderBasedWrapper, instead got " + condition.getClass().getSimpleName());
+               IConditionSerializer<T> serializer = (IConditionSerializer<T>) CONDITIONS.get(condition.getID());
+               if (serializer == null)
+                   throw new JsonSyntaxException("Unknown condition type: " + condition.getID().toString());
+               serializer.write(json, (T) condition);
            }
         }
     }
