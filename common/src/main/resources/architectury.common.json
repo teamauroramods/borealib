@@ -1,5 +1,5 @@
 {
-  "accessWidener": "${mod_id}.accesswidener",
+  "accessWidener": "borealib.accesswidener",
   "injected_interfaces": {
     "net/minecraft/class_7889$class_7890": [
       "com/teamaurora/borealib/core/extensions/IntrinsicTagAppenderExtension"

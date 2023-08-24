@@ -92,14 +92,11 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
      */
     public Consumer<FinishedRecipe> withConditions(Consumer<FinishedRecipe> original, ResourceConditionProvider... conditions) {
         return finishedRecipe -> {
-            this.addConditions(this.getId(finishedRecipe.getId()), conditions);
+            this.addConditions(finishedRecipe.getId(), conditions);
             ResourceLocation advId = finishedRecipe.getAdvancementId();
-            if (advId != null) this.addConditions(this.getId(advId), conditions);
+            if (advId != null) this.addConditions(advId, conditions);
+            original.accept(finishedRecipe);
         };
-    }
-
-    protected ResourceLocation getId(ResourceLocation original) {
-        return new ResourceLocation(this.output.getModId(), original.getPath());
     }
 
     @Override
@@ -107,7 +104,7 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
         Set<ResourceLocation> generatedRecipes = new HashSet<>();
         List<CompletableFuture<?>> futures = new ArrayList<>();
         this.buildRecipes(finishedRecipe -> {
-            ResourceLocation id = this.getId(finishedRecipe.getId());
+            ResourceLocation id = finishedRecipe.getId();
             if (!generatedRecipes.add(id))
                 throw new IllegalStateException("Duplicate recipe " + id);
 
@@ -118,9 +115,9 @@ public abstract class BorealibRecipeProvider extends SimpleConditionalDataProvid
             JsonObject advancementJson = finishedRecipe.serializeAdvancement();
 
             if (advancementJson != null) {
-                ResourceLocation advancmentId = this.getId(finishedRecipe.getAdvancementId());
-                this.injectConditions(advancmentId, advancementJson);
-                futures.add(DataProvider.saveStable(cachedOutput, advancementJson, this.advancementPathProvider.json(advancmentId)));
+                ResourceLocation advancementId = finishedRecipe.getAdvancementId();
+                this.injectConditions(advancementId, advancementJson);
+                futures.add(DataProvider.saveStable(cachedOutput, advancementJson, this.advancementPathProvider.json(advancementId)));
             }
         });
         return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));

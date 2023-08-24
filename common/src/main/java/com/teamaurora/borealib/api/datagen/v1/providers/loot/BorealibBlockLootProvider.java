@@ -1,6 +1,7 @@
 package com.teamaurora.borealib.api.datagen.v1.providers.loot;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonObject;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionProvider;
 import com.teamaurora.borealib.impl.datagen.providers.loot.BorealibLootProviderImpl;
@@ -15,8 +16,7 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
@@ -27,6 +27,7 @@ import java.util.function.BiConsumer;
 public abstract class BorealibBlockLootProvider extends BlockLootSubProvider implements BorealibLootProvider {
 
     private final PackOutput.PathProvider pathProvider;
+    private final Map<ResourceLocation, List<ResourceConditionProvider>> providers = new HashMap<>();
 
     protected BorealibBlockLootProvider(BorealibPackOutput output) {
         super(Collections.emptySet(), FeatureFlags.REGISTRY.allFlags());
@@ -74,5 +75,23 @@ public abstract class BorealibBlockLootProvider extends BlockLootSubProvider imp
     @Override
     public CompletableFuture<?> run(CachedOutput cachedOutput) {
         return BorealibLootProviderImpl.run(cachedOutput, this, LootContextParamSets.BLOCK, this.pathProvider);
+    }
+
+    @Override
+    public void addConditions(ResourceLocation id, ResourceConditionProvider... providers) {
+        if (providers.length == 0)
+            return;
+        this.providers.computeIfAbsent(id, __ -> new ArrayList<>()).addAll(Arrays.asList(providers));
+    }
+
+    @Override
+    public void injectConditions(ResourceLocation id, JsonObject json) {
+        if (this.providers.containsKey(id))
+            ResourceConditionProvider.write(json, this.providers.get(id).toArray(new ResourceConditionProvider[0]));
+    }
+
+    @Override
+    public String getName() {
+        return "Block Loot";
     }
 }
