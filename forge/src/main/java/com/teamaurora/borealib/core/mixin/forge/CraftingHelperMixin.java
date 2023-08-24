@@ -31,10 +31,12 @@ public class CraftingHelperMixin {
                 throw new JsonSyntaxException("Unknown condition type: " + wrapper.getID().toString());
             JsonObject json = new JsonObject();
             wrapper.writeTo(serializer, json);
-            cir.setReturnValue(new JsonObject());
+            json.addProperty("type", condition.getID().toString());
+            cir.setReturnValue(json);
         } else if (condition instanceof DefaultResourceConditionsImplImpl.ProviderBasedWrapper wrapper) {
             JsonObject json = new JsonObject();
             wrapper.value().write(json);
+            json.addProperty("type", condition.getID().toString());
             cir.setReturnValue(json);
         }
     }

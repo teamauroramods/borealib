@@ -56,9 +56,12 @@ public class ForgeResourceConditionProvider<T extends ICondition> implements Res
                if (serializer == null)
                    throw new JsonSyntaxException("Unknown condition type: " + wrapper.getID().toString());
                wrapper.writeTo(serializer, json);
+               json.addProperty("type", wrapper.getID().toString());
            } else if (condition instanceof DefaultResourceConditionsImplImpl.ProviderBasedWrapper wrapper) {
                wrapper.value().write(json);
+               json.addProperty("type", wrapper.getID().toString());
            } else {
+               // Most likely the direct list of conditions; don't mess with this either
                IConditionSerializer<T> serializer = (IConditionSerializer<T>) CONDITIONS.get(condition.getID());
                if (serializer == null)
                    throw new JsonSyntaxException("Unknown condition type: " + condition.getID().toString());
