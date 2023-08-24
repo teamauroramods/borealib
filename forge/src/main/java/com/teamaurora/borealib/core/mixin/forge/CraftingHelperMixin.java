@@ -25,12 +25,16 @@ public class CraftingHelperMixin {
 
     @Inject(method = "serialize(Lnet/minecraftforge/common/crafting/conditions/ICondition;)Lcom/google/gson/JsonObject;", at = @At("HEAD"), cancellable = true, remap = false)
     private static <T extends ICondition> void serialize(T condition, CallbackInfoReturnable<JsonObject> cir) {
-        if (condition instanceof DefaultResourceConditionsImplImpl.DelegatedWrapper<?> wrapper) {
+        if (condition instanceof DefaultResourceConditionsImplImpl.ConditionBasedWrapper<?> wrapper) {
             IConditionSerializer<?> serializer = conditions.get(wrapper.getID());
             if (serializer == null)
                 throw new JsonSyntaxException("Unknown condition type: " + wrapper.getID().toString());
             JsonObject json = new JsonObject();
             wrapper.writeTo(serializer, json);
+            cir.setReturnValue(new JsonObject());
+        } else if (condition instanceof DefaultResourceConditionsImplImpl.ProviderBasedWrapper wrapper) {
+            JsonObject json = new JsonObject();
+            wrapper.value().write(json);
             cir.setReturnValue(json);
         }
     }

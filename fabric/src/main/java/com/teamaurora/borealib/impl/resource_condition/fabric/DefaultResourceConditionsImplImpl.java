@@ -78,6 +78,10 @@ public class DefaultResourceConditionsImplImpl {
         return new ConditionJsonWrapper(condition);
     }
 
+    public static ResourceConditionProvider configure(ResourceConditionProvider provider) {
+        return provider;
+    }
+
     private record ConditionJsonWrapper(ResourceConditionProvider provider) implements ConditionJsonProvider {
 
         @Override

@@ -19,6 +19,11 @@ public class DefaultResourceConditionsImpl {
     public static final ResourceLocation WOODWORKS_FLAG = Borealib.location("woodworks_flag");
 
     @ExpectPlatform
+    public static ResourceConditionProvider configure(ResourceConditionProvider provider) {
+        return Platform.expect();
+    }
+
+    @ExpectPlatform
     public static ResourceConditionProvider and(ResourceConditionProvider... values) {
         return Platform.expect();
     }
@@ -44,7 +49,7 @@ public class DefaultResourceConditionsImpl {
     }
 
     public static ResourceConditionProvider registryKeyExists(ResourceKey<? extends Registry<?>> registry, ResourceLocation key) {
-        return new ResourceConditionProvider() {
+        return configure(new ResourceConditionProvider() {
             @Override
             public ResourceLocation getName() {
                 return RegistryKeyExistsResourceCondition.NAME;
@@ -55,7 +60,7 @@ public class DefaultResourceConditionsImpl {
                 json.addProperty("registry", registry.location().toString());
                 json.addProperty("key", key.toString());
             }
-        };
+        });
     }
 
     @ExpectPlatform
@@ -69,15 +74,15 @@ public class DefaultResourceConditionsImpl {
     }
 
     public static ResourceConditionProvider config(String modId, ModConfig.Type type, String key, Object value) {
-        return new ConfigResourceCondition.SimpleProvider(modId, type, key, value);
+        return configure(new ConfigResourceCondition.SimpleProvider(modId, type, key, value));
     }
 
     public static ResourceConditionProvider config(String modId, ModConfig.Type type, String key, Number value, NumberComparator comparator) {
-        return new ConfigResourceCondition.NumberProvider(modId, type, key, value, comparator);
+        return configure(new ConfigResourceCondition.NumberProvider(modId, type, key, value, comparator));
     }
 
     public static ResourceConditionProvider quarkFlag(String flag) {
-        return new ResourceConditionProvider() {
+        return configure(new ResourceConditionProvider() {
             @Override
             public void write(JsonObject json) {
                 json.addProperty("flag", flag);
@@ -87,11 +92,11 @@ public class DefaultResourceConditionsImpl {
             public ResourceLocation getName() {
                 return QUARK_FLAG;
             }
-        };
+        });
     }
 
     public static ResourceConditionProvider woodworksFlag(String value) {
-        return new ResourceConditionProvider() {
+        return configure(new ResourceConditionProvider() {
             @Override
             public void write(JsonObject json) {
                 json.addProperty("value", value);
@@ -101,6 +106,6 @@ public class DefaultResourceConditionsImpl {
             public ResourceLocation getName() {
                 return WOODWORKS_FLAG;
             }
-        };
+        });
     }
 }

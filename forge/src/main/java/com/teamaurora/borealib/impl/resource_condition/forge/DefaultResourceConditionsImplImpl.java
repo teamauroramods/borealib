@@ -48,16 +48,23 @@ public class DefaultResourceConditionsImplImpl {
 
     @SuppressWarnings("unchecked")
     static <T extends ICondition> ICondition wrap(ResourceConditionProvider provider) {
-        if (provider instanceof ForgeResourceConditionProvider<?> forgeProvider)
-            return new DelegatedWrapper<>((ForgeResourceConditionProvider<T>) forgeProvider);
-        return new CustomWrapper(provider);
+        try {
+            ForgeResourceConditionProvider<T> forgeProvider = (ForgeResourceConditionProvider<T>) provider;
+            return forgeProvider.getSource().left().isPresent() ? new ConditionBasedWrapper<>(forgeProvider) : new ProviderBasedWrapper(forgeProvider);
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("Unconfigured resource condition provider " + provider.getName());
+        }
     }
 
-    public record DelegatedWrapper<T extends ICondition>(ForgeResourceConditionProvider<T> provider) implements ICondition {
+    public static ResourceConditionProvider configure(ResourceConditionProvider provider) {
+        return new ForgeResourceConditionProvider<>(provider);
+    }
+
+    public record ConditionBasedWrapper<T extends ICondition>(ForgeResourceConditionProvider<T> provider) implements ICondition {
 
         @SuppressWarnings("unchecked")
         public void writeTo(IConditionSerializer<?> serializer, JsonObject json) {
-            ((IConditionSerializer<T>) serializer).write(json, this.provider().getCondition());
+            ((IConditionSerializer<T>) serializer).write(json, this.provider().getSource().left().orElseThrow());
         }
 
         @Override
@@ -71,12 +78,11 @@ public class DefaultResourceConditionsImplImpl {
         }
     }
 
-    // Regular functionality
-    public record CustomWrapper(ResourceConditionProvider provider) implements ICondition {
+    public record ProviderBasedWrapper(ResourceConditionProvider value) implements ICondition {
 
         @Override
         public ResourceLocation getID() {
-            return this.provider.getName();
+            return this.value.getName();
         }
 
         @Override

@@ -2,6 +2,7 @@ package com.teamaurora.borealib.impl.resource_condition.forge;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.datafixers.util.Either;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Optional;
 
 @ApiStatus.Internal
 @SuppressWarnings("unchecked")
@@ -28,38 +30,45 @@ public class ForgeResourceConditionProvider<T extends ICondition> implements Res
         }
     }
 
-    private final T condition;
+    private final Either<T, ResourceConditionProvider> source;
 
     public ForgeResourceConditionProvider(T condition) {
-        this.condition = condition;
+        this.source = Either.left(condition);
     }
 
-    public T getCondition() {
-        return this.condition;
+    public ForgeResourceConditionProvider(ResourceConditionProvider parent) {
+        this.source = Either.right(parent);
+    }
+
+    public Either<T, ResourceConditionProvider> getSource() {
+        return source;
     }
 
     @Override
     public void write(JsonObject json) {
-        write(json, this.condition);
+        if (this.source.right().isPresent()) {
+            // Custom-created provider, we don't want to mess with that
+            this.source.right().get().write(json);
+        } else {
+           ICondition condition = this.source.left().get();
+           if (condition instanceof DefaultResourceConditionsImplImpl.ConditionBasedWrapper<?> wrapper) {
+               IConditionSerializer<?> serializer = CONDITIONS.get(wrapper.getID());
+               if (serializer == null)
+                   throw new JsonSyntaxException("Unknown condition type: " + wrapper.getID().toString());
+               wrapper.writeTo(serializer, json);
+           } else if (condition instanceof DefaultResourceConditionsImplImpl.ProviderBasedWrapper wrapper) {
+               wrapper.value().write(json);
+           } else {
+               throw new IllegalStateException("Unwrapped resource condition: expected ConditionBasedWrapper or ProviderBasedWrapper, instead got " + condition.getClass().getSimpleName());
+           }
+        }
     }
 
     @Override
     public ResourceLocation getName() {
-        return this.condition.getID();
-    }
-
-    private static <T extends ICondition> void write(JsonObject json, T condition) {
-        // Exists to retain information of wrapped IConditions that would otherwise be lost in conversion to CustomWrapper, resulting in a ClassCastException
-        if (condition instanceof DefaultResourceConditionsImplImpl.DelegatedWrapper<?> wrapper) {
-            IConditionSerializer<?> serializer = CONDITIONS.get(wrapper.getID());
-            if (serializer == null)
-                throw new JsonSyntaxException("Unknown condition type: " + wrapper.getID().toString());
-            wrapper.writeTo(serializer, json);
-        } else {
-            IConditionSerializer<T> serializer = (IConditionSerializer<T>) CONDITIONS.get(condition.getID());
-            if (serializer == null)
-                throw new JsonSyntaxException("Unknown condition type: " + condition.getID().toString());
-            serializer.write(json, condition);
-        }
+        if (this.source.left().isPresent())
+            return this.source.left().get().getID();
+        else
+            return this.source.right().get().getName();
     }
 }

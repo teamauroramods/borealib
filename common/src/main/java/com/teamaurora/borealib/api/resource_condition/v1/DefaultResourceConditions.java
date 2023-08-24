@@ -10,6 +10,10 @@ import net.minecraft.resources.ResourceLocation;
 
 public interface DefaultResourceConditions {
 
+    static ResourceConditionProvider configure(ResourceConditionProvider provider) {
+        return DefaultResourceConditionsImpl.configure(provider);
+    }
+
     static ResourceConditionProvider and(ResourceConditionProvider... values) {
         return DefaultResourceConditionsImpl.and(values);
     }
