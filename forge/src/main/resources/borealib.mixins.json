@@ -6,6 +6,7 @@
   ],
   "mixins": [
     "AxeItemMixin",
+    "CraftingHelperMixin",
     "FireBlockAccessor",
     "HandshakeHandlerMixin",
     "ItemBlockRenderTypesMixin",

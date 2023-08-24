@@ -1,5 +1,6 @@
 package com.teamaurora.borealib.impl.resource_condition.forge;
 
+import com.google.gson.JsonObject;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.*;
@@ -14,7 +15,7 @@ public class DefaultResourceConditionsImplImpl {
     private static final ResourceConditionProvider TRUE_CONDITION = wrap(TrueCondition.INSTANCE);
 
     public static ResourceConditionProvider and(ResourceConditionProvider... values) {
-        return wrap(new AndCondition(Arrays.stream(values).map(ConditionWrapper::new).toArray(ICondition[]::new)));
+        return wrap(new AndCondition(Arrays.stream(values).map(DefaultResourceConditionsImplImpl::wrap).toArray(ICondition[]::new)));
     }
 
     public static ResourceConditionProvider FALSE() {
@@ -26,11 +27,11 @@ public class DefaultResourceConditionsImplImpl {
     }
 
     public static ResourceConditionProvider not(ResourceConditionProvider value) {
-        return wrap(new NotCondition(new ConditionWrapper(value)));
+        return wrap(new NotCondition(wrap(value)));
     }
 
     public static ResourceConditionProvider or(ResourceConditionProvider... values) {
-        return wrap(new OrCondition(Arrays.stream(values).map(ConditionWrapper::new).toArray(ICondition[]::new)));
+        return wrap(new OrCondition(Arrays.stream(values).map(DefaultResourceConditionsImplImpl::wrap).toArray(ICondition[]::new)));
     }
 
     public static ResourceConditionProvider allModsLoaded(String... modIds) {
@@ -41,11 +42,23 @@ public class DefaultResourceConditionsImplImpl {
         return modIds.length == 1 ? wrap(new ModLoadedCondition(modIds[0])) : wrap(new OrCondition(Arrays.stream(modIds).map(ModLoadedCondition::new).toArray(ICondition[]::new)));
     }
 
-    private static ResourceConditionProvider wrap(ICondition condition) {
-        return new ForgeResourceConditionProvider(condition);
+    private static <T extends ICondition> ResourceConditionProvider wrap(T condition) {
+        return new ForgeResourceConditionProvider<>(condition);
     }
 
-    private record ConditionWrapper(ResourceConditionProvider provider) implements ICondition {
+    @SuppressWarnings("unchecked")
+    static <T extends ICondition> ICondition wrap(ResourceConditionProvider provider) {
+        if (provider instanceof ForgeResourceConditionProvider<?> forgeProvider)
+            return new DelegatedWrapper<>((ForgeResourceConditionProvider<T>) forgeProvider);
+        return new CustomWrapper(provider);
+    }
+
+    public record DelegatedWrapper<T extends ICondition>(ForgeResourceConditionProvider<T> provider) implements ICondition {
+
+        @SuppressWarnings("unchecked")
+        public void writeTo(IConditionSerializer<?> serializer, JsonObject json) {
+            ((IConditionSerializer<T>) serializer).write(json, this.provider().getCondition());
+        }
 
         @Override
         public ResourceLocation getID() {
@@ -54,6 +67,20 @@ public class DefaultResourceConditionsImplImpl {
 
         @Override
         public boolean test(IContext context) {
+            return false;
+        }
+    }
+
+    // Regular functionality
+    public record CustomWrapper(ResourceConditionProvider provider) implements ICondition {
+
+        @Override
+        public ResourceLocation getID() {
+            return this.provider.getName();
+        }
+
+        @Override
+        public boolean test(IContext iContext) {
             return false;
         }
     }
