@@ -99,7 +99,7 @@ publishing {
     repositories {
         if (System.getenv("MAVEN_PASSWORD") != null) {
             maven {
-                url = "https://maven.stevenplayzz.studio/team-aurora-modding-releases"
+                url = "https://maven.stevenplayzz.studio/borealib-libraries"
                 credentials {
                     username = "teamaurora"
                     password = System.getenv("MAVEN_PASSWORD")
