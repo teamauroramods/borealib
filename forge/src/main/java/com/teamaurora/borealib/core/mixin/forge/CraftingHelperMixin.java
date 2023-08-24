@@ -19,7 +19,7 @@ import java.util.Map;
 @Mixin(CraftingHelper.class)
 public class CraftingHelperMixin {
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private static Map<ResourceLocation, IConditionSerializer<?>> conditions;
 
