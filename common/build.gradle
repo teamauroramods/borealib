@@ -16,14 +16,6 @@ dependencies {
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${rootProject.mixinextras_version}"))
 }
 
-processResources {
-    inputs.property "mod_id", project.mod_id
-
-    filesMatching(["architectury.common.json"]) {
-        expand "mod_id": project.mod_id
-    }
-}
-
 publishing {
     publications {
         mavenCommon(MavenPublication) {
