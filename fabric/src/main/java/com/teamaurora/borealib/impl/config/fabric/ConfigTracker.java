@@ -5,7 +5,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.api.event.config.v1.ConfigEvents;
-import com.teamaurora.borealib.core.network.fabric.ClientboundSyncConfigDataPacket;
+import com.teamaurora.borealib.core.network.fabric.ConfigSyncHandler;
 import net.minecraft.client.Minecraft;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @ApiStatus.Internal
@@ -65,15 +66,16 @@ public class ConfigTracker {
         this.configSets.get(type).forEach(config -> closeConfig(config, configBasePath));
     }
 
-    public List<Pair<String, ClientboundSyncConfigDataPacket>> syncConfigs(boolean isLocal) { // Only sync configs for players joining and if the config actually exists
-        return isLocal ? Collections.emptyList() : this.configSets.get(ModConfig.Type.SERVER).stream().filter(mc -> mc.getFullPath() != null).map(mc -> {
-            try {
-                return Pair.of("Config " + mc.getFileName(), new ClientboundSyncConfigDataPacket(mc.getFileName(), Files.readAllBytes(mc.getFullPath())));
-            } catch (Exception e) {
-                LOGGER.error("Failed to sync {} config for {}", mc.getType(), mc.getModId(), e);
-                return null;
-            }
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+    public void syncConfigs(boolean isLocal, BiConsumer<String, byte[]> sender) {
+       if (!isLocal) {
+           this.configSets.get(ModConfig.Type.COMMON).forEach(mc -> {
+               try {
+                   sender.accept(mc.getFileName(), Files.readAllBytes(mc.getFullPath()));
+               } catch (Exception e) {
+                   LOGGER.error("Failed to sync {} config for {}", mc.getType(), mc.getModId(), e);
+               }
+           });
+       }
     }
 
     private void openConfig(ModConfigImpl config, Path configBasePath) {
@@ -91,10 +93,10 @@ public class ConfigTracker {
         }
     }
 
-    public void receiveSyncedConfig(ClientboundSyncConfigDataPacket pkt) {
-        if (!Minecraft.getInstance().isLocalServer() && this.fileMap.containsKey(pkt.getFileName())) {
-            ModConfigImpl config = this.fileMap.get(pkt.getFileName());
-            config.setConfigData(TomlFormat.instance().createParser().parse(new ByteArrayInputStream(pkt.getFileData())));
+    public void receiveSyncedConfig(String filename, byte[] fileData) {
+        if (!Minecraft.getInstance().isLocalServer() && this.fileMap.containsKey(filename)) {
+            ModConfigImpl config = this.fileMap.get(filename);
+            config.setConfigData(TomlFormat.instance().createParser().parse(new ByteArrayInputStream(fileData)));
             ConfigEvents.RELOADING.invoker().accept(config);
         }
     }

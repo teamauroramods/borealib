@@ -3,7 +3,6 @@ package com.teamaurora.borealib.core;
 import com.teamaurora.borealib.api.base.v1.util.ParallelDispatcher;
 import com.teamaurora.borealib.api.resource_condition.v1.DelegateResourceCondition;
 import com.teamaurora.borealib.api.resource_condition.v1.ResourceConditionRegistry;
-import com.teamaurora.borealib.core.network.BorealibMessages;
 import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
 import com.teamaurora.borealib.impl.biome.modifier.BuiltInBiomeModifierActions;
@@ -52,6 +51,5 @@ public class Borealib {
     }
 
     public static void onCommonPostInit(ParallelDispatcher dispatcher) {
-        BorealibMessages.init();
     }
 }

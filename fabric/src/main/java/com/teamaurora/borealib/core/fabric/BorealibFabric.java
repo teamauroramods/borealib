@@ -10,6 +10,8 @@ import com.teamaurora.borealib.api.event.lifecycle.v1.ServerLifecycleEvents;
 import com.teamaurora.borealib.api.event.registry.v1.CommandRegistryEvent;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import com.teamaurora.borealib.core.Borealib;
+import com.teamaurora.borealib.core.mixin.fabric.ServerLoginPacketListenerImplAccessor;
+import com.teamaurora.borealib.core.network.fabric.ConfigSyncHandler;
 import com.teamaurora.borealib.impl.biome.modifier.fabric.FabricBiomeModifierLoader;
 import com.teamaurora.borealib.impl.config.fabric.ConfigLoadingHelper;
 import com.teamaurora.borealib.impl.config.fabric.ConfigTracker;
@@ -27,7 +29,9 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +46,6 @@ import java.util.List;
 public class BorealibFabric implements ModInitializer {
 
     static MinecraftServer server;
-    private static final LevelResource SERVERCONFIG = new LevelResource("serverconfig");
 
 
     @Override
@@ -58,8 +61,6 @@ public class BorealibFabric implements ModInitializer {
             ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.SERVER, ConfigLoadingHelper.getServerConfigDirectory(server));
             BorealibTradesLoader.init();
             return true;
-        });
-        net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STARTING.register(server -> {
         });
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPING.register(server -> ServerLifecycleEvents.STOPPING.invoker().forServer(server));
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPED.register(server1 -> {
@@ -82,6 +83,12 @@ public class BorealibFabric implements ModInitializer {
         AttackBlockCallback.EVENT.register((player, level, hand, pos, direction) -> PlayerInteractionEvents.LEFT_CLICK_BLOCK.invoker().interact(player, level, hand, pos, direction));
         UseEntityCallback.EVENT.register((player, world, hand, entity, entityHitResult) -> PlayerInteractionEvents.RIGHT_CLICK_ENTITY.invoker().interact(player, world, hand, entity));
         CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) -> CommandRegistryEvent.EVENT.invoker().registerCommands(dispatcher, buildContext, environment));
+        ServerLoginConnectionEvents.QUERY_START.register((handler, server1, sender, synchronizer) -> {
+            ConfigTracker.INSTANCE.syncConfigs(((ServerLoginPacketListenerImplAccessor) handler).getConnection().isMemoryConnection(), (name, bytes) -> {
+                Packet<?> pkt = sender.createPacket(ConfigSyncHandler.ID, ConfigSyncHandler.write(name, bytes));
+                sender.sendPacket(pkt);
+            });
+        });
     }
 
     private static CreativeTabEvents.Output wrapOutput(FabricItemGroupEntries entries) {

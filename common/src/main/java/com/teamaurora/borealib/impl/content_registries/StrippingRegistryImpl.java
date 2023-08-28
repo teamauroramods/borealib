@@ -20,12 +20,10 @@ public class StrippingRegistryImpl {
     }
 
     @Nullable
-    public static BlockState getStrippedState(BlockState from) {
+    public static BlockState get(BlockState from) {
         Block stripped = REGISTRY.get(from.getBlock());
         if (stripped == null)
             return null;
-        if (stripped instanceof StrippingRegistry.StrippedStateProvider provider)
-            return provider.copyStrippedPropertiesFrom(from);
         return stripped.withPropertiesOf(from);
     }
 }

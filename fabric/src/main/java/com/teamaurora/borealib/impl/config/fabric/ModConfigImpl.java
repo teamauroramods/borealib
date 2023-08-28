@@ -62,12 +62,12 @@ public class ModConfigImpl implements ModConfig {
 
     @Override
     public void save() {
-        if (this.configData instanceof FileConfig) // Server configs without a file will be in memory instead, so no file to save to
+        if (this.configData instanceof FileConfig)
             ((FileConfig) this.configData).save();
     }
 
     @Override
     public Path getFullPath() {
-        return this.configData instanceof FileConfig ? ((FileConfig) this.configData).getNioPath() : null; // Same here. There is no path to a memory config.
+        return this.configData instanceof FileConfig ? ((FileConfig) this.configData).getNioPath() : null;
     }
 }

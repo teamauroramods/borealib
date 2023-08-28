@@ -15,7 +15,7 @@ public class AxeItemMixin {
 
     @Inject(method = "getStripped", at = @At(value = "RETURN"), cancellable = true)
     public void useOn(BlockState blockState, CallbackInfoReturnable<Optional<BlockState>> cir) {
-        BlockState state = StrippingRegistryImpl.getStrippedState(blockState);
+        BlockState state = StrippingRegistryImpl.get(blockState);
         if (state != null)
             cir.setReturnValue(Optional.of(state));
     }

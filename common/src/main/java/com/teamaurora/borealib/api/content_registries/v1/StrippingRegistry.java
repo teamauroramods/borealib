@@ -28,25 +28,7 @@ public interface StrippingRegistry {
      * @return The stripped version of the blockstate if it exists, otherwise {@code null}
      */
     @Nullable
-    static BlockState getStrippedState(BlockState from) {
-        return StrippingRegistryImpl.getStrippedState(from);
-    }
-
-
-    /**
-     * Gives blocks finer control as to how block states transfer over to stripped variants.
-     * <p>If this class isn't implemented, all block state properties common to both blocks will be copied over.
-     *
-     * @since 1.0.0
-     */
-    interface StrippedStateProvider {
-
-        /**
-         * Copies the properties from the specified state into this state.
-         *
-         * @param state The state to copy values from
-         * @return This state with copied properties from the provided state
-         */
-        BlockState copyStrippedPropertiesFrom(BlockState state);
+    static BlockState get(BlockState from) {
+        return StrippingRegistryImpl.get(from);
     }
 }

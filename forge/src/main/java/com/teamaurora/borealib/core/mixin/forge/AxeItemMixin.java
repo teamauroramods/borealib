@@ -13,7 +13,7 @@ public class AxeItemMixin {
 
     @Inject(method = "getAxeStrippingState", at = @At("HEAD"), cancellable = true, remap = false)
     private static void getAxeStrippingState(BlockState state, CallbackInfoReturnable<BlockState> cir) {
-        BlockState strippedState = StrippingRegistryImpl.getStrippedState(state);
+        BlockState strippedState = StrippingRegistryImpl.get(state);
         if (strippedState != null)
             cir.setReturnValue(strippedState);
     }
