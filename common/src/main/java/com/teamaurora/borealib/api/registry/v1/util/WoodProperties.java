@@ -1,7 +1,6 @@
 package com.teamaurora.borealib.api.registry.v1.util;
 
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -15,6 +14,7 @@ import java.util.function.Consumer;
  * A helper class to generate {@link BlockBehaviour.Properties} for wood blocks.
  *
  * @author ebo2022
+ * @author rose_
  * @since 1.0
  */
 public record WoodProperties(MapColor woodColor, MapColor logColor, MapColor leavesColor, Consumer<BlockBehaviour.Properties> sharedProperties, SoundType sound, SoundType logSound, SoundType leavesSound, SoundType saplingSound) {
@@ -138,10 +138,10 @@ public record WoodProperties(MapColor woodColor, MapColor logColor, MapColor lea
           properties.ignitedByLava();
           properties.instrument(NoteBlockInstrument.BASS);
         };
-        private SoundType sound = SoundType.CHERRY_WOOD;
-        private SoundType logSound = SoundType.CHERRY_WOOD;
-        private SoundType leavesSound = SoundType.CHERRY_LEAVES;
-        private SoundType saplingSound = SoundType.CHERRY_SAPLING;
+        private SoundType sound = SoundType.WOOD;
+        private SoundType logSound = SoundType.WOOD;
+        private SoundType leavesSound = SoundType.GRASS;
+        private SoundType saplingSound = SoundType.GRASS;
 
         private Builder(MapColor woodColor, MapColor logColor) {
             this.woodColor = woodColor;
