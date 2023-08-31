@@ -1,14 +1,11 @@
 package com.teamaurora.borealib.core.forge;
 
-import com.google.common.base.Predicates;
 import com.teamaurora.borealib.api.base.v1.util.Mods;
 import com.teamaurora.borealib.api.block.v1.compat.forge.BorealibHollowLogBlock;
 import com.teamaurora.borealib.api.config.v1.ConfigRegistry;
 import com.teamaurora.borealib.api.config.v1.ModConfig;
 import com.teamaurora.borealib.core.Borealib;
-import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

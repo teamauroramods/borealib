@@ -10,9 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.Set;
-
 @ApiStatus.Internal
 public final class RegistryWrapperImpl {
 

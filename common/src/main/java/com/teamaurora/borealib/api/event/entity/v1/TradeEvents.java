@@ -238,7 +238,9 @@ public final class TradeEvents {
         }
     }
 
-    private record SimpleItemTrade(Supplier<? extends ItemLike> item, int emeralds, int count, int maxUses, int xpGain, float priceMultiplier, boolean sellToVillager) implements VillagerTrades.ItemListing {
+    private record SimpleItemTrade(Supplier<? extends ItemLike> item, int emeralds, int count, int maxUses, int xpGain,
+                                   float priceMultiplier,
+                                   boolean sellToVillager) implements VillagerTrades.ItemListing {
 
         @Override
         public MerchantOffer getOffer(Entity entity, RandomSource randomSource) {

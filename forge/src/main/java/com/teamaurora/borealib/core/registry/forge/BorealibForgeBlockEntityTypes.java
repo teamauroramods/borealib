@@ -4,7 +4,6 @@ import com.teamaurora.borealib.api.block.v1.compat.forge.BorealibBeehiveBlock;
 import com.teamaurora.borealib.api.block.v1.entity.compat.forge.BorealibBeehiveBlockEntity;
 import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import com.teamaurora.borealib.core.registry.BorealibBlockEntityTypes;
-import net.minecraft.Util;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class BorealibForgeBlockEntityTypes {

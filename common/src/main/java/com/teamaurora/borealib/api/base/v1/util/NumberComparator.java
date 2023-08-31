@@ -1,9 +1,7 @@
 package com.teamaurora.borealib.api.base.v1.util;
 
-import com.google.gson.JsonSyntaxException;
 import net.minecraft.util.StringRepresentable;
 
-import java.util.Locale;
 import java.util.function.BiPredicate;
 
 public enum NumberComparator implements BiPredicate<Number, Number>, StringRepresentable {

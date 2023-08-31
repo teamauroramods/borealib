@@ -16,20 +16,14 @@
 
 package com.teamaurora.borealib.api.datagen.v1.providers;
 
-import com.teamaurora.borealib.api.base.v1.platform.Platform;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
 import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
-import com.teamaurora.borealib.impl.datagen.providers.ForcedTagEntry;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
-import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagBuilder;
-import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -42,7 +36,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * @param <T> The type of tag to generate

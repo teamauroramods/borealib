@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.teamaurora.borealib.api.block.v1.compat.ChestVariant;
 import com.teamaurora.borealib.api.block.v1.compat.ExtendedChestBlock;
-import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;

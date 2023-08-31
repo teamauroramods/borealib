@@ -1,9 +1,7 @@
 package com.teamaurora.borealib.impl.content_registries;
 
-import com.teamaurora.borealib.api.content_registries.v1.StrippingRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 

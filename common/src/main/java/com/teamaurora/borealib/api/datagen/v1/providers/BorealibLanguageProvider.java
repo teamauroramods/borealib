@@ -2,9 +2,7 @@ package com.teamaurora.borealib.api.datagen.v1.providers;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.datagen.v1.BorealibPackOutput;
-import com.teamaurora.borealib.api.registry.v1.RegistryReference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -31,7 +29,6 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 /**
  * Generates translation keys for language files.

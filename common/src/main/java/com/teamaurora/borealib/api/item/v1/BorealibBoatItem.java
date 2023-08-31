@@ -1,8 +1,8 @@
 package com.teamaurora.borealib.api.item.v1;
 
-import com.teamaurora.borealib.api.entity.v1.CustomBoat;
-import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
-import com.teamaurora.borealib.api.entity.v1.CustomChestBoat;
+import com.teamaurora.borealib.api.entity.v1.BorealibBoat;
+import com.teamaurora.borealib.api.entity.v1.BorealibBoatType;
+import com.teamaurora.borealib.api.entity.v1.BorealibChestBoat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -31,16 +31,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 /**
- * A boat item that supports spawning custom {@link CustomBoatType}.
+ * A boat item that supports spawning custom {@link BorealibBoatType}.
  *
  * @author Ocelot
  * @since 1.4.0
  */
-public class CustomBoatItem extends Item {
+public class BorealibBoatItem extends Item {
 
     private static final Predicate<Entity> ENTITY_PREDICATE = EntitySelector.NO_SPECTATORS.and(Entity::isPickable);
-    private static final Map<CustomBoatType, Item> BOAT_ITEMS = new ConcurrentHashMap<>();
-    private static final Map<CustomBoatType, Item> CHEST_BOAT_ITEMS = new ConcurrentHashMap<>();
+    private static final Map<BorealibBoatType, Item> BOAT_ITEMS = new ConcurrentHashMap<>();
+    private static final Map<BorealibBoatType, Item> CHEST_BOAT_ITEMS = new ConcurrentHashMap<>();
     private static final DispenseItemBehavior DISPENSE_BEHAVIOR = new DefaultDispenseItemBehavior() {
         private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
 
@@ -62,8 +62,8 @@ public class CustomBoatItem extends Item {
                 offset = 0.0;
             }
 
-            CustomBoatItem item = ((CustomBoatItem) stack.getItem());
-            CustomBoat boat = item.chest ? new CustomChestBoat(level, x, y + offset, z) : new CustomBoat(level, x, y + offset, z);
+            BorealibBoatItem item = ((BorealibBoatItem) stack.getItem());
+            BorealibBoat boat = item.chest ? new BorealibChestBoat(level, x, y + offset, z) : new BorealibBoat(level, x, y + offset, z);
             boat.setCustomType(item.getType());
             boat.setYRot(direction.toYRot());
             level.addFreshEntity(boat);
@@ -72,10 +72,10 @@ public class CustomBoatItem extends Item {
         }
     };
 
-    private final CustomBoatType type;
+    private final BorealibBoatType type;
     private final boolean chest;
 
-    public CustomBoatItem(CustomBoatType type, boolean chest, Item.Properties properties) {
+    public BorealibBoatItem(BorealibBoatType type, boolean chest, Item.Properties properties) {
         super(properties);
         this.type = type;
         this.chest = chest;
@@ -88,7 +88,7 @@ public class CustomBoatItem extends Item {
     }
 
     @Nullable
-    public static Item getBoatItem(CustomBoatType type, boolean chest) {
+    public static Item getBoatItem(BorealibBoatType type, boolean chest) {
         return chest ? CHEST_BOAT_ITEMS.get(type) : BOAT_ITEMS.get(type);
     }
 
@@ -111,7 +111,7 @@ public class CustomBoatItem extends Item {
             }
 
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                CustomBoat boat = this.getBoat(level, hitResult);
+                BorealibBoat boat = this.getBoat(level, hitResult);
                 boat.setCustomType(this.type);
                 boat.setYRot(player.getYRot());
                 if (!level.noCollision(boat, boat.getBoundingBox().inflate(-0.1)))
@@ -131,13 +131,13 @@ public class CustomBoatItem extends Item {
         return InteractionResultHolder.pass(itemStack);
     }
 
-    public CustomBoatType getType() {
+    public BorealibBoatType getType() {
         return this.type;
     }
 
-    private CustomBoat getBoat(Level level, HitResult hitResult) {
+    private BorealibBoat getBoat(Level level, HitResult hitResult) {
         return this.chest
-            ? new CustomChestBoat(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z)
-            : new CustomBoat(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
+            ? new BorealibChestBoat(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z)
+            : new BorealibBoat(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
     }
 }

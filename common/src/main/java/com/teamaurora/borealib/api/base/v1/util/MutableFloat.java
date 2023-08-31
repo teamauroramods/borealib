@@ -1,7 +1,5 @@
 package com.teamaurora.borealib.api.base.v1.util;
 
-import net.minecraft.util.ToFloatFunction;
-
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 

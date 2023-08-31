@@ -1,7 +1,6 @@
 package com.teamaurora.borealib.api.resource_loader.v1;
 
 import com.teamaurora.borealib.impl.resource_loader.ResourceLoaderImpl;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 
 /**

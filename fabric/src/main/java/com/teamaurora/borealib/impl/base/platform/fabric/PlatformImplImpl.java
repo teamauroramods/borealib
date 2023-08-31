@@ -1,8 +1,8 @@
 package com.teamaurora.borealib.impl.base.platform.fabric;
 
+import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
-import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import com.teamaurora.borealib.core.fabric.BorealibFabric;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;

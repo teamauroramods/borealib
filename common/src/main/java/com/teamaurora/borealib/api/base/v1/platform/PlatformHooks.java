@@ -1,7 +1,6 @@
 package com.teamaurora.borealib.api.base.v1.platform;
 
 import com.teamaurora.borealib.impl.base.platform.PlatformHooksImpl;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

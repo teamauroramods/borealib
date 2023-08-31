@@ -26,7 +26,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@SuppressWarnings("deprecation")
 public class BorealibVerticalSlabBlock extends Block implements SimpleWaterloggedBlock {
 	public static final EnumProperty<Type> TYPE = EnumProperty.create("type", Type.class);
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;

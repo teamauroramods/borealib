@@ -30,7 +30,6 @@ import javax.annotation.Nullable;
 /**
  * @author vectorwing
  */
-@SuppressWarnings("deprecation")
 public class CabinetBlock extends BaseEntityBlock {
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final BooleanProperty OPEN = BlockStateProperties.OPEN;

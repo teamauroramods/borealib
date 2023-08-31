@@ -1,6 +1,6 @@
 package com.teamaurora.borealib.api.entity.v1;
 
-import com.teamaurora.borealib.api.item.v1.CustomBoatItem;
+import com.teamaurora.borealib.api.item.v1.BorealibBoatItem;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -26,18 +26,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
-public class CustomChestBoat extends CustomBoat implements HasCustomInventoryScreen, ContainerEntity {
+public class BorealibChestBoat extends BorealibBoat implements HasCustomInventoryScreen, ContainerEntity {
     private static final int CONTAINER_SIZE = 27;
     private NonNullList<ItemStack> itemStacks = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
     @Nullable
     private ResourceLocation lootTable;
     private long lootTableSeed;
 
-    public CustomChestBoat(EntityType<? extends Boat> entityType, Level level) {
+    public BorealibChestBoat(EntityType<? extends Boat> entityType, Level level) {
         super(entityType, level);
     }
 
-    public CustomChestBoat(Level level, double d, double e, double f) {
+    public BorealibChestBoat(Level level, double d, double e, double f) {
         this(BorealibEntityTypes.CHEST_BOAT.get(), level);
         this.setPos(d, e, f);
         this.xo = d;
@@ -109,8 +109,8 @@ public class CustomChestBoat extends CustomBoat implements HasCustomInventoryScr
 
     @Override
     public Item getDropItem() {
-        CustomBoatType type = this.getBoatCustomType();
-        return type != null ? CustomBoatItem.getBoatItem(type, true) : null;
+        BorealibBoatType type = this.getBoatCustomType();
+        return type != null ? BorealibBoatItem.getBoatItem(type, true) : null;
     }
 
     @Override

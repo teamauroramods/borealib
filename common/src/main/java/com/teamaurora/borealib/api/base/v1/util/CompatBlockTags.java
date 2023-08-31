@@ -1,6 +1,5 @@
 package com.teamaurora.borealib.api.base.v1.util;
 
-import com.teamaurora.borealib.api.base.v1.util.Mods;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;

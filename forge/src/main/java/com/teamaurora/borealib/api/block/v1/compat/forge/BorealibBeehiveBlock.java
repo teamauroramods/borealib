@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-@SuppressWarnings("deprecation")
 public class BorealibBeehiveBlock extends BeehiveBlock {
 
 	public BorealibBeehiveBlock(Properties properties) {

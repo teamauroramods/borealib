@@ -3,7 +3,6 @@ package com.teamaurora.borealib.core.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.teamaurora.borealib.api.block.v1.FancyRenderBlock;
-import com.teamaurora.borealib.core.Borealib;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.world.level.block.LeavesBlock;
 import org.spongepowered.asm.mixin.Mixin;

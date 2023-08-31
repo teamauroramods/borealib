@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
-import com.teamaurora.borealib.api.entity.v1.CustomBoat;
-import com.teamaurora.borealib.api.entity.v1.CustomBoatType;
+import com.teamaurora.borealib.api.entity.v1.BorealibBoat;
+import com.teamaurora.borealib.api.entity.v1.BorealibBoatType;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import net.minecraft.client.model.BoatModel;
 import net.minecraft.client.model.ChestBoatModel;
@@ -25,12 +25,12 @@ import java.util.Map;
 import java.util.Objects;
 
 @ApiStatus.Internal
-public class CustomBoatRenderer<T extends CustomBoat> extends EntityRenderer<T> {
-    private final Map<CustomBoatType, Pair<ResourceLocation, BoatModel>> boatResources;
+public class BorealibBoatRenderer<T extends BorealibBoat> extends EntityRenderer<T> {
+    private final Map<BorealibBoatType, Pair<ResourceLocation, BoatModel>> boatResources;
     private final EntityRendererProvider.Context ctx;
     private final boolean chest;
 
-    public CustomBoatRenderer(EntityRendererProvider.Context context, boolean chest) {
+    public BorealibBoatRenderer(EntityRendererProvider.Context context, boolean chest) {
         super(context);
         this.shadowRadius = 0.8F;
         this.chest = chest;
@@ -82,17 +82,17 @@ public class CustomBoatRenderer<T extends CustomBoat> extends EntityRenderer<T> 
         super.render(boat, f, g, poseStack, multiBufferSource, i);
     }
 
-    private BoatModel createBoatModel(EntityRendererProvider.Context context, CustomBoatType type, boolean bl) {
+    private BoatModel createBoatModel(EntityRendererProvider.Context context, BorealibBoatType type, boolean bl) {
         ModelLayerLocation modelLayerLocation = bl ? createChestBoatModelName(type) : createBoatModelName(type);
         return bl ? new ChestBoatModel(context.bakeLayer(modelLayerLocation)) : new BoatModel(context.bakeLayer(modelLayerLocation));
     }
 
-    public static ModelLayerLocation createBoatModelName(CustomBoatType type) {
+    public static ModelLayerLocation createBoatModelName(BorealibBoatType type) {
         ResourceLocation location =  Objects.requireNonNull(BorealibRegistries.BOAT_TYPES.getKey(type));
         return new ModelLayerLocation(new ResourceLocation(location.getNamespace(), "boat/" + location.getPath()), "main");
     }
 
-    public static ModelLayerLocation createChestBoatModelName(CustomBoatType type) {
+    public static ModelLayerLocation createChestBoatModelName(BorealibBoatType type) {
         ResourceLocation location =  Objects.requireNonNull(BorealibRegistries.BOAT_TYPES.getKey(type));
         return new ModelLayerLocation(new ResourceLocation(location.getNamespace(), "chest_boat/" + location.getPath()), "main");
     }

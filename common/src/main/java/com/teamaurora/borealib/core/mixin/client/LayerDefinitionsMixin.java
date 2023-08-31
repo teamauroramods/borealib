@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.core.mixin.client;
 
 import com.google.common.collect.ImmutableMap;
-import com.teamaurora.borealib.core.client.render.entity.CustomBoatRenderer;
+import com.teamaurora.borealib.core.client.render.entity.BorealibBoatRenderer;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import net.minecraft.client.model.BoatModel;
 import net.minecraft.client.model.ChestBoatModel;
@@ -23,8 +23,8 @@ public class LayerDefinitionsMixin {
     @Inject(method = "createRoots", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/blockentity/SignRenderer;createSignLayer()Lnet/minecraft/client/model/geom/builders/LayerDefinition;"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private static void createRoots(CallbackInfoReturnable<Map<ModelLayerLocation, LayerDefinition>> cir, ImmutableMap.Builder<ModelLayerLocation, LayerDefinition> builder) {
         BorealibRegistries.BOAT_TYPES.stream().forEach(type -> {
-            builder.put(CustomBoatRenderer.createChestBoatModelName(type), ChestBoatModel.createBodyModel());
-            builder.put(CustomBoatRenderer.createBoatModelName(type), BoatModel.createBodyModel());
+            builder.put(BorealibBoatRenderer.createChestBoatModelName(type), ChestBoatModel.createBodyModel());
+            builder.put(BorealibBoatRenderer.createBoatModelName(type), BoatModel.createBodyModel());
         });
     }
 }

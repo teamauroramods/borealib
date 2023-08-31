@@ -2,7 +2,6 @@ package com.teamaurora.borealib.api.config.v1;
 
 import com.teamaurora.borealib.impl.config.ConfigRegistryImpl;
 
-import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Function;
 

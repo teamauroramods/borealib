@@ -24,7 +24,6 @@ import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 
 import java.lang.reflect.Field;
 import java.util.EnumMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;

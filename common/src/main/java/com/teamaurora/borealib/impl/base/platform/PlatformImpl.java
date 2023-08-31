@@ -1,8 +1,8 @@
 package com.teamaurora.borealib.impl.base.platform;
 
+import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import com.teamaurora.borealib.api.base.v1.platform.ModContainer;
 import com.teamaurora.borealib.api.base.v1.platform.Platform;
-import com.teamaurora.borealib.api.base.v1.platform.Environment;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.MinecraftServer;

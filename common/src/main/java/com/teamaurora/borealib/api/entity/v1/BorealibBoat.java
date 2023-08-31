@@ -1,7 +1,7 @@
 package com.teamaurora.borealib.api.entity.v1;
 
 import com.teamaurora.borealib.api.base.v1.util.NBTConstants;
-import com.teamaurora.borealib.api.item.v1.CustomBoatItem;
+import com.teamaurora.borealib.api.item.v1.BorealibBoatItem;
 import com.teamaurora.borealib.core.registry.BorealibEntityTypes;
 import com.teamaurora.borealib.core.registry.BorealibRegistries;
 import net.minecraft.core.BlockPos;
@@ -22,15 +22,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class CustomBoat extends Boat {
+public class BorealibBoat extends Boat {
 
-    private static final EntityDataAccessor<Integer> DATA_ID_TYPE = SynchedEntityData.defineId(CustomBoat.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_ID_TYPE = SynchedEntityData.defineId(BorealibBoat.class, EntityDataSerializers.INT);
 
-    public CustomBoat(EntityType<? extends Boat> entityType, Level level) {
+    public BorealibBoat(EntityType<? extends Boat> entityType, Level level) {
         super(entityType, level);
     }
 
-    public CustomBoat(Level level, double d, double e, double f) {
+    public BorealibBoat(Level level, double d, double e, double f) {
         this(BorealibEntityTypes.BOAT.get(), level);
         this.setPos(d, e, f);
         this.setDeltaMovement(Vec3.ZERO);
@@ -74,8 +74,8 @@ public class CustomBoat extends Boat {
 
     @Override
     public Item getDropItem() {
-        CustomBoatType type = this.getBoatCustomType();
-        return type != null ? CustomBoatItem.getBoatItem(type, false) : null;
+        BorealibBoatType type = this.getBoatCustomType();
+        return type != null ? BorealibBoatItem.getBoatItem(type, false) : null;
     }
 
 
@@ -133,11 +133,11 @@ public class CustomBoat extends Boat {
         }
     }
 
-    public void setCustomType(@Nullable CustomBoatType boatType) {
+    public void setCustomType(@Nullable BorealibBoatType boatType) {
         this.entityData.set(DATA_ID_TYPE, boatType == null ? -1 : BorealibRegistries.BOAT_TYPES.getId(boatType));
     }
 
-    public CustomBoatType getBoatCustomType() {
+    public BorealibBoatType getBoatCustomType() {
         int id = this.entityData.get(DATA_ID_TYPE);
         return id == -1 ? null : BorealibRegistries.BOAT_TYPES.byId(id);
     }

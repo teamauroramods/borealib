@@ -1,10 +1,6 @@
 package com.teamaurora.borealib.impl.config.fabric;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.core.ConfigSpec;
-import com.electronwill.nightconfig.core.EnumGetMethod;
-import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import com.electronwill.nightconfig.core.*;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.core.utils.UnmodifiableConfigWrapper;
 import com.google.common.annotations.VisibleForTesting;
@@ -19,18 +15,11 @@ import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.ADD;
-import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.REMOVE;
-import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.REPLACE;
+import static com.electronwill.nightconfig.core.ConfigSpec.CorrectionAction.*;
 
 @ApiStatus.Internal
 public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConfig> {

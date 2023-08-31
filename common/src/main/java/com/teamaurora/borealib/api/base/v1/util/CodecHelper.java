@@ -2,11 +2,7 @@ package com.teamaurora.borealib.api.base.v1.util;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.teamaurora.borealib.api.registry.v1.RegistryWrapper;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.Property;
 
 import java.util.List;
 import java.util.function.Function;

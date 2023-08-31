@@ -1,6 +1,5 @@
 package com.teamaurora.borealib.impl.biome.modifier.info.fabric;
 
-import com.teamaurora.borealib.api.biome.v1.modifier.info.GenerationSettings;
 import com.teamaurora.borealib.api.biome.v1.modifier.info.SpecialEffectSettings;
 import net.fabricmc.fabric.api.biome.v1.BiomeModificationContext;
 import net.minecraft.core.Holder;
