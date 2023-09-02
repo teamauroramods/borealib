@@ -194,6 +194,16 @@ public record WoodProperties(MapColor woodColor, MapColor logColor, MapColor lea
             return this;
         }
 
+        /**
+         * Sets the sound to use for sapling blocks.
+         *
+         * @param soundType The sound type to use
+         */
+        public Builder saplingSound(SoundType soundType) {
+            this.saplingSound = soundType;
+            return this;
+        }
+
         public WoodProperties build() {
             return new WoodProperties(this.logColor, this.woodColor, this.leavesColor, this.sharedProperties, this.sound, this.logSound, this.leavesSound, this.saplingSound);
         }
