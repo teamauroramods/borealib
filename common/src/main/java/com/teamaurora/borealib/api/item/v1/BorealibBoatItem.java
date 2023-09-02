@@ -37,7 +37,6 @@ import java.util.function.Predicate;
  * @since 1.4.0
  */
 public class BorealibBoatItem extends Item {
-
     private static final Predicate<Entity> ENTITY_PREDICATE = EntitySelector.NO_SPECTATORS.and(Entity::isPickable);
     private static final Map<BorealibBoatType, Item> BOAT_ITEMS = new ConcurrentHashMap<>();
     private static final Map<BorealibBoatType, Item> CHEST_BOAT_ITEMS = new ConcurrentHashMap<>();
@@ -137,7 +136,7 @@ public class BorealibBoatItem extends Item {
 
     private BorealibBoat getBoat(Level level, HitResult hitResult) {
         return this.chest
-            ? new BorealibChestBoat(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z)
-            : new BorealibBoat(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
+                ? new BorealibChestBoat(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z)
+                : new BorealibBoat(level, hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z);
     }
 }

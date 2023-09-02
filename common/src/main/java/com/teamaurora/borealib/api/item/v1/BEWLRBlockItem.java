@@ -14,29 +14,29 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class BEWLRBlockItem extends BlockItem {
-	@Nullable
-	private final Supplier<LazyBEWLR> bewlr;
+    @Nullable
+    private final Supplier<LazyBEWLR> bewlr;
 
-	public BEWLRBlockItem(Block block, Properties properties, Supplier<Callable<LazyBEWLR>> bewlr) {
-		super(block, properties);
-		LazyBEWLR lazyBEWLR = EnvExecutor.unsafeCallWhenOn(Environment.CLIENT, bewlr);
-		this.bewlr = lazyBEWLR == null ? null : () -> lazyBEWLR;
-	}
+    public BEWLRBlockItem(Block block, Properties properties, Supplier<Callable<LazyBEWLR>> bewlr) {
+        super(block, properties);
+        LazyBEWLR lazyBEWLR = EnvExecutor.unsafeCallWhenOn(Environment.CLIENT, bewlr);
+        this.bewlr = lazyBEWLR == null ? null : () -> lazyBEWLR;
+    }
 
-	public Supplier<LazyBEWLR> getBewlr() {
-		return this.bewlr;
-	}
+    public Supplier<LazyBEWLR> getBewlr() {
+        return this.bewlr;
+    }
 
-	public static final class LazyBEWLR {
-		private final BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> cacheFunction;
-		public BlockEntityWithoutLevelRenderer value;
+    public static final class LazyBEWLR {
+        private final BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> cacheFunction;
+        public BlockEntityWithoutLevelRenderer value;
 
-		public LazyBEWLR(BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> cacheFunction) {
-			this.cacheFunction = cacheFunction;
-		}
+        public LazyBEWLR(BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> cacheFunction) {
+            this.cacheFunction = cacheFunction;
+        }
 
-		public BlockEntityWithoutLevelRenderer cache(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
-			return this.value = this.cacheFunction.apply(dispatcher, modelSet);
-		}
-	}
+        public BlockEntityWithoutLevelRenderer cache(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
+            return this.value = this.cacheFunction.apply(dispatcher, modelSet);
+        }
+    }
 }

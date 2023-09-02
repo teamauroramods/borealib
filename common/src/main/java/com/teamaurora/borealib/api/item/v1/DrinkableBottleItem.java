@@ -23,56 +23,56 @@ import java.util.function.Supplier;
  * @author rose_
  */
 public class DrinkableBottleItem extends HoneyBottleItem {
-	private final Supplier<SoundEvent> drinkSound;
+    private final Supplier<SoundEvent> drinkSound;
 
-	public DrinkableBottleItem(Supplier<SoundEvent> drinkSound, FoodProperties food) {
-		super(PropertiesHelper.food(food).stacksTo(16).craftRemainder(Items.GLASS_BOTTLE));
-		this.drinkSound = drinkSound;
-	}
-	
-	public DrinkableBottleItem(FoodProperties food) {
-		this(() -> SoundEvents.GENERIC_DRINK, food);
-	}
+    public DrinkableBottleItem(Supplier<SoundEvent> drinkSound, FoodProperties food) {
+        super(PropertiesHelper.food(food).stacksTo(16).craftRemainder(Items.GLASS_BOTTLE));
+        this.drinkSound = drinkSound;
+    }
 
-	@Override
-	public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
-		ItemStack bottle = Items.GLASS_BOTTLE.getDefaultInstance();
-		entity.eat(level, stack);
+    public DrinkableBottleItem(FoodProperties food) {
+        this(() -> SoundEvents.GENERIC_DRINK, food);
+    }
 
-		if (entity instanceof ServerPlayer player) {
-			CriteriaTriggers.CONSUME_ITEM.trigger(player, stack);
-			player.awardStat(Stats.ITEM_USED.get(this));
-		}
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
+        ItemStack bottle = Items.GLASS_BOTTLE.getDefaultInstance();
+        entity.eat(level, stack);
 
-		if (stack.isEmpty())
-			return bottle;
-		else {
-			if (entity instanceof Player player && !player.getAbilities().instabuild)
-				if (!player.getInventory().add(bottle))
-					player.drop(bottle, false);
+        if (entity instanceof ServerPlayer player) {
+            CriteriaTriggers.CONSUME_ITEM.trigger(player, stack);
+            player.awardStat(Stats.ITEM_USED.get(this));
+        }
 
-			return stack;
-		}
-	}
+        if (stack.isEmpty())
+            return bottle;
+        else {
+            if (entity instanceof Player player && !player.getAbilities().instabuild)
+                if (!player.getInventory().add(bottle))
+                    player.drop(bottle, false);
 
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-		return Objects.requireNonNull(this.getFoodProperties()).canAlwaysEat() || player.canEat(false) ? super.use(level, player, hand)
-				: InteractionResultHolder.fail(player.getItemInHand(hand));
-	}
+            return stack;
+        }
+    }
 
-	@Override
-	public SoundEvent getDrinkingSound() {
-		return this.drinkSound.get();
-	}
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return Objects.requireNonNull(this.getFoodProperties()).canAlwaysEat() || player.canEat(false) ? super.use(level, player, hand)
+                : InteractionResultHolder.fail(player.getItemInHand(hand));
+    }
 
-	@Override
-	public SoundEvent getEatingSound() {
-		return this.drinkSound.get();
-	}
-	
-	@Override
-	public int getUseDuration(ItemStack stack) {
-		return 32;
-	}
+    @Override
+    public SoundEvent getDrinkingSound() {
+        return this.drinkSound.get();
+    }
+
+    @Override
+    public SoundEvent getEatingSound() {
+        return this.drinkSound.get();
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        return 32;
+    }
 }
