@@ -69,6 +69,12 @@ public record WoodProperties(MapColor woodColor, MapColor logColor, MapColor lea
         return properties.mapColor(this.woodColor).strength(3.0F).sound(this.sound).noOcclusion().pushReaction(PushReaction.DESTROY);
     }
 
+    public BlockBehaviour.Properties sign() {
+        BlockBehaviour.Properties properties = BlockBehaviour.Properties.of();
+        this.sharedProperties.accept(properties);
+        return properties.mapColor(this.woodColor).forceSolidOn().instrument(NoteBlockInstrument.BASS).ignitedByLava().noCollission().strength(1.0F).sound(this.sound);
+    }
+
     public BlockBehaviour.Properties beehive() {
         BlockBehaviour.Properties properties = BlockBehaviour.Properties.of();
         this.sharedProperties.accept(properties);
