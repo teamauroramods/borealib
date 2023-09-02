@@ -30,7 +30,6 @@ import java.util.stream.Stream;
  * @since 1.0
  */
 public final class SimpleRegistry<T> implements RegistryWrapper<T> {
-
     private final BiMap<ResourceLocation, T> byLocation = HashBiMap.create();
     private final BiMap<ResourceKey<T>, T> byKey = HashBiMap.create();
     private final BiMap<Integer, T> byId = HashBiMap.create();

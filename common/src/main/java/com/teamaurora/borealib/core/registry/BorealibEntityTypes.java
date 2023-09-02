@@ -10,7 +10,6 @@ import net.minecraft.world.entity.MobCategory;
 import org.jetbrains.annotations.ApiStatus;
 
 public final class BorealibEntityTypes {
-
     @ApiStatus.Internal
     public static final RegistryWrapper.EntityProvider ENTITIES = RegistryWrapper.entityProvider(Borealib.MOD_ID);
     public static final RegistryReference<EntityType<BorealibBoat>> BOAT = ENTITIES.register("boat", () -> EntityType.Builder.<BorealibBoat>of(BorealibBoat::new, MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10).build("borealib:boat"));

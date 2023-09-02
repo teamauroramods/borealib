@@ -20,7 +20,6 @@ import java.util.function.Supplier;
  * @since 1.0
  */
 public record ChestVariant(Material single, Material left, Material right) {
-
 	private static final Map<ResourceLocation, Supplier<ChestVariant>> REGISTRY = new HashMap<>();
 
 	/**

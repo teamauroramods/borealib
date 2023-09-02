@@ -30,4 +30,5 @@ public class BorealibStandingSignBlock extends StandingSignBlock {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, BorealibBlockEntityTypes.SIGN.get(), SignBlockEntity::tick);
     }
+
 }

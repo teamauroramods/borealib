@@ -22,7 +22,4 @@ public final class ConfigEvents {
      * Fired when a config is loaded after the initial startup.
      */
     public static final Event<Consumer<ModConfig>> RELOADING = Event.createLoop(Consumer.class);
-
-    private ConfigEvents() {
-    }
 }

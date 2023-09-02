@@ -8,7 +8,6 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public final class ExplosionEvents {
-
     public static final Event<Start> START = Event.createCancellable(Start.class);
     public static final Event<Detonate> DETONATE = Event.createLoop(Detonate.class);
 

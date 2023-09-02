@@ -32,10 +32,8 @@ public class BorealibClient {
 
     @Environment(EnvType.CLIENT)
     public static BEWLRBlockItem.LazyBEWLR chestBEWLR(boolean trapped) {
-        return trapped ? new BEWLRBlockItem.LazyBEWLR((dispatcher, entityModelSet) -> {
-            return new ChestBlockEntityWithoutLevelRenderer<>(dispatcher, entityModelSet, new BorealibTrappedChestBlockEntity(BlockPos.ZERO, Blocks.TRAPPED_CHEST.defaultBlockState()));
-        }) : new BEWLRBlockItem.LazyBEWLR((dispatcher, entityModelSet) -> {
-            return new ChestBlockEntityWithoutLevelRenderer<>(dispatcher, entityModelSet, new BorealibChestBlockEntity(BlockPos.ZERO, Blocks.CHEST.defaultBlockState()));
-        });
+        return trapped ? new BEWLRBlockItem.LazyBEWLR((dispatcher, entityModelSet) -> new ChestBlockEntityWithoutLevelRenderer<>(dispatcher, entityModelSet, new BorealibTrappedChestBlockEntity(BlockPos.ZERO, Blocks.TRAPPED_CHEST.defaultBlockState())))
+                : new BEWLRBlockItem.LazyBEWLR((dispatcher, entityModelSet) -> new ChestBlockEntityWithoutLevelRenderer<>(dispatcher, entityModelSet, new BorealibChestBlockEntity(BlockPos.ZERO, Blocks.CHEST.defaultBlockState())));
     }
+
 }

@@ -121,4 +121,5 @@ public class CabinetBlock extends BaseEntityBlock {
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}
+
 }

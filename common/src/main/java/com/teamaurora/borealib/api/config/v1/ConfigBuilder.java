@@ -19,7 +19,6 @@ import java.util.function.Supplier;
  * @since 1.0
  */
 public interface ConfigBuilder {
-
     Splitter DOT_SPLITTER = Splitter.on(".");
 
     @ApiStatus.Internal

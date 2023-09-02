@@ -10,7 +10,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 
 public final class WorldEvents {
-
     public static final Event<Bonemeal> BONEMEAL = Event.createResult(Bonemeal.class);
     public static final Event<TreeGrowing> TREE_GROWING = Event.createResult(TreeGrowing.class);
 

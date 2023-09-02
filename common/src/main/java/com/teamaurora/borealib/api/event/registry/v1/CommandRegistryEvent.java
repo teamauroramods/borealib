@@ -14,7 +14,6 @@ import net.minecraft.commands.Commands;
  */
 @FunctionalInterface
 public interface CommandRegistryEvent {
-
     Event<CommandRegistryEvent> EVENT = Event.createLoop(CommandRegistryEvent.class);
 
     /**

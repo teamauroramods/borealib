@@ -12,15 +12,15 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public class TypedBlockEntityWithoutLevelRenderer<T extends BlockEntity> extends BlockEntityWithoutLevelRenderer {
-	private final T be;
+    private final T be;
 
-	public TypedBlockEntityWithoutLevelRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet, T be) {
-		super(dispatcher, modelSet);
-		this.be = be;
-	}
+    public TypedBlockEntityWithoutLevelRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet, T be) {
+        super(dispatcher, modelSet);
+        this.be = be;
+    }
 
-	@Override
-	public void renderByItem(ItemStack itemStack, ItemDisplayContext itemDisplayContext, PoseStack poseStack, MultiBufferSource multiBufferSource, int combinedLight, int combinedOverlay) {
-		this.blockEntityRenderDispatcher.renderItem(this.be, poseStack, multiBufferSource, combinedLight, combinedOverlay);
-	}
+    @Override
+    public void renderByItem(ItemStack itemStack, ItemDisplayContext itemDisplayContext, PoseStack poseStack, MultiBufferSource multiBufferSource, int combinedLight, int combinedOverlay) {
+        this.blockEntityRenderDispatcher.renderItem(this.be, poseStack, multiBufferSource, combinedLight, combinedOverlay);
+    }
 }

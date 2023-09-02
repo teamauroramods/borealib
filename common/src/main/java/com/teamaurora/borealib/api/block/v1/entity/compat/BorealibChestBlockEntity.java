@@ -14,11 +14,11 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class BorealibChestBlockEntity extends ChestBlockEntity {
 
-	protected BorealibChestBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
-		super(typeIn, pos, state);
-	}
+    protected BorealibChestBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+        super(typeIn, pos, state);
+    }
 
-	public BorealibChestBlockEntity(BlockPos pos, BlockState state) {
-		super(BorealibBlockEntityTypes.CHEST.get(), pos, state);
-	}
+    public BorealibChestBlockEntity(BlockPos pos, BlockState state) {
+        super(BorealibBlockEntityTypes.CHEST.get(), pos, state);
+    }
 }

@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.ApiStatus;
 
 public final class BorealibBlockEntityTypes {
-
     @ApiStatus.Internal
     public static final RegistryWrapper.BlockEntityProvider BLOCK_ENTITIES = RegistryWrapper.blockEntityProvider(Borealib.MOD_ID);
 

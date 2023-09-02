@@ -12,13 +12,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
 public final class BorealibRegistries {
-
     public static final SimpleRegistry<BorealibBoatType> BOAT_TYPES = RegistryWrapper.createSimple(Borealib.location("boat_type"));
     public static final SimpleRegistry<Codec<? extends BiomeSelector>> BIOME_SELECTOR_TYPES = RegistryWrapper.createSimple(Borealib.location("biome_selector_type"));
     public static final SimpleRegistry<Codec<? extends BiomeModifierAction>> BIOME_MODIFIER_ACTION_TYPES = RegistryWrapper.createSimple(Borealib.location("biome_modifier_action_type"));
     public static final ResourceKey<? extends Registry<BiomeModifier>> BIOME_MODIFIERS = RegistryWrapper.dynamicRegistry(Borealib.location("biome_modifier"), BiomeModifier.DIRECT_CODEC);
-
-    private BorealibRegistries() {
-    }
 
 }

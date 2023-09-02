@@ -96,7 +96,7 @@ public record WoodProperties(MapColor woodColor, MapColor logColor, MapColor lea
     }
 
     public BlockBehaviour.Properties sapling() {
-        return BlockBehaviour.Properties.of().mapColor(this.leavesColor).noCollission().randomTicks().instabreak().sound(this.leavesSound).pushReaction(PushReaction.DESTROY);
+        return BlockBehaviour.Properties.of().mapColor(this.leavesColor).noCollission().randomTicks().instabreak().sound(this.saplingSound).pushReaction(PushReaction.DESTROY);
     }
 
     public BlockBehaviour.Properties chest() {

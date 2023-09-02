@@ -6,5 +6,4 @@ package com.teamaurora.borealib.api.block.v1;
  * @author ebo2022
  * @since 1.0
  */
-public interface FancyRenderBlock {
-}
+public interface FancyRenderBlock { }

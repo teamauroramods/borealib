@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
  * @since 1.0
  */
 public class BorealibTrappedChestBlock extends ChestBlock implements ExtendedChestBlock {
-
     private final ResourceLocation type;
 
     public BorealibTrappedChestBlock(ResourceLocation type, Properties properties) {

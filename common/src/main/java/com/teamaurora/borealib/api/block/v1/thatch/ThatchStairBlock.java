@@ -20,5 +20,5 @@ public class ThatchStairBlock extends StairBlock {
     public float getShadeBrightness(BlockState state, BlockGetter worldIn, BlockPos pos) {
         return 1.0F;
     }
-    
+
 }
