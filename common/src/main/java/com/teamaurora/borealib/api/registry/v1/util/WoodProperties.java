@@ -72,7 +72,7 @@ public record WoodProperties(MapColor woodColor, MapColor logColor, MapColor lea
     public BlockBehaviour.Properties sign() {
         BlockBehaviour.Properties properties = BlockBehaviour.Properties.of();
         this.sharedProperties.accept(properties);
-        return properties.mapColor(this.woodColor).forceSolidOn().instrument(NoteBlockInstrument.BASS).ignitedByLava().noCollission().strength(1.0F).sound(this.sound);
+        return properties.mapColor(this.woodColor).forceSolidOn().noCollission().strength(1.0F).sound(this.sound);
     }
 
     public BlockBehaviour.Properties beehive() {
